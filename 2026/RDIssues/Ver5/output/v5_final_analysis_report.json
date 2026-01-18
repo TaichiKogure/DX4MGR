@@ -1,0 +1,264 @@
+{
+    "criteria": {
+        "min_throughput": 4.5,
+        "max_wait": 12.0,
+        "max_cv": 0.4,
+        "max_ci_width": 0.15
+    },
+    "gate_reports": {
+        "01_Baseline": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "FAIL",
+                    "value": 3.8249,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 10.9188,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.2733,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0301,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "02_High_Load": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "FAIL",
+                    "value": 3.8816,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "FAIL",
+                    "value": 14.7354,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.192,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0274,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "03_High_Rework": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "FAIL",
+                    "value": 2.7409,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "FAIL",
+                    "value": 20.4336,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.128,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0298,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "04_High_Dependency": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "FAIL",
+                    "value": 2.1573,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "FAIL",
+                    "value": 25.0433,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.1056,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.038,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "05_Skill_Up": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 4.9204,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 1.5623,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "FAIL",
+                    "value": 0.6547,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0233,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "06_Dependency_Reduction": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "FAIL",
+                    "value": 4.4764,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 5.1719,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "FAIL",
+                    "value": 0.4322,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0209,
+                    "threshold": 0.15
+                }
+            ]
+        },
+        "07_Ideal_State": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 4.9662,
+                    "threshold": 4.5
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 0.1291,
+                    "threshold": 12.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.2198,
+                    "threshold": 0.4
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.0248,
+                    "threshold": 0.15
+                }
+            ]
+        }
+    },
+    "comparison_summary": {
+        "01_Baseline": {
+            "mean": 3.824888888888889,
+            "ci": [
+                3.767248269466407,
+                3.8825295083113707
+            ]
+        },
+        "02_High_Load": {
+            "mean": 3.8815555555555563,
+            "ci": [
+                3.8283506071177316,
+                3.934760503993381
+            ]
+        },
+        "03_High_Rework": {
+            "mean": 2.740888888888889,
+            "ci": [
+                2.7000944511174674,
+                2.781683326660311
+            ]
+        },
+        "04_High_Dependency": {
+            "mean": 2.1573333333333333,
+            "ci": [
+                2.116297978266853,
+                2.1983686883998135
+            ]
+        },
+        "05_Skill_Up": {
+            "mean": 4.920444444444445,
+            "ci": [
+                4.863175116519388,
+                4.977713772369501
+            ]
+        },
+        "06_Dependency_Reduction": {
+            "mean": 4.476444444444445,
+            "ci": [
+                4.429580576660151,
+                4.523308312228738
+            ]
+        },
+        "07_Ideal_State": {
+            "mean": 4.966222222222222,
+            "ci": [
+                4.904546973009657,
+                5.0278974714347875
+            ]
+        }
+    }
+}
