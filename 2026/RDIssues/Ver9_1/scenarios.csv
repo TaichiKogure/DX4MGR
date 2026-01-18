@@ -1,0 +1,6 @@
+scenario_name,n_trials,days,arrival_rate,small_exp_duration,proto_duration,bundle_size,dr_period,dr_capacity,dr_quality,rework_load_factor,max_rework_cycles,decay,approvers,rework_beta_a,rework_beta_b,rework_task_type_mix,conditional_prob_ratio,decision_latency_days
+01_Baseline,10,365,0.5,5,20,3,90,10,0.8,1.0,5,0.7,2,2.0,5.0,1.0,0.8,2.0
+02_High_Load,10,365,0.8,5,20,3,90,10,0.8,1.0,5,0.7,2,2.0,5.0,1.0,0.8,2.0
+03_High_Rework,10,365,0.5,5,20,3,90,10,0.4,5.0,5,0.7,2,5.0,2.0,1.0,0.9,2.0
+04_Large_Bundle,10,365,0.5,5,20,10,90,10,0.8,1.0,5,0.7,2,2.0,5.0,1.0,0.8,2.0
+05_Fast_DR,10,365,0.5,5,20,3,30,10,0.8,1.0,5,0.7,2,2.0,5.0,1.0,0.8,2.0

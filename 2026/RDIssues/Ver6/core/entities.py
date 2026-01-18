@@ -1,0 +1,43 @@
+from dataclasses import dataclass, field
+from typing import List, Optional, Dict, Any
+from enum import Enum, auto
+
+class TaskType(Enum):
+    SMALL_EXP = auto()
+    PROTO_TEST = auto()
+    DR_REVIEW = auto()
+
+@dataclass
+class Approver:
+    approver_id: str
+    approver_type: str # 'Senior', 'Coordinator', 'New'
+    capacity: int
+    quality: float
+
+@dataclass
+class Task:
+    task_id: str
+    task_type: TaskType
+    duration_days: float
+    generated_by: Optional[str] = None # 'REWORK' or None
+    created_at: float = 0.0
+
+@dataclass
+class Job:
+    job_id: str
+    created_at: float
+    current_node: Optional[str] = None
+    bundle_items: List['Job'] = field(default_factory=list)
+    rework_weight: float = 0.0
+    history: List[Dict[str, Any]] = field(default_factory=list)
+    tasks: List[Task] = field(default_factory=list)
+    rework_count: int = 0
+    
+    def add_history(self, node_id: str, event: str, time: float, **kwargs):
+        entry = {
+            "node_id": node_id,
+            "event": event,
+            "time": time
+        }
+        entry.update(kwargs)
+        self.history.append(entry)

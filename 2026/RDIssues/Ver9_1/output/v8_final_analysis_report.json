@@ -1,0 +1,248 @@
+{
+    "criteria": {
+        "min_throughput": 0.01,
+        "max_wait": 200.0,
+        "max_cv": 0.8,
+        "max_ci_width": 0.5,
+        "max_reworks": 5.0
+    },
+    "gate_reports": {
+        "01_Baseline": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 0.077,
+                    "threshold": 0.01
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 44.1572,
+                    "threshold": 200.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.1157,
+                    "threshold": 0.8
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.1695,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 0.0,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_wait": 44.15720474946683,
+                "avg_throughput": 0.07698630136986301,
+                "avg_reworks": 0.0
+            }
+        },
+        "02_High_Load": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 0.0753,
+                    "threshold": 0.01
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 40.0377,
+                    "threshold": 200.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.0612,
+                    "threshold": 0.8
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.1551,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 0.0,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_wait": 40.037691693969386,
+                "avg_throughput": 0.07534246575342465,
+                "avg_reworks": 0.0
+            }
+        },
+        "03_High_Rework": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 0.077,
+                    "threshold": 0.01
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 44.1572,
+                    "threshold": 200.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.1157,
+                    "threshold": 0.8
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.1695,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 0.0,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_wait": 44.15720474946683,
+                "avg_throughput": 0.07698630136986301,
+                "avg_reworks": 0.0
+            }
+        },
+        "04_Large_Bundle": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 0.0214,
+                    "threshold": 0.01
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 43.7595,
+                    "threshold": 200.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.2017,
+                    "threshold": 0.8
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.1641,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 0.0,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_wait": 43.759491306279074,
+                "avg_throughput": 0.021369863013698632,
+                "avg_reworks": 0.0
+            }
+        },
+        "05_Fast_DR": {
+            "overall_status": "PASS",
+            "gates": [
+                {
+                    "name": "Gate1: スループット基準",
+                    "status": "PASS",
+                    "value": 0.077,
+                    "threshold": 0.01
+                },
+                {
+                    "name": "Gate1: 平均待ち時間基準",
+                    "status": "PASS",
+                    "value": 14.2661,
+                    "threshold": 200.0
+                },
+                {
+                    "name": "Gate2: 安定性 (CV)",
+                    "status": "PASS",
+                    "value": 0.0948,
+                    "threshold": 0.8
+                },
+                {
+                    "name": "Gate3: 信頼区間精度",
+                    "status": "PASS",
+                    "value": 0.1477,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 0.0,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_wait": 14.26614541162028,
+                "avg_throughput": 0.07698630136986301,
+                "avg_reworks": 0.0
+            }
+        }
+    },
+    "comparison_summary": {
+        "01_Baseline": {
+            "mean": 0.07698630136986301,
+            "ci": [
+                0.07046094187730154,
+                0.08351166086242448
+            ]
+        },
+        "02_High_Load": {
+            "mean": 0.07534246575342465,
+            "ci": [
+                0.0695010683124606,
+                0.08118386319438871
+            ]
+        },
+        "03_High_Rework": {
+            "mean": 0.07698630136986301,
+            "ci": [
+                0.07046094187730154,
+                0.08351166086242448
+            ]
+        },
+        "04_Large_Bundle": {
+            "mean": 0.021369863013698632,
+            "ci": [
+                0.019616073097404558,
+                0.023123652929992706
+            ]
+        },
+        "05_Fast_DR": {
+            "mean": 0.07698630136986301,
+            "ci": [
+                0.07130055431204266,
+                0.08267204842768336
+            ]
+        }
+    }
+}

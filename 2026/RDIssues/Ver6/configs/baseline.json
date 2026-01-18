@@ -1,0 +1,16 @@
+{
+    "days": 365,
+    "arrival_rate": 0.5,
+    "small_exp_duration": 5,
+    "proto_duration": 20,
+    "bundle_size": 3,
+    "dr_period": 90,
+    "dr_capacity": 10,
+    "dr_quality": 0.8,
+    "rework_load_factor": 1.0,
+    "max_rework_cycles": 5,
+    "decay": 0.7,
+    "approvers": 2,
+    "base_seed": 42,
+    "n_trials": 20
+}

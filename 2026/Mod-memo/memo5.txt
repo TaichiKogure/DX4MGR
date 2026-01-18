@@ -1,0 +1,284 @@
+
+（前提：現状の Sim Ver6 は「R&DフローのDES/モンテカルロ」相当。DRゲートや差し戻し“重み＝小実験増殖”を、より構造化して拡張する。）🧩
+
+⸻
+
+DX4MGR Sim Ver6 改良指示書（Agent＋Gate Graph＋差し戻し増殖）
+
+0. ゴール定義（最初に固定すること）
+
+この改良のゴールは「機能を増やす」ではなく、DX4MGRを“組織・会議体・ゲート”として組み替え可能な実験基盤にすること。
+
+必須要件（Must）
+	1.	ゲートを複数組み合わせできる（小実験判定、試作判定、DRなど）
+	2.	DRの周期イベント（半年/年）と **容量（1回に捌ける件数）**を持つ
+	3.	**バンドル（試作3〜4件でDRパッケージ）**を表現する
+	4.	差し戻しは回数ではなく“重み”（課題が出ると小実験が増殖）を表現する
+	5.	出力は「平均」より P90/P95、CCDF、WIP（滞留）、ゲート別詰まりを標準で出す
+
+任意要件（Nice）
+	•	“最小Agent”導入（承認者タイプ/会議体）で意思決定品質に差をつける
+	•	DOE/シナリオスイープを標準搭載（並列）
+
+⸻
+
+1. 破壊的変更を避ける方針（重要）
+	•	既存のVer6 API（エントリポイント）を一旦維持して、内部実装を段階的に差し替える
+	•	例：run_simulation() や simulate() など既存関数名を残し、内部で新エンジン呼び出しにする
+	•	まず「同じ入力でだいたい同じ傾向の結果」が出る状態まで持っていく（再現性確保）
+	•	リファクタリングは「構造を作るため」だけに限定し、表層機能追加は後回し
+
+⸻
+
+2. 新アーキテクチャ（AnyLogic風の最小構成）
+
+2.1 モジュール（ファイル）分割（推奨）
+
+以下の新規/整理を行う（既存構成に合わせて名前は調整してOK）
+	•	core/entities.py
+	•	Job（案件＝DRパッケージ or 試作単位）
+	•	Task（小実験/試作などの作業単位）
+	•	core/gates.py
+	•	GateNode 抽象基底
+	•	MeetingGate（周期・容量・品質）
+	•	WorkGate（通常作業処理、処理時間分布）
+	•	BundleGate（3〜4件を束ねてDRパッケージ化）
+	•	core/engine.py
+	•	イベントキュー（自作DES）または SimPy ラッパ
+	•	step() / run() / schedule_event()
+	•	core/policies.py
+	•	差し戻し分岐、重み→増殖ルール、意思決定品質モデル
+	•	analysis/metrics.py
+	•	P50/P90/P95、CCDF、WIP時系列、ゲート別滞留
+	•	analysis/viz.py
+	•	出力プロット（最低限：CCDF、箱ひげ、WIP、ゲートヒートマップ）
+	•	runner/experiment.py
+	•	モンテカルロ、シナリオスイープ、DOE、並列化
+
+⚠️注意：いきなり大改造せず、Step3で“GateNodeだけ”追加して既存ループに差し込むなど段階的に移行する。
+
+⸻
+
+3. ステップバイステップ実装計画（ここをそのまま実行）
+
+Step 1 — 現状の入出力を固定し、回帰テストの「観測点」を作る（必須）
+
+目的：改造で挙動が壊れたか判定できるようにする
+	1.	既存Ver6の代表的なパラメータセットを3つ作る（小/中/大負荷）
+	2.	出力として最低限これを保存（JSON推奨）
+	•	throughput（期間内にDRゲートを通過できた数）
+	•	lead_time分布（P50/P90/P95）
+	•	wait_time分布（P50/P90/P95）
+	•	rework回数 or 再投入量（現状の定義でOK）
+	3.	seed固定のテストを1本作る（pytest推奨）
+
+⚠️引っかかり：
+	•	乱数が複数箇所で使われている場合、seedが固定できないと比較不能になる
+→ rng = np.random.default_rng(seed) を全体に注入する形に統一する
+
+⸻
+
+Step 2 — 「Job」「Task」を導入し、差し戻し“重み”をデータとして持てるようにする
+
+目的：重み＝増殖を表現する器を先に作る
+	1.	Job に最低限のフィールドを持たせる
+	•	job_id
+	•	created_at
+	•	current_node（今いるゲート）
+	•	bundle_items（束ねた試作のリスト：任意）
+	•	rework_weight（0〜1など）
+	•	history（通過ノード・滞留時間記録用）
+	2.	Task（小実験/試作）を導入
+	•	task_type（SMALL_EXP / PROTO_TEST など）
+	•	duration_days（分布サンプル）
+	•	generated_by（差し戻し由来かどうか）
+	3.	既存の“差し戻し”処理部分を修正し、回数ではなく rework_weight をJobに保持
+	•	例：差し戻しが起きたら rework_weight = sample() で付与する（後でルール化）
+
+⚠️引っかかり：
+	•	「差し戻し＝学習ループ」と「手戻り」を混ぜると、後から改善策が出せなくなる
+→ rework_type を最低限入れて区別できるように（OPTIONでも良い）
+
+⸻
+
+Step 3 — GateNode（ゲートの標準インターフェース）を作る
+
+目的：ゲートを足せる構造にする（ここが本丸）
+
+GateNode の最低限インターフェース：
+	•	enqueue(job, now)：キューへ入れる
+	•	can_process(now)：今処理できるか（会議周期・容量）
+	•	process(now)：処理して次遷移（job, next_node, additional_tasksなど返す）
+	•	stats()：キュー長、処理数、平均待ちなど
+
+⚠️引っかかり：
+	•	ゲートが増えると「どこで待ってるか」の観測が重要
+→ enqueue_time をJob側に記録し、出た時点で待ち時間を加算する
+
+⸻
+
+Step 4 — 3種類のゲートを実装（最小セット）
+
+目的：現場の流れ（小実験→試作→DR）を組み立てる
+
+4.1 WorkGate（作業ゲート）
+	•	小実験、試作など「時間がかかる作業」を表現
+	•	入ったJobに Task を付与し、duration_days 後に次へ進むイベントを発火
+
+4.2 BundleGate（束ねるゲート）
+	•	試作が 3〜4 件溜まったら1つのDRパッケージ（Job）を生成 or 既存Jobにbundle_items追加
+	•	bundle_size_dist（例：3 or 4 を確率で出す）
+
+⚠️引っかかり：
+	•	“束ね待ち”が新しいボトルネックになる
+→ BundleGateの待ち時間も必ず記録し、WIPとして可視化対象にする
+
+4.3 MeetingGate（会議ゲート：DR）
+	•	period_days（例：180日 or 365日）で開催
+	•	capacity_per_meeting 件だけ処理
+	•	output_quality（意思決定が適切な確率）
+	•	decision_latency_days（議事確定遅れ：任意）
+
+処理結果は3分岐（確率でOK）
+	•	GO（次へ）
+	•	CONDITIONAL（差し戻し：重み付き）
+	•	NO_GO（終了 or 大差し戻し：運用に合わせる）
+
+⚠️引っかかり：
+	•	会議は「開催日以外は1件も進まない」ので、モデルが急に不連続になる
+→ 実装は “次開催日までイベントをスキップ” できるように（無駄な日次ループ禁止）
+
+⸻
+
+Step 5 — 差し戻し“重み”を「増殖」に変換するルール（最重要）
+
+目的：たいっちさんの現実をモデルで再現するコア
+
+5.1 基本ルール
+	•	差し戻しが発生したら rework_weight をサンプル or 設定に従って決める
+	•	その重みに応じて、追加の Task(SMALL_EXP) を生成する（小実験が増える）
+	•	例：n_new_tasks = ceil(rework_load_factor * rework_weight)
+	•	さらに分布にしてもOK（Poissonなど）
+
+5.2 パラメータ追加（設定ファイル化）
+	•	p_rework：差し戻し発生確率（ベース）
+	•	rework_weight_dist：重み分布（Betaなど）
+	•	rework_load_factor：重み→増殖係数
+	•	rework_task_type_mix：小実験と試作を何割増やすか（任意）
+
+⚠️引っかかり：
+	•	“増殖”が無限ループしうる
+→ ループ上限（max_rework_cycles）か、重み減衰（decay）を必ず入れる
+例：戻るたびに rework_weight *= 0.7
+
+⸻
+
+Step 6 — 最小Agent要素（揉めない設計で）
+
+目的：人・会議の違いを入れるが、個人評価に見えないようにする
+
+6.1 ApproverType（承認者タイプ）を3つ程度
+	•	Senior：高品質・高スループット
+	•	Coordinator：品質中・保留多め
+	•	New：品質低め・遅い
+
+MeetingGateの output_quality と capacity を、構成比で合成する
+	•	effective_capacity = sum(capacity_i * count_i)
+	•	effective_quality = weighted_mean(quality_i, by capacity or count)
+
+⚠️引っかかり：
+	•	個人名や部署名と紐付けると炎上する
+→ “役割タイプ”としてしか扱わない（匿名化）
+
+⸻
+
+Step 7 — 出力（可観測性）を“地味に全部出す”
+
+目的：上層にも現場にも刺さる可視化（DX4MGRの武器）
+
+最低限出すべき指標（標準出力）
+	•	全体：throughput、lead_time P50/P90/P95、CCDF
+	•	ゲート別：平均待ち、P90待ち、キュー長時系列、処理数
+	•	差し戻し：重み分布、増殖した小実験数分布、ループ回数分布
+	•	WIP：ノード別滞留数の時系列（どこが詰まりか）
+
+⚠️引っかかり：
+	•	“平均だけ”だと尾（P90）が消える
+→ P90/P95 と CCDF を固定で出す（仕様で縛る）
+
+⸻
+
+Step 8 — 複数パラメータを複数並列で走らせる（実験基盤）
+
+目的：DX4MGRを「意思決定のための実験装置」にする
+
+8.1 Scenario sweep（シナリオ比較）
+	•	例：DR年1→半年、容量+1、品質+0.1 など
+	•	scenarios.csv または config.yaml で定義
+
+8.2 MonteCarlo
+	•	各シナリオで n_trials 回実行して分布を得る
+	•	seedは base_seed + trial_id
+
+8.3 DOE（任意）
+	•	LHS（Latin Hypercube）で rework_load_factor, output_quality, capacity を探索
+	•	影響度を散布図/回帰で出す
+
+⚠️引っかかり：
+	•	並列化すると乱数とログが壊れやすい
+→ trialごとにrngを独立生成、ログは trial_id で分離保存
+
+⸻
+
+Step 9 — 互換性維持：旧Ver6の入口から新エンジンに接続する
+	•	既存の simulate_ver6(params) を残し、内部で
+	•	設定 → GateGraph構築 → run → metrics → return
+に置き換える
+	•	既存の呼び出し側（Notebook/CLI）が壊れないことを確認
+
+⸻
+
+4. 設定ファイル（Config）仕様（エージェントに必ず作らせる）
+
+config.yaml もしくは config.json を必須にする（ハードコード禁止）
+
+最低限：
+	•	期間：days
+	•	流入：arrival_rate（ジョブ/日 or 試作/日）
+	•	試作：proto_duration_dist
+	•	小実験：small_exp_duration_dist
+	•	バンドル：bundle_size_dist
+	•	DR：dr_period_days, dr_capacity, dr_quality, dr_latency_days
+	•	差し戻し：p_rework, rework_weight_dist, rework_load_factor, max_rework_cycles
+
+⚠️引っかかり：
+	•	“単位”が揺れると全崩壊（案件/VP/試作の混在）
+→ 単位は最初に Job＝DRパッケージ に固定、試作/小実験はTaskとして扱う
+
+⸻
+
+5. 受け入れ基準（Doneの定義）
+
+エージェントに「完了」を判断させるため、これを満たしたらDone。
+	1.	DR周期（半年/年）を変えると、待ち時間分布が合理的に変わる
+	2.	rework_load_factor を上げると、P90リードタイムが増える（尾が太る）
+	3.	DR容量を増やすと、DRキューが減りスループットが上がる
+	4.	出力に CCDF、P90、ゲート別WIPが出ている
+	5.	seed固定で再現性がある（同じ結果）
+
+⸻
+
+6. 追加の注意書き（ハマりどころ集）
+	•	周期会議の実装で日次ループにしない（イベントジャンプ方式）
+	•	増殖が暴走しやすいので、上限/減衰を必ず入れる
+	•	並列化時の乱数：プロセス間でseedが衝突しない設計にする
+	•	ログ肥大化：全イベントログは重いので、集計指標とサマリを分ける
+	•	説明責任：パラメータの意味（業務定義）を PARAMETERS.md に書く（超重要）
+
+⸻
+
+7. 仕上げ（エージェントに渡す実行順コマンド例）
+	•	python run_sim.py --config configs/baseline.yaml --seed 42 --trials 200
+	•	python run_sweep.py --grid configs/sweep_dr_period.yaml --trials 100 --parallel
+
+⸻

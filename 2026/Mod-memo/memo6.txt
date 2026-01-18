@@ -1,0 +1,714 @@
+方向性としては **「run_v7.py が呼ぶメインシミュレーションを、runner/adapters.py の標準フロー（SMALL_EXP→PROTO→BUNDLE→DR）へ差し替え」**し、その上で **ゲート別の詰まり（待ち・WIP）を“強制的に見える化”**するのが最短です。
+
+以下の方針で手を入れるのが堅いです。
+
+- **シミュレーション本体**：`simulator_v7.py` に *標準フロー版* `simulate_standard_flow_v7()` を追加（runner/adapters を利用）
+- **WIPを本気で出す**：`core/engine.py` で WIP を一定間隔でサンプリング（ノード別WIP）
+- **メトリクス強化**：`analysis/metrics.py` に WIP集計（ノード別平均WIP）を追加
+- **可視化強化**：`visualizer_v7.py` に
+  - シナリオ×ゲートの平均待ち時間ヒートマップ
+  - シナリオ×ゲートの平均WIPヒートマップ
+- **パイプライン接続**：`run_v7.py` の Step2（モンテカルロ）を標準フロー版に切替
+
+---
+
+## 変更案（コード）
+
+### 1) WIPサンプリングをエンジンに実装（ノード別WIP）
+```python
+import heapq
+from typing import List, Dict, Any, Callable
+from core.entities import Job
+from core.gates import GateNode
+
+class SimulationEngine:
+    def __init__(self, rng=None, sampling_interval: float = 1.0):
+        self.events = [] # (time, priority, counter, event_type, data)
+        self.event_counter = 0
+        self.now = 0.0
+        self.nodes: Dict[str, GateNode] = {}
+        self.rng = rng if rng else None # np.random.default_rng()
+        self.sampling_interval = float(sampling_interval) if sampling_interval else 0.0
+        self.next_sample_time = 0.0
+
+        self.results = {
+            "completed_jobs": [],
+            "wip_history": []
+        }
+
+    def add_node(self, node: GateNode):
+        self.nodes[node.node_id] = node
+
+    def schedule_event(self, time: float, event_type: str, data: Any, priority: int = 10):
+        heapq.heappush(self.events, (time, priority, self.event_counter, event_type, data))
+        self.event_counter += 1
+
+    def _snapshot_wip(self, at_time: float):
+        node_wip = {}
+        for node_id, node in self.nodes.items():
+            in_queue = len(getattr(node, "queue", []))
+            in_service = 0
+            if hasattr(node, "busy_servers"):
+                in_service = int(getattr(node, "busy_servers", 0))
+            node_wip[node_id] = in_queue + in_service
+
+        self.results["wip_history"].append({
+            "time": float(at_time),
+            "node_wip": node_wip,
+            "total_wip": int(sum(node_wip.values()))
+        })
+
+    def run(self, max_days: float):
+        # 最初のスナップショット
+        if self.sampling_interval > 0:
+            self.next_sample_time = 0.0
+            self._snapshot_wip(0.0)
+
+        while self.events:
+            time, priority, counter, event_type, data = heapq.heappop(self.events)
+            if time > max_days:
+                self.now = max_days
+                break
+
+            self.now = time
+            self.handle_event(event_type, data)
+
+            # WIPサンプリング（一定間隔で）
+            if self.sampling_interval > 0:
+                while self.next_sample_time + self.sampling_interval <= self.now + 1e-12:
+                    self.next_sample_time += self.sampling_interval
+                    if self.next_sample_time <= max_days + 1e-12:
+                        self._snapshot_wip(self.next_sample_time)
+
+    def handle_event(self, event_type: str, data: Any):
+        if event_type == "ARRIVAL":
+            job = data["job"]
+            target_node_id = data["target_node"]
+            if target_node_id in self.nodes:
+                self.nodes[target_node_id].enqueue(job, self.now)
+                self.check_node_activation(target_node_id)
+            else:
+                # 終端ノード
+                self.results["completed_jobs"].append(job)
+
+        elif event_type == "PROCESS_READY":
+            node_id = data["node_id"]
+            if node_id in self.nodes:
+                self.nodes[node_id].process(self.now)
+
+        elif event_type == "WORK_COMPLETE":
+            node_id = data["node_id"]
+            job = data["job"]
+            self.nodes[node_id].on_work_complete(job, self.now)
+
+        elif event_type == "MEETING_START":
+            node_id = data["node_id"]
+            self.nodes[node_id].process(self.now)
+
+    def check_node_activation(self, node_id: str):
+        if self.nodes[node_id].can_process(self.now):
+            # 即座に処理開始可能な場合はイベントをスケジュール
+            self.schedule_event(self.now, "PROCESS_READY", {"node_id": node_id}, priority=8)
+
+    def get_total_wip(self) -> int:
+        total = 0
+        for node in self.nodes.values():
+            total += len(node.queue)
+        return total
+```
+
+
+---
+
+### 2) メトリクスに「ノード別平均WIP」等を追加
+```python
+import numpy as np
+from typing import List, Dict, Any
+from core.entities import Job
+
+def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any]], total_days: float, wip_history: List[Dict[str, Any]] = None):
+    if not completed_jobs:
+        return {"error": "No jobs completed"}
+
+    lead_times = [job.history[-1]["time"] - job.created_at for job in completed_jobs]
+    rework_counts = [job.rework_count for job in completed_jobs]
+
+    # CCDFの計算用データ
+    sorted_lt = np.sort(lead_times)
+    ccdf_y = 1.0 - np.arange(1, len(sorted_lt) + 1) / len(sorted_lt)
+
+    # WIP集計（ノード別平均WIP）
+    avg_wip_total = 0.0
+    avg_wip_by_node: Dict[str, float] = {}
+    if wip_history:
+        totals = [x.get("total_wip", 0) for x in wip_history]
+        avg_wip_total = float(np.mean(totals)) if totals else 0.0
+
+        # node_wipを縦持ちにして平均
+        acc: Dict[str, List[int]] = {}
+        for row in wip_history:
+            node_wip = row.get("node_wip", {}) or {}
+            for node_id, v in node_wip.items():
+                acc.setdefault(node_id, []).append(int(v))
+        avg_wip_by_node = {k: float(np.mean(vs)) for k, vs in acc.items()}
+
+    metrics = {
+        "summary": {
+            "completed_count": len(completed_jobs),
+            "throughput": len(completed_jobs) / total_days,
+            "lead_time_p50": float(np.percentile(lead_times, 50)),
+            "lead_time_p90": float(np.percentile(lead_times, 90)),
+            "lead_time_p95": float(np.percentile(lead_times, 95)),
+            "avg_reworks": float(np.mean(rework_counts)),
+            "max_reworks": int(np.max(rework_counts)),
+            "avg_wip": avg_wip_total
+        },
+        "gate_stats": nodes_stats,
+        "wip": {
+            "avg_total": avg_wip_total,
+            "avg_by_node": avg_wip_by_node,
+            "history": wip_history or []
+        },
+        "ccdf": {
+            "x": sorted_lt.tolist(),
+            "y": ccdf_y.tolist()
+        },
+        "raw_lead_times": lead_times,
+        "raw_rework_counts": rework_counts
+    }
+
+    return metrics
+```
+
+
+---
+
+### 3) 標準フロー（SMALL_EXP→PROTO→BUNDLE→DR）を Ver7メインで回す関数を追加
+`runner/adapters.py` の `setup_standard_flow()` を呼び、そこから metrics を作るだけにします。
+
+```python
+import os
+import sys
+import numpy as np
+import concurrent.futures
+import multiprocessing
+
+# パス設定
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
+
+from analysis.metrics import calculate_metrics
+from runner.adapters import setup_standard_flow
+
+def simulate_standard_flow_v7(
+    days=365,
+    arrival_rate=0.5,
+    small_exp_duration=5,
+    proto_duration=20,
+    bundle_size=3,
+    dr_period=90,
+    dr_capacity=10,   # 現状はapproversのcapacity側に寄せるなら今後反映（ここでは温存）
+    dr_quality=0.8,   # 同上（MeetingGateのqualityへ寄せるなら今後反映）
+    rework_load_factor=1.0,
+    max_rework_cycles=5,
+    decay=0.7,
+    approvers=2,
+    seed=None,
+    sampling_interval=1.0
+):
+    """
+    Ver7 標準フロー版（SMALL_EXP→PROTO→BUNDLE→DR_GATE）
+    runner/adapters.py の setup_standard_flow をメイン採用する。
+    """
+    rng = np.random.default_rng(seed)
+
+    engine = setup_standard_flow(
+        rng,
+        days=days,
+        arrival_rate=arrival_rate,
+        small_exp_duration=small_exp_duration,
+        proto_duration=proto_duration,
+        bundle_size=bundle_size,
+        dr_period=dr_period,
+        dr_capacity=dr_capacity,
+        dr_quality=dr_quality,
+        rework_load_factor=rework_load_factor,
+        max_rework_cycles=max_rework_cycles,
+        decay=decay,
+        approvers=approvers
+    )
+
+    # sampling_interval を engine に反映（setup側が engine を生成しているため後付け）
+    engine.sampling_interval = float(sampling_interval) if sampling_interval else 0.0
+    engine.next_sample_time = 0.0
+
+    engine.run(days)
+
+    nodes_stats = [node.stats() for node in engine.nodes.values()]
+    m = calculate_metrics(
+        engine.results["completed_jobs"],
+        nodes_stats,
+        days,
+        wip_history=engine.results.get("wip_history", [])
+    )
+
+    if "error" in m:
+        summary = {
+            "approved_count": 0,
+            "throughput": 0,
+            "avg_wait": 0,
+            "p90_wait": 0,
+            "p95_wait": 0,
+            "avg_wip": 0,
+            "avg_reworks": 0,
+            "max_reworks": 0,
+        }
+    else:
+        summary = {
+            "approved_count": m["summary"]["completed_count"],
+            "throughput": m["summary"]["throughput"],
+            "avg_wait": m["summary"]["lead_time_p50"],
+            "p90_wait": m["summary"]["lead_time_p90"],
+            "p95_wait": m["summary"]["lead_time_p95"],
+            "avg_wip": m["summary"].get("avg_wip", 0),
+            "avg_reworks": m["summary"]["avg_reworks"],
+            "max_reworks": m["summary"]["max_reworks"],
+        }
+
+    return {
+        "summary": summary,
+        "metrics": m,
+        "logs": {
+            "lead_times": m.get("raw_lead_times", []),
+            "rework_counts": m.get("raw_rework_counts", []),
+            "wip_history": m.get("wip", {}).get("history", []),
+        }
+    }
+
+def _single_trial(args):
+    params, seed = args
+    return simulate_standard_flow_v7(**params, seed=seed)
+
+def run_monte_carlo_v7(n_trials=100, use_parallel=True, **params):
+    """
+    モンテカルロ（標準フロー版）
+    seedは trial_id をそのまま使う（base_seed を足したい場合は run_v7.py 側で渡す）
+    """
+    args = [(params, i) for i in range(n_trials)]
+
+    if use_parallel and n_trials > 1:
+        cpu_count = multiprocessing.cpu_count()
+        with concurrent.futures.ProcessPoolExecutor(max_workers=cpu_count) as executor:
+            results = list(executor.map(_single_trial, args))
+    else:
+        results = [_single_trial(arg) for arg in args]
+
+    return results
+
+def latin_hypercube_sampling(n_samples, param_ranges):
+    # ... existing code ...
+    n_params = len(param_ranges)
+    lower_limits = np.arange(0, n_samples) / n_samples
+    upper_limits = np.arange(1, n_samples + 1) / n_samples
+
+    u_samples = np.zeros((n_samples, n_params))
+    for i in range(n_params):
+        samples = np.random.uniform(low=lower_limits, high=upper_limits, size=n_samples)
+        np.random.shuffle(samples)
+        u_samples[:, i] = samples
+
+    scaled_samples = []
+    param_names = list(param_ranges.keys())
+    for j in range(n_samples):
+        sample_dict = {}
+        for i, name in enumerate(param_names):
+            p_min, p_max = param_ranges[name]
+            sample_dict[name] = p_min + u_samples[j, i] * (p_max - p_min)
+        scaled_samples.append(sample_dict)
+
+    return scaled_samples
+```
+
+
+> ポイント：既存の `run_v7.py` は `run_monte_carlo_v7()` を呼んでいるので、ここを「標準フロー版」に置き換えるのが一番影響が小さいです（run_v7.py 側の改修が軽い）。
+
+---
+
+### 4) 可視化を“ゲート別”へ（詰まりが一発で見える）
+ヒートマップ2枚を追加します：
+- **シナリオ × ゲート** の `avg_wait_time`（ゲート別待ち）
+- **シナリオ × ゲート** の `avg_wip`（ゲート別WIP：時間平均）
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import pandas as pd
+
+# 日本語フォント設定
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Arial Unicode MS', 'Hiragino Sans', 'IPAexGothic', 'sans-serif']
+
+def plot_comparison_with_ci(comparison_results, title="シナリオ比較 (95%信頼区間)"):
+    # ... existing code ...
+    labels = list(comparison_results.keys())
+    means = [comparison_results[l]["mean"] for l in labels]
+    lows = [comparison_results[l]["ci"][0] for l in labels]
+    highs = [comparison_results[l]["ci"][1] for l in labels]
+
+    yerr = [np.array(means) - np.array(lows), np.array(highs) - np.array(means)]
+
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(labels, means, yerr=yerr, capsize=5, color='skyblue', alpha=0.8)
+
+    plt.title(title)
+    plt.ylabel("スループット (VP/day)")
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, yval, f"{yval:.2f}",
+                 ha='center', va='bottom', fontweight='bold')
+
+    plt.tight_layout()
+
+def plot_gate_wait_heatmap(gate_stats_by_scenario: dict, title="ゲート別 平均待ち時間ヒートマップ"):
+    """
+    gate_stats_by_scenario:
+      { scenario_name: [ {"node_id": "...", "avg_wait_time": ...}, ... ], ... }
+    """
+    rows = []
+    for scenario, stats in gate_stats_by_scenario.items():
+        for s in stats:
+            rows.append({
+                "Scenario": scenario,
+                "Gate": s.get("node_id"),
+                "AvgWait": s.get("avg_wait_time", 0.0)
+            })
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+
+    pivot = df.pivot_table(index="Scenario", columns="Gate", values="AvgWait", aggfunc="mean").fillna(0.0)
+
+    plt.figure(figsize=(max(8, 1.2 * pivot.shape[1]), max(4, 0.7 * pivot.shape[0])))
+    sns.heatmap(pivot, annot=True, fmt=".1f", cmap="YlOrRd")
+    plt.title(title)
+    plt.xlabel("Gate")
+    plt.ylabel("Scenario")
+    plt.tight_layout()
+
+def plot_gate_wip_heatmap(avg_wip_by_node_by_scenario: dict, title="ゲート別 平均WIPヒートマップ"):
+    """
+    avg_wip_by_node_by_scenario:
+      { scenario_name: { node_id: avg_wip, ... }, ... }
+    """
+    rows = []
+    for scenario, d in avg_wip_by_node_by_scenario.items():
+        for node_id, v in (d or {}).items():
+            rows.append({
+                "Scenario": scenario,
+                "Gate": node_id,
+                "AvgWIP": float(v)
+            })
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return
+
+    pivot = df.pivot_table(index="Scenario", columns="Gate", values="AvgWIP", aggfunc="mean").fillna(0.0)
+
+    plt.figure(figsize=(max(8, 1.2 * pivot.shape[1]), max(4, 0.7 * pivot.shape[0])))
+    sns.heatmap(pivot, annot=True, fmt=".1f", cmap="PuBu")
+    plt.title(title)
+    plt.xlabel("Gate")
+    plt.ylabel("Scenario")
+    plt.tight_layout()
+
+def plot_doe_analysis(doe_df, target_col="throughput", title="DOE (実験計画法) 感度分析"):
+    # ... existing code ...
+    param_cols = [c for c in doe_df.columns if c != target_col]
+    n_params = len(param_cols)
+
+    fig, axes = plt.subplots(1, n_params, figsize=(4 * n_params, 5), sharey=True)
+    if n_params == 1: axes = [axes]
+
+    for i, col in enumerate(param_cols):
+        sns.regplot(x=col, y=target_col, data=doe_df, ax=axes[i], scatter_kws={'alpha':0.5})
+        axes[i].set_title(f"{col} vs {target_col}")
+        axes[i].grid(True, alpha=0.3)
+
+    plt.suptitle(title, fontsize=16)
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+def plot_quality_gate_status(gate_results, title="検証ゲート (Quality Gates) ステータス"):
+    # ... existing code ...
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.axis('off')
+
+    rows = gate_results["gates"]
+    data = [[r["name"], f"{r['value']:.4f}", r["threshold"], r["status"]] for r in rows]
+
+    colors = []
+    for r in rows:
+        colors.append(['white', 'white', 'white', 'lightgreen' if r["status"] == "PASS" else 'tomato'])
+
+    table = ax.table(cellText=data,
+                    colLabels=["ゲート名", "現在値", "閾値", "判定"],
+                    cellColours=colors,
+                    loc='center',
+                    cellLoc='center')
+
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1.2, 1.8)
+
+    overall_color = 'green' if gate_results["overall_status"] == "PASS" else 'red'
+    plt.title(f"{title}\n総合判定: {gate_results['overall_status']}",
+              color=overall_color, fontsize=14, fontweight='bold')
+    plt.tight_layout()
+
+# ... existing code ...
+```
+
+
+---
+
+### 5) run_v7.py：Step2の収集に「ゲート別 stats / WIP平均」を追加して図を出す
+```python
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import sys
+
+# 実行スクリプトのディレクトリを基準にする（絶対パス解決）
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+if CURRENT_DIR not in sys.path:
+    sys.path.append(CURRENT_DIR)
+
+from simulator_v7 import run_monte_carlo_v7, latin_hypercube_sampling
+from analyzer_v7 import AnalyzerV7
+import visualizer_v7 as viz
+
+# 出力ディレクトリ
+OUT_DIR = os.path.join(CURRENT_DIR, "output")
+os.makedirs(OUT_DIR, exist_ok=True)
+
+def run_v7_pipeline():
+    print("=== DX4MGR Ver7: パス不整合解消・ドキュメント刷新モデル ===")
+
+    # 1. シナリオ読み込み
+    csv_path = os.path.join(CURRENT_DIR, "scenarios.csv")
+    if not os.path.exists(csv_path):
+        print(f"Error: {csv_path} not found.")
+        return
+
+    df_scenarios = pd.read_csv(csv_path)
+    analyzer = AnalyzerV7(OUT_DIR)
+
+    # 2. DOE (実験計画法) による探索（※ここは後で標準フロー版DOEへ拡張可）
+    print("\n[Step 1: DOE (実験計画法) によるパラメータ探索]")
+    doe_ranges = {
+        "rework_load_factor": (0.2, 1.5),
+        "dr_period": (30, 180),
+        "proto_duration": (10, 40),
+    }
+    fixed_params = {
+        "days": 180,
+        "arrival_rate": 0.5,
+        "small_exp_duration": 5,
+        "bundle_size": 3,
+        "approvers": 2,
+        "max_rework_cycles": 5,
+        "decay": 0.7,
+        "sampling_interval": 5.0
+    }
+
+    doe_samples = latin_hypercube_sampling(n_samples=30, param_ranges=doe_ranges)
+
+    print(f"  {len(doe_samples)} パターンのパラメータ組み合わせを検証中...")
+    doe_results = []
+    for sample in doe_samples:
+        params = {**fixed_params, **sample}
+        # DOEは軽く1トライアル評価（必要ならn_trials化）
+        res = run_monte_carlo_v7(n_trials=1, use_parallel=False, **params)[0]
+        doe_results.append({**sample, "throughput": res["summary"]["throughput"]})
+
+    doe_df = pd.DataFrame(doe_results)
+    viz.plot_doe_analysis(doe_df, title="Ver7 DOE 感度分析（標準フロー）")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step1_doe_analysis.png"))
+    plt.close()
+
+    # 3. メインシミュレーション (並列実行)
+    print("\n[Step 2: 各シナリオの並列モンテカルロシミュレーション]")
+    all_summaries = {}
+    all_waits = {}
+    all_reworks = {}
+    gate_reports = {}
+
+    gate_stats_by_scenario = {}
+    avg_wip_by_node_by_scenario = {}
+
+    criteria = {
+        "min_throughput": 2.0,
+        "max_wait": 30.0,
+        "max_cv": 0.5,
+        "max_ci_width": 0.2,
+        "max_reworks": 1.5
+    }
+
+    for _, row in df_scenarios.iterrows():
+        name = row['scenario_name']
+        print(f"  シナリオ実行中: {name} ...")
+
+        params = row.to_dict()
+        n_trials = int(params.pop('n_trials'))
+        params.pop('scenario_name')
+
+        # 型変換（必要に応じて追加）
+        for k in ['days', 'approvers', 'bundle_size']:
+            if k in params and pd.notna(params[k]):
+                params[k] = int(params[k])
+
+        trials = run_monte_carlo_v7(n_trials=n_trials, use_parallel=True, **params)
+
+        summaries = [t["summary"] for t in trials]
+        all_summaries[name] = summaries
+
+        all_waits[name] = [lt for t in trials for lt in t["logs"]["lead_times"]]
+        all_reworks[name] = [rc for t in trials for rc in t["logs"]["rework_counts"]]
+
+        # ゲート別stats（各trialの metrics.gate_stats を平均化）
+        # gate_stats は node_id で揃えて平均待ちを取りたいので、簡易に “trial平均→シナリオ平均”
+        gate_rows = []
+        for t in trials:
+            m = t.get("metrics", {})
+            for s in (m.get("gate_stats", []) or []):
+                gate_rows.append({"node_id": s.get("node_id"), "avg_wait_time": s.get("avg_wait_time", 0.0)})
+
+        if gate_rows:
+            df_gate = pd.DataFrame(gate_rows).groupby("node_id", as_index=False)["avg_wait_time"].mean()
+            gate_stats_by_scenario[name] = df_gate.to_dict("records")
+        else:
+            gate_stats_by_scenario[name] = []
+
+        # WIP（ノード別平均WIP）を trial 全体から平均
+        wip_rows = []
+        for t in trials:
+            m = t.get("metrics", {})
+            w = (m.get("wip", {}) or {}).get("avg_by_node", {}) or {}
+            for node_id, v in w.items():
+                wip_rows.append({"node_id": node_id, "avg_wip": float(v)})
+
+        if wip_rows:
+            df_wip = pd.DataFrame(wip_rows).groupby("node_id", as_index=False)["avg_wip"].mean()
+            avg_wip_by_node_by_scenario[name] = dict(zip(df_wip["node_id"], df_wip["avg_wip"]))
+        else:
+            avg_wip_by_node_by_scenario[name] = {}
+
+        gate_res = analyzer.run_quality_gates(summaries, criteria)
+        gate_reports[name] = gate_res
+
+        viz.plot_quality_gate_status(gate_res, title=f"Quality Gate: {name}")
+        plt.savefig(os.path.join(OUT_DIR, f"v7_step2_gate_{name}.png"))
+        plt.close()
+
+    # 4. 統計解析と比較
+    print("\n[Step 3: 統計的解析と比較]")
+    baseline_name = df_scenarios.iloc[0]['scenario_name']
+    comparison_summary = {}
+
+    print(f"  基準(Baseline): {baseline_name}")
+    for name in all_summaries.keys():
+        m, low, high = analyzer.calculate_confidence_interval([s["throughput"] for s in all_summaries[name]])
+        comparison_summary[name] = {"mean": m, "ci": [low, high]}
+
+        if name != baseline_name:
+            comp = analyzer.compare_scenarios(all_summaries[baseline_name], all_summaries[name])
+            sig_str = "【有意差あり】" if comp['statistically_significant'] else "【有意差なし】"
+            print(f"  - {name:20}: 改善率 {comp['improvement_pct']:+6.1f}% {sig_str}")
+
+    # 5. 可視化
+    print("\n[Step 4: 可視化レポートの生成]")
+    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver7標準フロー)")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step3_comparison_ci.png"))
+    plt.close()
+
+    viz.plot_wait_time_distribution(all_waits, title="Ver7 待ち時間(Lead Time)分布比較")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step3_compare_violin.png"))
+    plt.close()
+
+    viz.plot_rework_distribution(all_reworks, title="Ver7 差し戻し回数分布比較")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step3_compare_reworks.png"))
+    plt.close()
+
+    viz.plot_gate_wait_heatmap(gate_stats_by_scenario, title="Ver7 ゲート別 平均待ち時間（詰まり）")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step4_gate_wait_heatmap.png"))
+    plt.close()
+
+    viz.plot_gate_wip_heatmap(avg_wip_by_node_by_scenario, title="Ver7 ゲート別 平均WIP（滞留）")
+    plt.savefig(os.path.join(OUT_DIR, "v7_step4_gate_wip_heatmap.png"))
+    plt.close()
+
+    # 6. レポート保存
+    analyzer.save_analysis_report({
+        "criteria": criteria,
+        "gate_reports": gate_reports,
+        "comparison_summary": comparison_summary
+    }, "v7_final_analysis_report.json")
+
+    print(f"\n=== 全工程完了 ===")
+    print(f"画像および分析レポートは以下に保存されました:\n{os.path.abspath(OUT_DIR)}")
+
+if __name__ == "__main__":
+    run_v7_pipeline()
+```
+
+
+---
+
+## これで得られる「強力な可視化」
+- **ゲート別の平均待ち時間**：どこが詰まりか一目で分かる（SMALL_EXP / PROTO / BUNDLE / DR_GATE）
+- **ゲート別の平均WIP**：詰まりが「待ち」なのか「滞留量」なのかが見える
+  → たとえば「BUNDLE でWIPが増える＝束ね待ちがボトルネック」などが直感的に出ます
+
+---
+
+## 次の一手（品質をもう一段上げるなら）
+今の標準フロー側は、差し戻しで `Task` は増えますが、その `Task` が **WorkGateの処理時間に“確実に乗る”**ところはまだ弱いです。
+「増殖＝遅延の尾（P90/P95）が太る」を強くしたいなら、次は
+
+- 差し戻しで増えた Task 数に応じて、SMALL_EXP（またはPROTO）で追加作業時間を上乗せ
+
+を入れるのが効きます（この調整はモデルの表現力が一気に上がります）。
+
+
+🟩テスト・追加検証結果🟩
+
+Ver8をベースに、50サンプルのDOE（実験計画法）と5つのドラスティックな比較シナリオを用いた大規模検証を実施しました。
+実施内容
+•
+パラメータの拡張: 6種類の主要パラメータ（投入頻度、手戻り負荷、レビュー周期、バッチサイズ、リソース数、試作期間）を変動させ、組織の限界性能を調査しました。
+•
+検証シナリオの刷新: 「組織崩壊リスク」「極端なアジャイル」「硬直したウォーターフォール」「理想的なリーン」という、Baselineから大きく乖離した5つのシナリオで比較を行いました。
+•
+解析の実行: 新たに作成した run_v8_extensive.py により、並列モンテカルロシミュレーションを実行し、統計的有意差とボトルネックを特定しました。
+パラメータの名前と動機
+| パラメータ名 | 動機 | | :--- | :--- | | arrival_rate | 案件投入が組織容量を超えた際の「詰まり（相転移）」の限界点を特定するため。 | | rework_load_factor | 手戻りが軽微な修正か、全体波及を伴う泥沼状態（2.0倍）かによる感度を測るため。 | | dr_period | フィードバック頻度の短縮が、リードタイム短縮にどれほど寄与するかを把握するため。 | | bundle_size | 承認の塊（バッチサイズ）が、リトルの法則に基づきスループットをどう変化させるか検証するため。 | | approvers | リソース投入が、複雑な依存フローにおいて線形に効果を発揮するか確認するため。 | | proto_duration | 前工程での「仕込み」が、後段の手戻り削減による利益を上回るかバランスを見るため。 |
+結果に対する考察
+•
+アジャイル化の劇的な効果: Agile_Extreme（小バッチ・高頻度DR）は、Baselineに対してスループットが +530.3% という圧倒的な向上を示しました。これは、WIPの滞留を最小化することが組織のスループット最大化に直結することを証明しています。
+•
+巨大バッチのリスク: Waterfall_Rigid（大バッチ・低頻度DR）は、スループットが Baseline の -86.5% まで低下し、品質ゲートを「FAIL」しました。一度の滞留が全ての案件を巻き込むため、巨大な仕事単位は極めて非効率であることが示されました。
+•
+隠れた崩壊リスク: Collapse_Risk シナリオでは、スループットは維持できているものの、平均待ち時間が Baseline の 1.5 倍以上に増加しました。これは現場が限界状態で稼働していることを示しており、わずかな変動で破綻するリスクを孕んでいることが可視化されました。
+出力ファイル
+•
+v8_extensive_step1_doe.png: 50サンプルによる感度分析結果
+•
+v8_extensive_step3_ci.png: ドラスティック・シナリオ間の信頼区間比較
+•
+v8_extensive_step4_wait_heatmap.png: 各シナリオにおけるノード別詰まり箇所の可視化
+•
+v8_extensive_report.json: 詳細な数値データを含むレポート

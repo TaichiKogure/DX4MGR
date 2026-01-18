@@ -1,0 +1,35 @@
+{
+    "low_load": {
+        "approved_count": 216,
+        "throughput": 2.16,
+        "avg_wait": 0.03957178425450185,
+        "p90_wait": 0.0715019425612411,
+        "p95_wait": 0.2590921042813452,
+        "avg_wip": 0.55,
+        "avg_reworks": 0.10185185185185185,
+        "max_reworks": 2,
+        "utilization": 0.22000000000000003
+    },
+    "mid_load": {
+        "approved_count": 465,
+        "throughput": 4.65,
+        "avg_wait": 0.6300892174292897,
+        "p90_wait": 1.844866714582091,
+        "p95_wait": 2.1040542460768177,
+        "avg_wip": 4.06,
+        "avg_reworks": 0.25161290322580643,
+        "max_reworks": 3,
+        "utilization": 0.55
+    },
+    "high_load": {
+        "approved_count": 324,
+        "throughput": 3.24,
+        "avg_wait": 31.655580886311608,
+        "p90_wait": 54.22756513474493,
+        "p95_wait": 60.57495073024444,
+        "avg_wip": 321.86,
+        "avg_reworks": 0.44135802469135804,
+        "max_reworks": 5,
+        "utilization": 1.1
+    }
+}

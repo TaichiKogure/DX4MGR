@@ -21,7 +21,7 @@ def _const_func(val):
 def _exp_sample(rng, rate):
     return rng.exponential(1.0 / rate)
 
-def simulate_flow_v6(
+def simulate_flow_v7(
     days=90,
     arrival_vp_per_day=5.0,
     approvers=1,
@@ -36,7 +36,7 @@ def simulate_flow_v6(
     sampling_interval=1.0
 ):
     """
-    DX4MGR Sim Ver6 - 新エンジンへのアダプタ実装
+    DX4MGR Sim Ver7 - 新エンジンへのアダプタ実装
     """
     rng = np.random.default_rng(seed)
     engine = SimulationEngine(rng=rng)
@@ -135,11 +135,11 @@ def simulate_flow_v6(
 
 def _single_trial(args):
     params, seed = args
-    return simulate_flow_v6(**params, seed=seed)
+    return simulate_flow_v7(**params, seed=seed)
 
-def run_monte_carlo_v6(n_trials=100, use_parallel=True, **params):
+def run_monte_carlo_v7(n_trials=100, use_parallel=True, **params):
     """
-    モンテカルロシミュレーションの実行 (並列処理対応) - Ver6
+    モンテカルロシミュレーションの実行 (並列処理対応) - Ver7
     """
     args = [(params, i) for i in range(n_trials)]
     

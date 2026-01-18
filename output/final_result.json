@@ -1,0 +1,37 @@
+{
+    "summary": {
+        "completed_count": 135,
+        "throughput": 0.07397260273972603,
+        "lead_time_p50": 38.28014243386574,
+        "lead_time_p90": 77.08589877062528,
+        "lead_time_p95": 83.10717288806131,
+        "avg_reworks": 0.0,
+        "max_reworks": 0
+    },
+    "gate_stats": [
+        {
+            "node_id": "SMALL_EXP",
+            "queue_length": 0,
+            "processed_count": 188,
+            "avg_wait_time": 0.0
+        },
+        {
+            "node_id": "PROTO",
+            "queue_length": 94,
+            "processed_count": 89,
+            "avg_wait_time": 98.79083878599471
+        },
+        {
+            "node_id": "BUNDLE",
+            "queue_length": 2,
+            "processed_count": 29,
+            "avg_wait_time": 10.824347845600085
+        },
+        {
+            "node_id": "DR_GATE",
+            "queue_length": 0,
+            "processed_count": 29,
+            "avg_wait_time": 40.41888248490483
+        }
+    ]
+}
