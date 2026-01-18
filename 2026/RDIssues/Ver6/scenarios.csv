@@ -1,0 +1,6 @@
+scenario_name,days,arrival_vp_per_day,approvers,service_vp_per_day,p_rework,rework_load_factor,skill_factor,skill_at_dependency_resolution,dependency_level,coordination_penalty,n_trials
+01_Baseline,365,0.05,1,0.1,0.2,0.5,1.0,0.0,0.2,1.0,100
+02_Heavy_Rework_Load,365,0.05,1,0.1,0.2,2.0,1.0,0.0,0.2,1.0,100
+03_High_P_Rework,365,0.05,1,0.1,0.5,0.5,1.0,0.0,0.2,1.0,100
+04_Skill_Up_Rework_Mitigation,365,0.05,1,0.1,0.2,0.5,1.5,0.5,0.1,1.0,100
+05_Fast_DR_Cycle,365,0.1,1,0.2,0.2,0.5,1.0,0.0,0.2,1.0,100

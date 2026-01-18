@@ -1,0 +1,636 @@
+改良ポイント：
+小実験 → 結果判断
+試作検証 → 結果判断
+試作検証が3〜4個たまる → DR会議でゲート判断
+課題が出ると「小実験が増える」（＝差し戻しが“回数”より“重み”）
+
+というフィードバックを反映した形に改良したい。すなわち下記メモの部分である。
+
+「モデルを拡張する（おすすめ）
+rework_weight を使って、「戻ったときに追加のサービス時間（または追加の到着）」を増やす
+例：p_rework は発生確率
+追加パラメータ rework_load_factor を導入して、戻った仕事の“重さ”を調整」
+
+DR会議は大体半年または1年に一回程度のスパン。
+試作検証は大体３ヶ月に１−２回の枠組みです。
+ただし差し戻し（または追加課題）が見つかった場合緊急的に枠組みが増加することもあります。
+
+各パラメータとそれのアウトプットはなるべく地味でも可視化するように改良してください。
+
+
+
+以下その他全体議論メモ。
+
+## 1) 実運用で「組織の構造・過去の活動」とシミュレーションを紐づける考え方（現実⇄モデルの接着面）
+
+ポイントは **「パラメータを当てる」より先に、ログとモデルの“同じ出来事”を定義する**ことです。
+ここが曖昧だと、数字が増えた瞬間に「それっぽいけど当たらないモデル」になります。
+
+### A. まず決めるべき “辞書”（運用ルール）
+以下の4つを、現場で迷いが出ない粒度で定義します（これが紐づけの核です）。
+
+1. **Arrival（到着）**：いつ「判断待ちの案件」が発生したことにするか
+   - 例：実験結果が揃った時点／レビュー依頼を出した時点／稟議起票時点
+2. **Service（処理）**：いつ「判断が下りた」とするか
+   - 例：レビュー承認完了／判定会でGo判定／稟議決裁完了
+3. **Rework（差し戻し）**：どれを「同じ案件のやり直し」と数えるか
+   - 例：差し戻しコメントで再提出／条件変更で再試験／書類不備の差戻し
+4. **Dependency（依存・調整）**：どの待ちを「調整待ち」に含めるか
+   - 例：他部門の回答待ち、設備枠待ち、委員会待ち、データ整形待ち
+
+> ここが揃うと、過去ログから **到着率・処理率・差し戻し率・調整ペナルティ**を「推定」できるようになります。
+
+---
+
+## 2) Ver5パラメータを実組織に当てるときの“対応表”と注意点
+
+以下は「どのデータから作るか」と「ハマりどころ（事故るポイント）」のセットです。
+
+### 基本パラメータ（まずはここだけで運用可能）
+| モデル側 | 実世界での意味 | 現実データ例 | 注意点（罠） |
+|---|---|---|---|
+| `days` | 観測窓（分析期間） | 四半期、90日など | 期間を変えると分布の見え方が変わる（繁忙期混入に注意） |
+| `arrival_vp_per_day` | 判断待ち案件の発生ペース | 週の新規レビュー依頼数／日次の判定対象件数 | “作業開始”ではなく“判断待ち発生”で数える（ここズレやすい） |
+| `approvers` | 判断枠の並列数（意思決定サーバ数） | 判定会の枠数、承認者数、レビュー担当数 | 名簿人数じゃなく「実際に捌ける枠」。兼務で実効は落ちる |
+| `service_vp_per_day` | 判断処理能力（1枠あたり） | 1日あたりに完了できた判断数 | 会議バッチ処理（週1まとめて処理）だと単純換算で歪む |
+| `p_rework` | 差し戻しで戻る確率 | 差戻し件数 / 判断完了件数 | “学習ループ”と“手戻り”を混ぜると意味が変わるのでラベル分け推奨 |
+
+### 組織構造に関わるパラメータ（効くが、定義が曖昧になりやすい）
+| モデル側 | 実世界での意味 | 現実データ例 | 注意点（罠） |
+|---|---|---|---|
+| `dependency_level` | 依存の強さ（調整待ちが出やすい度合い） | 依存先部門数、外部待ちステップ数、ブロック理由の割合 | 0〜1のスケールにする“換算ルール”が必要（後述） |
+| `coordination_penalty` | 依存1単位あたりの痛さ | 調整に費やした日数/回、会議待ち日数 | 依存が増えると線形以上に痛くなることが多い（単純化しすぎ注意） |
+| `skill_factor` | 判断処理の速さ/質の総合係数 | テンプレ導入後の処理時間改善、熟練者比率 | 個人評価に見えないよう「仕組み・標準化の成熟度」として扱うのが安全 |
+| `skill_at_dependency_resolution` | 依存を“ほどく”能力 | 調整のリードタイム短縮、合意形成の速さ | これも個人ではなく「調整の型（会議体・境界・API）」に寄せて定義すると揉めない |
+
+---
+
+## 3) 当てはめで失敗しがちなポイント（実務で効く注意事項）
+
+### ① 単位（VP）が揺れると全部壊れる
+“VP”がストーリーによって変わると、`arrival_vp_per_day` も `service_vp_per_day` も同時にズレます。
+**VPの定義は固定**し、難しければ最初は「案件数/日」で運用し、VPは後から導入が安全です。
+
+### ② 「待ち時間」の定義を1つに固定する
+現場は「待ち」と言っても混ぜがちです（レビュー待ち、実験待ち、設備待ち…）。
+モデルで見たいのが“判断待ち”なら、ログも**判断待ちだけ**に寄せるのがコツです。
+
+### ③ 校正（キャリブレーション）は“平均”より“分布（P90/CCDF）”でやる
+上層説明目的なら特に、モデル合わせは
+- スループット平均
+ではなく
+- **待ち時間のP90/P95**
+- **CCDF（超過確率）**
+に寄せる方が「現場感」と一致します。
+
+---
+
+## 4) 実運用に向けた“進め方”のおすすめ（最短ルート）
+
+1. **Baselineのログを1期間分だけ用意**（粒度は粗くてOK）
+   - 最低限：案件ID、判断待ち発生日時、判断完了日時、差戻し有無、依存（ブロック理由）
+2. そのログからまず **5つだけ推定**してBaseline固定
+   - `arrival_vp_per_day`, `approvers`, `service_vp_per_day`, `p_rework`, `days`
+3. 依存系（`dependency_level`/`coordination_penalty`）は **後から**
+   - 最初は「依存なし」で合うか確認 → 合わない分を依存で説明する、の順が安全
+
+---
+
+## 5) プログラムを“わかりやすく改良”するなら、効く場所（優先順位）
+
+### 改良ポイント1：設定をコードから分離（数字が増えても迷子にならない）
+- DOE範囲、ゲート閾値、固定パラメータを **JSON設定ファイル**に逃がす
+- 「この組織の前提」を1ファイルに閉じ込められます
+
+### 改良ポイント2：入力チェック（パラメータの意味の破綻を早期検知）
+- `p_rework` が 0〜1 の範囲外
+- `arrival_vp_per_day` が負
+- `approvers` が0
+などを即エラーにする（運用事故が激減）
+
+### 改良ポイント3：実データ→パラメータ推定の入口を作る（最重要）
+- `history.csv`（案件ログ）から、Baseline推定値を出す関数を用意
+- 推定結果＋採用した定義（Arrival/Service/Rework…）をレポートに残す
+  → 上層にも説明しやすくなります
+
+---
+
+## 6) 具体的な改良案（コード変更例：設定ファイル化＋CLI化）
+
+「数字が増えた」問題に一番効くのは、まず **runスクリプトからハードコードを消す**ことです。
+以下は `run_v5.py` を **設定JSONを読む形**にする最小改修案です（追加依存なし）。
+
+```python
+import os
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import sys
+import json
+import argparse
+
+# 自身のディレクトリをパスに追加（インポートエラー回避のため）
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from simulator_v5 import run_monte_carlo_v5, latin_hypercube_sampling, simulate_flow_v5
+from analyzer_v5 import AnalyzerV5
+import visualizer_v5 as viz
+
+# 出力ディレクトリ
+OUT_DIR = "2026/RDIssues/Ver5/output"
+os.makedirs(OUT_DIR, exist_ok=True)
+
+def load_config(config_path: str) -> dict:
+    with open(config_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def run_v5_pipeline(config_path: str):
+    print("=== DX4MGR Ver5: 実験主導型シミュレーション・検証ゲートフロー ===")
+
+    cfg = load_config(config_path)
+
+    # 1. シナリオ読み込み
+    csv_path = cfg.get("scenarios_csv", "2026/RDIssues/Ver5/scenarios.csv")
+    if not os.path.exists(csv_path):
+        print(f"Error: {csv_path} not found.")
+        return
+
+    df_scenarios = pd.read_csv(csv_path)
+    analyzer = AnalyzerV5(OUT_DIR)
+
+    # 2. DOE (実験計画法) による探索
+    print("\n[Step 1: DOE (実験計画法) によるパラメータ探索]")
+
+    doe_ranges = cfg.get("doe_ranges", {
+        "skill_factor": (0.8, 1.5),
+        "dependency_level": (0.1, 0.6),
+        "p_rework": (0.05, 0.3)
+    })
+    doe_n_samples = int(cfg.get("doe_n_samples", 30))
+
+    fixed_params = cfg.get("doe_fixed_params", {
+        "days": 90,
+        "arrival_vp_per_day": 5.0,
+        "service_vp_per_day": 6.0,
+        "approvers": 1
+    })
+
+    doe_samples = latin_hypercube_sampling(n_samples=doe_n_samples, param_ranges=doe_ranges)
+
+    print(f"  {len(doe_samples)} パターンのパラメータ組み合わせを検証中...")
+    doe_results = []
+    for sample in doe_samples:
+        params = {**fixed_params, **sample}
+        res = simulate_flow_v5(**params, seed=42)
+        doe_results.append({**sample, "throughput": res["summary"]["throughput"]})
+
+    doe_df = pd.DataFrame(doe_results)
+    viz.plot_doe_analysis(doe_df)
+    plt.savefig(f"{OUT_DIR}/v5_step1_doe_analysis.png")
+    plt.close()
+
+    # 3. メインシミュレーション (並列実行)
+    print("\n[Step 2: 各シナリオの並列モンテカルロシミュレーション]")
+    all_summaries = {}
+    all_waits = {}
+    gate_reports = {}
+
+    # 検証ゲートの基準 (Quality Gates)
+    criteria = cfg.get("criteria", {
+        "min_throughput": 4.5,
+        "max_wait": 12.0,
+        "max_cv": 0.4,
+        "max_ci_width": 0.15
+    })
+
+    use_parallel = bool(cfg.get("use_parallel", True))
+
+    for _, row in df_scenarios.iterrows():
+        name = row["scenario_name"]
+        print(f"  シナリオ実行中: {name} ...")
+
+        params = row.to_dict()
+        n_trials = int(params.pop("n_trials"))
+        params.pop("scenario_name")
+
+        # 型変換
+        for k in ["days", "approvers"]:
+            if k in params:
+                params[k] = int(params[k])
+
+        # モンテカルロ実行 (並列処理で高速化)
+        trials = run_monte_carlo_v5(n_trials=n_trials, use_parallel=use_parallel, **params)
+
+        summaries = [t["summary"] for t in trials]
+        all_summaries[name] = summaries
+        all_waits[name] = [w for t in trials for w in t["logs"]["wait_times"]]
+
+        # 検証ゲート判定 (Quality Gates)
+        gate_res = analyzer.run_quality_gates(summaries, criteria)
+        gate_reports[name] = gate_res
+
+        # ゲートステータスの視覚化
+        viz.plot_quality_gate_status(gate_res, title=f"Quality Gate: {name}")
+        plt.savefig(f"{OUT_DIR}/v5_step2_gate_{name}.png")
+        plt.close()
+
+    # 4. 統計解析と比較 (仮説検定・信頼区間)
+    print("\n[Step 3: 統計的解析と比較]")
+    baseline_name = df_scenarios.iloc[0]["scenario_name"]
+    comparison_summary = {}
+
+    print(f"  基準(Baseline): {baseline_name}")
+    for name in all_summaries.keys():
+        m, low, high = analyzer.calculate_confidence_interval([s["throughput"] for s in all_summaries[name]])
+        comparison_summary[name] = {"mean": m, "ci": [low, high]}
+
+        if name != baseline_name:
+            comp = analyzer.compare_scenarios(all_summaries[baseline_name], all_summaries[name])
+            sig_str = "【有意差あり】" if comp["statistically_significant"] else "【有意差なし】"
+            print(f"  - {name:20}: 改善率 {comp['improvement_pct']:+6.1f}% {sig_str}")
+
+    # 5. 全体可視化の生成
+    print("\n[Step 4: 可視化レポートの生成]")
+    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループットと95%信頼区間")
+    plt.savefig(f"{OUT_DIR}/v5_step3_comparison_ci.png")
+    plt.close()
+
+    viz.plot_wait_time_distribution(all_waits, title="Ver5 待ち時間分布比較 (P90/P95強調)")
+    plt.savefig(f"{OUT_DIR}/v5_step3_compare_violin.png")
+    plt.close()
+
+    viz.plot_ccdf(all_waits, title="納期超過確率 (CCDF) 比較")
+    plt.savefig(f"{OUT_DIR}/v5_step3_compare_ccdf.png")
+    plt.close()
+
+    # 6. 分析レポートの保存
+    analyzer.save_analysis_report({
+        "criteria": criteria,
+        "gate_reports": gate_reports,
+        "comparison_summary": comparison_summary
+    }, "v5_final_analysis_report.json")
+
+    print("\n=== 全工程完了 ===")
+    print(f"画像および分析レポートは以下に保存されました:\n{os.path.abspath(OUT_DIR)}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config",
+        default="2026/RDIssues/Ver5/config_v5.json",
+        help="Ver5の設定JSONへのパス"
+    )
+    args = parser.parse_args()
+    run_v5_pipeline(args.config)
+```
+
+
+そして設定ファイル（新規）を作ります。
+
+```json
+{
+  "scenarios_csv": "2026/RDIssues/Ver5/scenarios.csv",
+  "use_parallel": true,
+  "criteria": {
+    "min_throughput": 4.5,
+    "max_wait": 12.0,
+    "max_cv": 0.4,
+    "max_ci_width": 0.15
+  },
+  "doe_n_samples": 30,
+  "doe_fixed_params": {
+    "days": 90,
+    "arrival_vp_per_day": 5.0,
+    "service_vp_per_day": 6.0,
+    "approvers": 1
+  },
+  "doe_ranges": {
+    "skill_factor": [0.8, 1.5],
+    "dependency_level": [0.1, 0.6],
+    "p_rework": [0.05, 0.3]
+  }
+}
+```
+
+
+---
+
+## 次に確認したい（“実組織に当てる”作業の設計が一気に具体化します）
+1) あなたの組織で「判断ゲート」は主に何ですか？（例：判定会、稟議、レビュー、設備予約の許可…）
+2) 過去ログとして取りやすいのはどれですか？
+- **A. 案件の開始/終了日時**（ざっくり）
+- **B. “判定待ち”に入った日時と抜けた日時**（理想）
+- **C. 差し戻し回数**
+- **D. ブロック理由（他部門待ち等）**
+
+この2点が分かれば、「どのパラメータはログから推定できて、どれはヒアリング初期値で置くか」を切り分けて、**推定用のCSVフォーマットと推定関数（自動キャリブレーションの入口）**まで提案できます。
+
+判断ゲートは主にDR会議、過去ログとしては活動開始、終了日時、終了予定日時。小実験⇨結果の判断　⇨ 試作検証⇨結果の判断　⇨試作検証が3−４個セットで判断しDRのゲート　、差し戻しは回数よりも重み（大抵試作検証で課題が出て小実験が増える構図）、ブロック理由はあまりわからないです。これで推定用フォーマットや関数提案できる？
+
+はい、**その条件（DR会議が主ゲート／ログは開始・終了・終了予定）でも「推定用フォーマット」と「推定関数（入口）」は提案できます**。
+ただし正直に言うと、現状ログだけだと **「DR待ち（ゲート待ち）」と「実験・試作そのものの所要」を分離して推定するのが難しい**ので、**“最小1列だけ追加”**するのがいちばんコスパが良いです（後述）。
+
+以下、実運用に落とせる形で整理します。
+
+---
+
+## 1) あなたのプロセスをVer5に写像する（どう割り切るか）
+
+あなたの流れはざっくりこうですよね：
+
+- 小実験 → 結果判断
+- 試作検証 → 結果判断
+- 試作検証が3〜4個たまる → DR会議でゲート判断
+- 課題が出ると「小実験が増える」（＝差し戻しが“回数”より“重み”）
+
+この場合、Ver5の単一ゲートモデルに当てるなら、**“ジョブ＝DRに上げる判断パッケージ（3〜4試作の束）”**にするのが一番自然です。
+
+- **arrival（到着）**：DRに上げるパッケージが出来上がる頻度
+- **service（処理）**：DR会議で判断される処理能力（1回のDRで何パッケージ裁けるか）
+- **rework（差し戻し）**：DRで「追加の小実験/再検証」が必要になる確率・重さ
+- **dependency（依存）**：ブロック理由が取れないなら、まずは0〜小さめで固定し、後から拡張
+
+---
+
+## 2) 推定用CSVフォーマット（最小構成と推奨構成）
+
+### A. **最小構成**（今あるログだけで作れる）
+「DRパッケージ」単位（＝DRで判断される塊）で1行にします。
+
+```csv
+package_id,project_id,package_type,started_at,planned_finish_at,finished_at
+P001,PRJ_A,DR_PACKAGE,2025-10-01,2025-11-15,2025-11-20
+P002,PRJ_A,DR_PACKAGE,2025-10-05,2025-11-25,2025-12-02
+```
+
+
+- `started_at`：そのパッケージ（3〜4試作セット）を作り始めた日（定義を固定）
+- `finished_at`：パッケージが“DRに上げられる状態になった”日（または実績終了日）
+- `planned_finish_at`：終了予定（予測可能性の評価に使える）
+
+> 限界：これだけだと、`finished_at` 以降に「DR会議がいつだったか」が分からないので、**ゲート待ち時間（queue wait）を切り出せません**。
+> ただし、**到着率（arrival）**と**“DRに上がるまでのリードタイム分布”**は作れます。
+
+---
+
+### B. **推奨構成（追加1列で世界が変わる）**
+上の最小構成に、これを足してください：
+
+- `dr_decision_at`（DRで実際に判断された日）
+
+```csv
+package_id,project_id,package_type,started_at,planned_finish_at,finished_at,dr_decision_at,dr_outcome,rework_weight
+P001,PRJ_A,DR_PACKAGE,2025-10-01,2025-11-15,2025-11-20,2025-11-28,CONDITIONAL_GO,0.6
+P002,PRJ_A,DR_PACKAGE,2025-10-05,2025-11-25,2025-12-02,2025-12-05,GO,0.0
+```
+
+
+- `finished_at → dr_decision_at` が **DR待ち時間**（＝シミュレーションの `avg_wait` と整合しやすい）
+- `dr_outcome` は最初は `GO / NO_GO / CONDITIONAL_GO` くらいで十分
+- `rework_weight` はあなたの言う「回数じゃなく重み」を入れる箱（0.0〜1.0など運用で決める）
+
+> ブロック理由が無いのは問題になりません。依存系は初期は固定でOK。
+> まずは **DR待ち（判断待ち）**を切り出すのが最優先です。
+
+---
+
+## 3) このCSVから何が推定できるか（Ver5パラメータへの変換）
+
+### 推定できる（現実ログから作れる）
+- `arrival_vp_per_day`
+  - 観測期間内の **DRパッケージ数 / 日数**
+- `p_rework`（差し戻し確率）
+  - `dr_outcome` が `CONDITIONAL_GO` や `NO_GO` の割合
+  - もしくは `rework_weight > 0` の割合
+- “差し戻しの重み”
+  - Ver5の現状パラメータは確率 `p_rework` しかないので、**重みは別パラメータ（後述の改良案）で吸収**するのがきれい
+
+### 推定が難しい（追加ログがないと誤差が出る）
+- `approvers` と `service_vp_per_day`
+  - DR会議の「枠（同時に処理できる判断数）」と「処理率」をどう置くかが肝
+  - `dr_decision_at` があると、**1回のDRで何件決めたか**（同日決裁数）から **実効キャパ**を推定できます
+
+---
+
+## 4) 推定関数（提案：まずは“入口”を作る）
+
+「CSVを読んで、推定値と根拠（何件/何日/どの定義）を返す」関数を用意します。
+※ここでは新規ファイル案として提示します（プロジェクトに追加しやすい形）。
+
+```python
+import pandas as pd
+import numpy as np
+
+def estimate_v5_params_from_dr_packages(
+    csv_path: str,
+    window_start: str | None = None,
+    window_end: str | None = None,
+    time_unit_days: float = 1.0,
+) -> dict:
+    """
+    DRパッケージログから、Ver5の初期パラメータを推定する（第一段階）。
+    必須列: package_id, started_at, finished_at
+    推奨列: dr_decision_at, dr_outcome, rework_weight
+    """
+    df = pd.read_csv(csv_path)
+
+    # parse dates
+    for col in ["started_at", "planned_finish_at", "finished_at", "dr_decision_at"]:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors="coerce")
+
+    # analysis window
+    if window_start is not None:
+        ws = pd.to_datetime(window_start)
+        df = df[df["started_at"] >= ws]
+    if window_end is not None:
+        we = pd.to_datetime(window_end)
+        df = df[df["started_at"] <= we]
+
+    # observation length
+    t0 = df["started_at"].min()
+    t1 = df["started_at"].max()
+    if pd.isna(t0) or pd.isna(t1) or len(df) == 0:
+        raise ValueError("推定対象データが空です（started_atを確認してください）。")
+
+    obs_days = max((t1 - t0).days, 1)
+
+    # arrival rate: packages per day
+    arrival_per_day = len(df) / obs_days
+
+    # lead time (build) distribution: finished_at - started_at
+    build_days = None
+    if "finished_at" in df.columns:
+        build_days = (df["finished_at"] - df["started_at"]).dt.total_seconds() / (3600 * 24)
+        build_days = build_days.dropna()
+
+    # DR wait distribution: dr_decision_at - finished_at
+    dr_wait_days = None
+    if "dr_decision_at" in df.columns and "finished_at" in df.columns:
+        dr_wait_days = (df["dr_decision_at"] - df["finished_at"]).dt.total_seconds() / (3600 * 24)
+        dr_wait_days = dr_wait_days.dropna()
+
+    # rework probability (first approximation)
+    p_rework = None
+    if "rework_weight" in df.columns:
+        p_rework = float((df["rework_weight"].fillna(0.0) > 0.0).mean())
+    elif "dr_outcome" in df.columns:
+        p_rework = float(df["dr_outcome"].isin(["NO_GO", "CONDITIONAL_GO"]).mean())
+
+    # DR capacity proxy: decisions per decision-day
+    service_per_day = None
+    if "dr_decision_at" in df.columns:
+        g = df.dropna(subset=["dr_decision_at"]).copy()
+        g["decision_day"] = g["dr_decision_at"].dt.date
+        if len(g) > 0:
+            decisions_per_day = g.groupby("decision_day")["package_id"].nunique()
+            service_per_day = float(decisions_per_day.mean())
+
+    return {
+        "arrival_vp_per_day": float(arrival_per_day),
+        "p_rework": None if p_rework is None else float(p_rework),
+        "observed_days": int(obs_days),
+        "build_time_days": {
+            "mean": None if build_days is None or len(build_days) == 0 else float(build_days.mean()),
+            "p90": None if build_days is None or len(build_days) == 0 else float(np.percentile(build_days, 90)),
+        },
+        "dr_wait_days": {
+            "mean": None if dr_wait_days is None or len(dr_wait_days) == 0 else float(dr_wait_days.mean()),
+            "p90": None if dr_wait_days is None or len(dr_wait_days) == 0 else float(np.percentile(dr_wait_days, 90)),
+        },
+        "service_vp_per_day_proxy": service_per_day,
+        "notes": {
+            "arrival_definition": "started_atベースでDRパッケージ流入を推定（定義は運用で固定してください）",
+            "service_definition": "dr_decision_atがある場合、1日あたりのDR決裁件数平均を使用（会議バッチは注意）",
+            "rework_definition": "rework_weight>0 または outcomeがNO_GO/CONDITIONAL_GO をrework扱い",
+        }
+    }
+```
+
+
+この関数の出力を「Baseline推定値」として、シミュレーションの `scenarios.csv` の初期値に流し込めます。
+
+---
+
+## 5) “差し戻しは重み”問題への対処（重要）
+
+Ver5の現状は `p_rework` が「戻る/戻らない」だけなので、あなたの現実（課題が出ると“小実験が増える”）を表現するには、次のどちらかが必要です：
+
+1) **運用で割り切る（最短）**
+- `rework_weight` を 0/1 に丸めて、まず `p_rework` として扱う
+- “重み”は別途レポート（平均追加日数）で見せる
+
+2) **モデルを拡張する（おすすめ）**
+- `rework_weight` を使って、「戻ったときに追加のサービス時間（または追加の到着）」を増やす
+  - 例：`p_rework` は発生確率
+  - 追加パラメータ `rework_load_factor` を導入して、戻った仕事の“重さ”を調整する
+
+ここは、あなたの現実の説明力が一気に上がる改良ポイントです。
+
+---
+はい、**ここでの「差し戻し」は“実験の追加”にも“失敗（手戻り）”にも例えられます**。ただし、そのまま同一視すると運用上ブレるので、業務で使えるように **「差し戻し＝ゲートを通過できず、前工程（または同工程）に戻って追加の作業が発生すること」** と再定義しておくのがコツです。
+
+以下、**業務に定義し直したときの使い方**を、誤解が出にくい形で整理します。
+
+---
+
+## 1. 「差し戻し」は2種類に分けると実務で強い
+
+### A. 悪い差し戻し（手戻り・ムダ）
+**定義（業務）**：最初から満たすべき前提（情報・合意・形式・手順）不足により、同じ目的のためにやり直しが発生すること。
+**例**：
+- 依頼書の必須項目漏れで稟議が戻る
+- 測定条件が合意されておらず、データが「使えない」と再試験
+- レビュー観点が共有されておらず、指摘が後出しで大量に出る
+
+→ これは基本的に**減らす対象**です（再発防止が効く）。
+
+### B. 必要な差し戻し（学習ループ・実験の追加）
+**定義（業務）**：結果が基準に届かない／仮説が棄却されたため、次の仮説・条件で追加検証が必要になり、工程をループすること。
+**例**：
+- 材料AがNGで材料Bに切替えて再試作
+- 信頼性が規格外で設計を変更して再評価
+- 競合ベンチで想定外が出て、評価項目を追加
+
+→ これはゼロにはできません。論点は **「ループの回し方（重さ・判断待ち・同時多発）」** です。
+
+---
+
+## 2. 「差し戻し負荷（追加負荷）」として定義し直すとどう使える？
+
+あなたの文脈の「差し戻しは順番を戻すだけでなく、作業負荷が増える（小実験の増加など）」という発想は、業務定義に落とすとこうなります：
+
+> **差し戻し負荷係数＝差し戻し1回あたりに上乗せされる“追加作業量”の平均（段取り・追加実験・再資料化・再調整）**
+
+つまり「戻る」の本質は、単なる戻りではなく **“追加の工数・設備拘束・関係者合意の再取得”が増える**ことです。
+この定義にすると、現場の会話が「誰が悪い」から「どの追加負荷が支配的か」に移ります。
+
+---
+
+## 3. 具体的な業務での“写像”（そのままラベルとして使える）
+
+差し戻しを、R&Dや開発の現実に合わせて「イベント名」として置くと運用しやすいです。
+
+| モデル上の差し戻し | 業務イベント定義（例） | 増える負荷の中身（例） |
+|---|---|---|
+| 判定ゲートでNG → 戻る | **判定保留／追加データ要求** | 追加測定、解析のやり直し、条件再設定 |
+| 書類・依頼の差し戻し | **申請差戻し（不備・根拠不足）** | 再作成、関係者再確認、再稟議 |
+| 試作・実験のやり直し | **条件変更による再試作** | 試作段取り、材料手配、設備再予約 |
+| レビュー差し戻し | **レビュー指摘による再提出** | 修正、再レビュー待ち、レビュー準備コスト |
+| 依存先で詰まって戻る | **他部門回答待ちで仕様再調整** | 調整会議、合意形成、仕様変更管理 |
+
+ポイントは、「差し戻し」を一語で済ませず、**“何が原因で戻ったか”の粒度**を最低限持つことです（改善策の紐付けができるようになります）。
+
+---
+
+## 4. 実務での使い方（マネジメント上の用途）
+
+### 使い方1：差し戻しを「品質」ではなく「負荷の増殖」として説明する
+上層向けにはこの言い方が通りやすいです。
+
+- 「差し戻しが多い」＝精神論に聞こえがち
+- 「差し戻しは**追加負荷を増殖**させ、リードタイムの尾（P90）を太らせる」＝意思決定の話になる
+
+### 使い方2：改善策を2系統に分けて提案できる
+差し戻しが起きたとき、打ち手は実は2種類です。
+
+- **発生確率を下げる**（差し戻しそのものを減らす）
+  - DoR（着手条件）整備、テンプレ、事前合意、チェックリスト
+- **1回あたりの負荷を軽くする**（差し戻しが起きても痛くしない）
+  - 実験のモジュール化、並列化、段取り短縮、解析自動化、判定会の即時枠
+
+「rework_load_factor」は後者（痛さの軽減）を数字で議論できるのが強みです。
+
+### 使い方3：「学習ループ」を否定せずに、暴走だけ止められる
+R&Dは学習ループが本質なので、上層にこう説明できます：
+
+- 学習のための差し戻しは必要
+- ただし **ループが重い／判断待ちが長い／同時多発** だと詰まりに変わる
+- だから管理対象は「回数」より **“回すコスト（負荷）”と“滞留”**
+
+---
+
+## 5. 1分で合意できる「業務定義」テンプレ（そのまま使える文）
+
+社内説明・運用ルールとしては、まずこのくらいが適切です。
+
+```plain text
+差し戻しとは、判定（受け入れ・合意・Go/No-Go）に必要な条件を満たさず、
+前工程に戻って追加作業が発生すること。
+差し戻しには「手戻り（ムダ）」と「学習ループ（必要）」がある。
+我々は差し戻し回数ではなく、差し戻しによる追加負荷（工数・設備拘束・調整）と、
+それがP90リードタイムに与える影響を管理する。
+```
+
+
+---
+
+## 確認（1つだけ）
+あなたの現場の「差し戻し」で一番支配的なのは、次のどれに近いですか？
+
+1. **書類・稟議・手配の差戻し**（不備・根拠不足）
+2. **判定会（Go/No-Go）の保留・持ち越し**（判断待ち）
+3. **実験・試作の条件変更による再実行**（学習ループ）
+4. **他部門依存での再調整**（合意形成・調整コスト）
+
+これが分かると、「差し戻し負荷」を業務KPIとして置くときの**ラベル設計（分類）**と、改善策の出し方をより具体に固定できます。
