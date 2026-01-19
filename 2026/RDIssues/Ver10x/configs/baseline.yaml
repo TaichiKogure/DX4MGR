@@ -1,0 +1,22 @@
+# DX4MGR Sim Ver9.2 Baseline Configuration
+days: 365
+arrival_rate: 0.5
+small_exp_duration: 5
+proto_duration: 20
+bundle_size: 3
+dr_period: 90
+dr_capacity: 10
+dr_quality: 0.8
+rework_load_factor: 1.0
+max_rework_cycles: 5
+decay: 0.7
+rework_beta_a: 2.0
+rework_beta_b: 5.0
+rework_task_type_mix: 1.0
+conditional_prob_ratio: 0.8
+decision_latency_days: 2.0
+n_senior: 1
+n_coordinator: 1
+n_new: 0
+base_seed: 42
+n_trials: 100
