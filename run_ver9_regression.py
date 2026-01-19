@@ -81,6 +81,7 @@ def run_regression():
     
     for scn in scenarios:
         print(f"Testing scenario: {scn['name']}")
+        # Ver9の回帰テストでは、ベースラインが simulator_v8 に基づいているため、意図的に simulator_v8 を使用
         trials = run_monte_carlo_v8(n_trials=n_trials, use_parallel=False, **scn['params'])
         
         throughputs = [t["summary"]["throughput"] for t in trials]
@@ -88,7 +89,7 @@ def run_regression():
         
         base_mean_tp = baseline[scn['name']]["throughput"]["mean"]
         
-        # 許容誤差 1% (シード固定されていれば 0 になるはずだが、浮動小数点誤差や微妙な変更を考慮)
+        # 許容誤差 1e-6 (ベースラインとの厳密な一致を確認)
         diff_tp = abs(current_mean_tp - base_mean_tp)
         if diff_tp > 1e-6:
             print(f"  [FAIL] Throughput mismatch: Current={current_mean_tp}, Baseline={base_mean_tp}, Diff={diff_tp}")

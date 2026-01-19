@@ -1,7 +1,7 @@
-# DX4MGR Ver8: 標準フロー・WIP可視化強化モデル
+# DX4MGR Ver9: 標準フロー・WIP可視化強化モデル
 
 ## 概要
-Ver8では、シミュレーションのメインフローを `runner/adapters.py` の標準フロー（SMALL_EXP → PROTO → BUNDLE → DR）に差し替え、ゲート別の「詰まり（待ち時間・WIP）」を強力に可視化する機能を導入しました。
+Ver9（Ver8強化版）では、シミュレーションのメインフローを `runner/adapters.py` の標準フロー（SMALL_EXP → PROTO → BUNDLE → DR）に差し替え、ゲート別の「詰まり（待ち時間・WIP）」を強力に可視化する機能を導入しました。
 これにより、開発プロセスのどこでボトルネックが発生しているかを直感的に把握することが可能になりました。
 
 ## 主な変更点
@@ -20,7 +20,7 @@ Ver8では、シミュレーションのメインフローを `runner/adapters.p
 
 ## 実行方法
 ```bash
-python3 2026/RDIssues/Ver8/run_v8.py
+python3 2026/RDIssues/Ver9/run_v8.py
 ```
 
 ## 解析結果の見方
