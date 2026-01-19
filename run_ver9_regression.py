@@ -5,7 +5,7 @@ import numpy as np
 
 # プロジェクトルートとVer9のパスを通す
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-VER9_DIR = os.path.join(CURRENT_DIR, "2026/RDIssues/Ver9")
+VER9_DIR = os.path.join(CURRENT_DIR, "2026/RDIssues/archive/Ver9")
 if VER9_DIR not in sys.path:
     sys.path.append(VER9_DIR)
 
