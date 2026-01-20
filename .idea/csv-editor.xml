@@ -3,7 +3,28 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/2026/RDIssues/Ver10x/output/job_details_01_Baseline.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver10x/output/job_details_15_heavy1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver10x/runner/scenarios_test.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver10x/scenarios.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

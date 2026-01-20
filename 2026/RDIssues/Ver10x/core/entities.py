@@ -16,9 +16,9 @@ class Approver:
 
 # Step 6: 承認者タイプの定義
 APPROVER_TYPES = {
-    "Senior": {"capacity": 10, "quality": 0.95},
-    "Coordinator": {"capacity": 5, "quality": 0.8},
-    "New": {"capacity": 2, "quality": 0.6}
+    "Senior": {"capacity": 7, "quality": 0.76},
+    "Coordinator": {"capacity": 3, "quality": 0.7},
+    "New": {"capacity": 1, "quality": 0.4}
 }
 
 @dataclass
