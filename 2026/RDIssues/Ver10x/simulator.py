@@ -96,6 +96,31 @@ def simulate_standard_flow(
             "max_reworks": m["summary"]["max_reworks"],
         }
 
+    # Job詳細ログ (摩擦の検証用など)
+    job_logs = []
+    
+    def collect_job_logs(job_list):
+        for job in job_list:
+            # 自身の履歴から抽出
+            for h in job.history:
+                if h.get("event") == "START_WORK":
+                    job_logs.append({
+                        "job_id": job.job_id,
+                        "node_id": h.get("node_id"),
+                        "base_duration": h.get("base_duration"),
+                        "effective_duration": h.get("effective_duration"),
+                        "friction_multiplier": h.get("friction_multiplier"),
+                        "n_servers": h.get("n_servers"),
+                        "wait_time": h.get("wait_time")
+                    })
+            # バンドルされている場合は子要素も探索
+            if hasattr(job, "bundle_items") and job.bundle_items:
+                collect_job_logs(job.bundle_items)
+
+    collect_job_logs(engine.results["completed_jobs"])
+    completed_count = len(engine.results["completed_jobs"])
+    
+
     return {
         "summary": summary,
         "metrics": m,
@@ -105,6 +130,7 @@ def simulate_standard_flow(
             "rework_weights": m.get("raw_rework_weights", []),
             "proliferated_tasks": m.get("raw_proliferated_tasks", []),
             "wip_history": m.get("wip", {}).get("history", []),
+            "job_logs": job_logs,
         }
     }
 

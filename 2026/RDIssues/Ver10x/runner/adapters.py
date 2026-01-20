@@ -53,6 +53,10 @@ def setup_standard_flow(rng, **params):
     if not approvers:
         approvers.append(Approver("default", "Senior", 10, 0.9))
     
+    # 摩擦設定
+    friction_model = params.get("friction_model", "linear")
+    friction_alpha = float(params.get("friction_alpha", 0.05))
+
     # ノード構築
     # 1. 小実験
     small_exp_gate = WorkGate(
@@ -60,16 +64,20 @@ def setup_standard_flow(rng, **params):
         n_servers=999, # 無制限
         duration_dist=partial(_exp_dist, rng, params.get("small_exp_duration", 5)),
         next_node_id="PROTO",
-        task_type=TaskType.SMALL_EXP
+        task_type=TaskType.SMALL_EXP,
+        friction_model=friction_model,
+        friction_alpha=friction_alpha
     )
     
     # 2. 試作
     proto_gate = WorkGate(
         "PROTO", engine,
-        n_servers=5, # 試作ラインは有限
+        n_servers=int(params.get("n_servers_proto", 5)), # パラメータ化
         duration_dist=partial(_exp_dist, rng, params.get("proto_duration", 20)),
         next_node_id="BUNDLE",
-        task_type=TaskType.PROTO_TEST
+        task_type=TaskType.PROTO_TEST,
+        friction_model=friction_model,
+        friction_alpha=friction_alpha
     )
     
     # 3. バンドル

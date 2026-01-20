@@ -17,6 +17,11 @@ import visualizer as viz
 OUT_DIR = os.path.join(CURRENT_DIR, "output")
 os.makedirs(OUT_DIR, exist_ok=True)
 
+def _safe_mean(values, default=np.nan):
+    """空リストでも落ちずに平均を返す（長期運用向けの安全策）。"""
+    vals = [v for v in values if v is not None and not (isinstance(v, float) and np.isnan(v))]
+    return float(np.mean(vals)) if vals else float(default)
+
 def run_pipeline():
     print("=== DX4MGR Ver10: 並列実験プラットフォームモデル ===")
 
@@ -103,7 +108,7 @@ def run_pipeline():
         params.pop('scenario_name')
 
         # 型変換
-        for k in ['days', 'n_senior', 'n_coordinator', 'n_new', 'bundle_size']:
+        for k in ['days', 'n_senior', 'n_coordinator', 'n_new', 'bundle_size', 'n_servers_proto']:
             if k in params and pd.notna(params[k]):
                 params[k] = int(params[k])
 
@@ -112,20 +117,20 @@ def run_pipeline():
 
         summaries = [t["summary"] for t in trials]
         all_summaries[name] = summaries
-        all_metrics[name] = [t["metrics"] for t in trials] # Step 7
+        all_metrics[name] = [(t.get("metrics") or {}) for t in trials]  # ← None/欠損に強くする
 
         all_waits[name] = [lt for t in trials for lt in t["logs"]["lead_times"]]
         all_reworks[name] = [rc for t in trials for rc in t["logs"]["rework_counts"]]
         all_rework_weights[name] = [rw for t in trials for rw in t["logs"].get("rework_weights", [])]
         all_proliferated[name] = [pt for t in trials for pt in t["logs"].get("proliferated_tasks", [])]
-        
+
         # WIP時系列 (Step 7: trial[0]の履歴を代表として使用)
         all_wip_histories[name] = trials[0]["logs"]["wip_history"]
 
         # ゲート別stats（各trialの metrics.gate_stats を平均化）
         gate_rows = []
         for t in trials:
-            m = t.get("metrics", {})
+            m = t.get("metrics", {}) or {}
             for s in (m.get("gate_stats", []) or []):
                 gate_rows.append({"node_id": s.get("node_id"), "avg_wait_time": s.get("avg_wait_time", 0.0)})
 
@@ -135,10 +140,20 @@ def run_pipeline():
         else:
             gate_stats_by_scenario[name] = []
 
+        # ジョブログ（摩擦メトリクス等）の保存
+        job_log_all = []
+        for i, t in enumerate(trials):
+            for entry in t["logs"].get("job_logs", []):
+                entry["trial_id"] = i
+                job_log_all.append(entry)
+        
+        if job_log_all:
+            pd.DataFrame(job_log_all).to_csv(os.path.join(OUT_DIR, f"job_details_{name}.csv"), index=False)
+
         # WIP（ノード別平均WIP）を trial 全体から平均
         wip_rows = []
         for t in trials:
-            m = t.get("metrics", {})
+            m = t.get("metrics", {}) or {}
             w = (m.get("wip", {}) or {}).get("avg_by_node", {}) or {}
             for node_id, v in w.items():
                 wip_rows.append({"node_id": node_id, "avg_wip": float(v)})
@@ -173,16 +188,28 @@ def run_pipeline():
         # スループット信頼区間
         m, low, high = analyzer.calculate_confidence_interval([s["throughput"] for s in all_summaries[name]])
         comparison_summary[name] = {"mean": m, "ci": [low, high]}
-        
+
         # 各種サマリ値（trialの平均）
-        metrics_list = [m["summary"] for m in all_metrics[name]]
-        tp = np.mean([s["throughput"] for s in metrics_list])
-        p50 = np.mean([s["lead_time_p50"] for s in metrics_list])
-        p90 = np.mean([s["lead_time_p90"] for s in metrics_list])
-        rwk = np.mean([s["avg_reworks"] for s in metrics_list])
-        prol = np.mean([s.get("avg_proliferated_tasks", 0) for s in metrics_list])
-        wip = np.mean([s["avg_wip"] for s in metrics_list])
-        
+        # "summary" が無い trial（例: completed_jobs=0 → metrics={"error":...}）を除外して集計
+        summaries_in_metrics = []
+        missing = 0
+        for mm in all_metrics[name]:
+            s = (mm or {}).get("summary")
+            if isinstance(s, dict):
+                summaries_in_metrics.append(s)
+            else:
+                missing += 1
+
+        if missing:
+            print(f"  [warn] {name}: metrics.summary が無い trial が {missing} 件あります（完了ジョブ0等の可能性）。集計から除外します。")
+
+        tp = _safe_mean([s.get("throughput") for s in summaries_in_metrics])
+        p50 = _safe_mean([s.get("lead_time_p50") for s in summaries_in_metrics])
+        p90 = _safe_mean([s.get("lead_time_p90") for s in summaries_in_metrics])
+        rwk = _safe_mean([s.get("avg_reworks") for s in summaries_in_metrics])
+        prol = _safe_mean([s.get("avg_proliferated_tasks", 0) for s in summaries_in_metrics], default=0.0)
+        wip = _safe_mean([s.get("avg_wip") for s in summaries_in_metrics])
+
         print(f"{name:20} | {tp:5.3f} | {p50:5.1f} | {p90:5.1f} | {rwk:6.2f} | {prol:6.1f} | {wip:6.1f}")
 
     print("\n  --- 比較レポート (対Baseline) ---")

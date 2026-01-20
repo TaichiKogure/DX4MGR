@@ -35,13 +35,29 @@ class GateNode(ABC):
         }
 
 class WorkGate(GateNode):
-    def __init__(self, node_id: str, engine: Any, n_servers: int, duration_dist: Callable, next_node_id: Optional[str], task_type: Optional[Any] = None):
+    def __init__(self, node_id: str, engine: Any, n_servers: int, duration_dist: Callable, next_node_id: Optional[str], 
+                 task_type: Optional[Any] = None, friction_model: str = "linear", friction_alpha: float = 0.0):
         super().__init__(node_id, engine)
         self.n_servers = n_servers
         self.busy_servers = 0
         self.duration_dist = duration_dist
         self.next_node_id = next_node_id
         self.task_type = task_type
+        self.friction_model = friction_model
+        self.friction_alpha = friction_alpha
+
+    def _get_friction_multiplier(self) -> float:
+        """人数増加に伴う摩擦（コミュニケーションコスト）倍率を計算する"""
+        if self.n_servers <= 1:
+            return 1.0
+        
+        if self.friction_model == "linear":
+            return 1.0 + self.friction_alpha * (self.n_servers - 1)
+        elif self.friction_model == "pairs":
+            return 1.0 + self.friction_alpha * self.n_servers * (self.n_servers - 1) / 2.0
+        else:
+            # 未知のモデルの場合は摩擦なし
+            return 1.0
 
     def enqueue(self, job: Job, now: float):
         job.add_history(self.node_id, "ENQUEUE", now)
@@ -60,17 +76,29 @@ class WorkGate(GateNode):
         
         wait_time = now - job.temp_enqueue_time
         self.total_wait_time += wait_time
-        job.add_history(self.node_id, "START_WORK", now, wait_time=wait_time)
         
-        duration = self.duration_dist()
-        finish_time = now + duration
+        # 摩擦の適用
+        base_duration = self.duration_dist()
+        multiplier = self._get_friction_multiplier()
+        effective_duration = base_duration * multiplier
+        
+        job.add_history(
+            self.node_id, "START_WORK", now, 
+            wait_time=wait_time,
+            base_duration=base_duration,
+            effective_duration=effective_duration,
+            friction_multiplier=multiplier,
+            n_servers=self.n_servers
+        )
+        
+        finish_time = now + effective_duration
         
         # TaskをJobに付与 (Step 4.1)
         if self.task_type:
             task = Task(
                 task_id=f"{job.job_id}_{self.node_id}_{len(job.tasks)}",
                 task_type=self.task_type,
-                duration_days=duration,
+                duration_days=effective_duration,
                 created_at=now
             )
             job.tasks.append(task)
