@@ -43,38 +43,40 @@ class Analyzer:
     def run_quality_gates(self, summary_list, criteria):
         """
         検証ゲート (Quality Gates) の実行
-        criteria: { "avg_wait": {"max": 10}, "throughput": {"min": 4.0}, "max_reworks": 2.0 }
+        Statistical Quality (max_ci_width, completed >= N) と P90/P95 Wait Time を重視
         """
-        avg_wait = np.mean([s["avg_wait"] for s in summary_list])
+        # 統計品質の基本量
+        completed_counts = [s.get("completed_count", 0) for s in summary_list]
+        avg_completed = np.mean(completed_counts)
+        
+        # P90リードタイムの平均
+        p90_lts = [s.get("p90_wait") if "p90_wait" in s else s.get("lead_time_p90", 0) for s in summary_list]
+        avg_p90_lt = np.mean(p90_lts)
+        
         avg_tp = np.mean([s["throughput"] for s in summary_list])
         avg_wip = np.mean([s["avg_wip"] for s in summary_list])
         avg_reworks = np.mean([s["avg_reworks"] for s in summary_list])
         
         gates = []
         
-        # Gate 1: 基本的ステータス判定 (スループットと待ち時間)
-        g1_tp = QualityGate("Gate1: スループット基準", criteria.get("min_throughput", 0), ">")
-        g1_tp.check(avg_tp)
-        gates.append(g1_tp)
+        # Gate 1: 統計的十分性 (完了ジョブ数下限)
+        g1_comp = QualityGate("Gate1: 完了ジョブ数下限", criteria.get("min_completed", 10), ">=")
+        g1_comp.check(avg_completed)
+        gates.append(g1_comp)
         
-        g1_wait = QualityGate("Gate1: 平均待ち時間基準", criteria.get("max_wait", 100), "<")
-        g1_wait.check(avg_wait)
-        gates.append(g1_wait)
+        # Gate 2: 統計的精度 (CI幅 / TP)
+        m_tp, low_tp, high_tp = self.calculate_confidence_interval([s["throughput"] for s in summary_list])
+        ci_width_tp = (high_tp - low_tp) / (m_tp + 1e-9)
+        g2_ci = QualityGate("Gate2: 統計品質(CI幅)", criteria.get("max_ci_width", 0.3), "<")
+        g2_ci.check(ci_width_tp)
+        gates.append(g2_ci)
 
-        # Gate 2: パラメータ変異耐性 (ばらつき/CV判定)
-        cv_wait = np.std([s["avg_wait"] for s in summary_list]) / (avg_wait + 1e-9)
-        g2_cv = QualityGate("Gate2: 安定性 (CV)", criteria.get("max_cv", 0.5), "<")
-        g2_cv.check(cv_wait)
-        gates.append(g2_cv)
+        # Gate 3: 待ち時間 (P90)
+        g3_p90 = QualityGate("Gate3: P90待ち時間基準", criteria.get("max_wait_p90", 150), "<")
+        g3_p90.check(avg_p90_lt)
+        gates.append(g3_p90)
 
-        # Gate 3: 統計的有意性 (95%信頼区間の幅)
-        m, low, high = self.calculate_confidence_interval([s["throughput"] for s in summary_list])
-        ci_width_ratio = (high - low) / (m + 1e-9)
-        g3_ci = QualityGate("Gate3: 信頼区間精度", criteria.get("max_ci_width", 0.2), "<")
-        g3_ci.check(ci_width_ratio)
-        gates.append(g3_ci)
-
-        # Gate 4: 差し戻し負荷判定 (Ver6新規)
+        # Gate 4: 差し戻し負荷判定
         g4_rework = QualityGate("Gate4: 平均差し戻し回数", criteria.get("max_reworks", 5.0), "<")
         g4_rework.check(avg_reworks)
         gates.append(g4_rework)
@@ -90,9 +92,11 @@ class Analyzer:
                 } for g in gates
             ],
             "metrics": {
-                "avg_wait": avg_wait,
-                "avg_throughput": avg_tp,
-                "avg_reworks": avg_reworks
+                "avg_completed": avg_completed,
+                "avg_tp": avg_tp,
+                "avg_p90_lt": avg_p90_lt,
+                "avg_reworks": avg_reworks,
+                "ci_width_tp": ci_width_tp
             }
         }
         return results

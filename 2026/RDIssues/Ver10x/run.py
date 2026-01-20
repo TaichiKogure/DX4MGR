@@ -87,15 +87,17 @@ def run_pipeline():
     all_proliferated = {}
     all_wip_histories = {}
     gate_reports = {}
+    all_metrics_for_scorecard = {}
 
     gate_stats_by_scenario = {}
     avg_wip_by_node_by_scenario = {}
 
+    # 判定基準の更新 (Ver10xカスタム)
+    # 統計品質 (完了数下限, CI幅) と P90待ち時間を重視
     criteria = {
-        "min_throughput": 0.01,
-        "max_wait": 200.0,
-        "max_cv": 0.8,
-        "max_ci_width": 0.5,
+        "min_completed": 5,        # 完了ジョブ数下限
+        "max_ci_width": 0.4,       # CI幅 / TP
+        "max_wait_p90": 250.0,     # P90待ち時間 (以前の平均基準より緩和しつつP90で縛る)
         "max_reworks": 5.0
     }
 
@@ -115,7 +117,11 @@ def run_pipeline():
         # Step 8.2: モンテカルロ実行 (並列)
         trials = run_monte_carlo(n_trials=n_trials, use_parallel=True, base_seed=base_seed, **params)
 
-        summaries = [t["summary"] for t in trials]
+        summaries = [t.get("summary", {}) for t in trials if t.get("summary")]
+        if not summaries:
+            # 全てのトライアルでジョブが完了しなかった場合
+            summaries = [{"completed_count": 0, "throughput": 0.0, "lead_time_p90": 9999.0, "avg_wip": 0.0, "avg_reworks": 0.0}]
+
         all_summaries[name] = summaries
         all_metrics[name] = [(t.get("metrics") or {}) for t in trials]  # ← None/欠損に強くする
 
@@ -166,6 +172,14 @@ def run_pipeline():
 
         gate_res = analyzer.run_quality_gates(summaries, criteria)
         gate_reports[name] = gate_res
+
+        # スコアカード用データの蓄積
+        all_metrics_for_scorecard[name] = {
+            "p90": _safe_mean([s.get("p90_wait") if "p90_wait" in s else s.get("lead_time_p90") for s in summaries]),
+            "tp": _safe_mean([s.get("throughput") for s in summaries]),
+            "wip": _safe_mean([s.get("avg_wip") for s in summaries]),
+            "rework": _safe_mean([s.get("avg_reworks") for s in summaries])
+        }
 
         viz.plot_quality_gate_status(gate_res, title=f"Quality Gate: {name}")
         plt.savefig(os.path.join(OUT_DIR, f"gate_status_{name}.png"))
@@ -221,6 +235,13 @@ def run_pipeline():
 
     # 5. 可視化
     print("\n[Step 4: 可視化レポートの生成]")
+
+    # スコアカード生成 (Ver10xカスタム)
+    print("  スコアカード生成中...")
+    viz.plot_scorecard(all_metrics_for_scorecard, baseline_name, title="Ver10x シナリオ性能スコアカード")
+    plt.savefig(os.path.join(OUT_DIR, "scenario_scorecard.png"))
+    plt.close()
+
     viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver10)")
     plt.savefig(os.path.join(OUT_DIR, "comparison_throughput.png"))
     plt.close()

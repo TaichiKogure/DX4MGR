@@ -1,0 +1,4 @@
+scenario_name,n_trials,days,arrival_rate,small_exp_duration,proto_duration,bundle_size,dr_period,dr_capacity,dr_quality,rework_load_factor,max_rework_cycles,decay,n_senior,n_coordinator,n_new,rework_beta_a,rework_beta_b,rework_task_type_mix,conditional_prob_ratio,decision_latency_days,friction_model,friction_alpha,n_servers_proto
+NG_Low_Throughput,10,365,0.5,5,20,3,1000,10,0.8,1.0,5,0.7,1,1,0,2.0,5.0,1.0,0.8,2.0,linear,0.05,5
+NG_Wait_Time_Explosion,10,2000,1.0,5,20,3,500,10,0.8,1.0,5,0.7,1,1,0,2.0,5.0,1.0,0.8,2.0,linear,0.05,5
+NG_Unstable_CI,3,180,0.05,5,20,3,90,10,0.8,1.0,5,0.7,1,1,0,2.0,5.0,1.0,0.8,2.0,linear,0.05,5

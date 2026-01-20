@@ -269,3 +269,48 @@ def plot_proliferated_tasks_distribution(tasks_dict, title="増殖した小実�
     plt.xlabel("増殖タスク数")
     plt.grid(axis='y', alpha=0.3)
     plt.tight_layout()
+
+def plot_scorecard(scenario_metrics: dict, baseline_name: str, title="シナリオ性能スコアカード"):
+    """
+    各シナリオの主要指標を並べたスコアカード（表形式の画像）を生成。
+    指標: LT(P90), TP, AvgWIP, Rework
+    """
+    import pandas as pd
+    
+    if baseline_name not in scenario_metrics:
+        return
+    
+    base = scenario_metrics[baseline_name]
+    
+    rows = []
+    for name, m in scenario_metrics.items():
+        row = {
+            "Scenario": name,
+            "LT(P90)": f"{m['p90']:.1f}",
+            "LT(P90) vs Base": f"{m['p90'] / (base['p90'] + 1e-9):.2f}x",
+            "Throughput": f"{m['tp']:.3f}",
+            "TP vs Base": f"{m['tp'] / (base['tp'] + 1e-9):.2f}x",
+            "AvgWIP": f"{m['wip']:.1f}",
+            "AvgWIP vs Base": f"{m['wip'] / (base['wip'] + 1e-9):.2f}x",
+            "Rework": f"{m['rework']:.2f}",
+            "Rework vs Base": f"{m['rework'] / (base['rework'] + 1e-9):.2f}x"
+        }
+        rows.append(row)
+    
+    df = pd.DataFrame(rows)
+    
+    fig, ax = plt.subplots(figsize=(14, 2 + 0.5 * len(rows)))
+    ax.axis('off')
+    table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='center')
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(1.2, 1.8)
+    
+    # ヘッダーの色設定
+    for j in range(len(df.columns)):
+        table[0, j].set_facecolor('#40466e')
+        table[0, j].get_text().set_color('white')
+        table[0, j].get_text().set_weight('bold')
+
+    plt.title(title, pad=30, fontsize=14, fontweight='bold')
+    plt.tight_layout()
