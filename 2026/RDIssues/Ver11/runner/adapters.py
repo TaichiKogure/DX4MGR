@@ -130,12 +130,14 @@ def setup_standard_flow(rng, **params):
     for i, period in enumerate(periods):
         node_id = dr_gate_ids[i]
         next_node = dr_gate_ids[i + 1] if i + 1 < len(dr_gate_ids) else None
+        rework_node = "SMALL_EXP" if i == 0 else dr_gate_ids[i - 1]
         dr_gates.append(MeetingGate(
             node_id, engine,
             period_days=period,
             approvers=approvers,
             next_node_id=next_node, # final gate ends
-            rework_node_id="SMALL_EXP",
+            # Multi-stage DR: rework returns to previous DR gate (not always to SMALL_EXP).
+            rework_node_id=rework_node,
             rework_policy=rework_policy,
             conditional_prob_ratio=params.get("conditional_prob_ratio", 0.8),
             decision_latency_days=params.get("decision_latency_days", 0.0)
