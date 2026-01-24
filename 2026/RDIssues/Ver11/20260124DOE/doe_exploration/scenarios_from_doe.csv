@@ -1,0 +1,6 @@
+scenario_name,n_trials,days,arrival_rate,small_exp_duration,proto_duration,bundle_size,dr_period,dr_periods,dr_capacity,dr_quality,rework_load_factor,max_rework_cycles,decay,n_senior,n_coordinator,n_new,rework_beta_a,rework_beta_b,rework_task_type_mix,conditional_prob_ratio,decision_latency_days,friction_model,friction_alpha,n_servers_proto
+DOE_TOP_01,100,365,0.4819436822152463,7,21,5,41.15813604922291,41.158,10,0.8,1.2572752884922143,3,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+DOE_TOP_02,100,365,0.7001553044017037,7,21,5,50.25611053854048,50.256,10,0.8,1.3036842916718825,3,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+DOE_TOP_03,100,365,0.6906543049195996,7,21,5,35.81843908928033,35.818,10,0.8,1.4361706747262621,3,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+DOE_TOP_04,100,365,0.3078630917174903,7,21,5,91.68223045107663,91.682,10,0.8,0.4745082877943389,3,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+DOE_TOP_05,100,365,0.5029892765656099,7,21,5,30.388967371833914,30.389,10,0.8,0.8483326594876344,3,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2

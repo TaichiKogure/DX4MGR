@@ -1,0 +1,16 @@
+﻿scenario_name,n_trials,days,arrival_rate,small_exp_duration,proto_duration,bundle_size,dr_period,dr_periods,dr_capacity,dr_quality,rework_load_factor,max_rework_cycles,decay,n_senior,n_coordinator,n_new,rework_beta_a,rework_beta_b,rework_task_type_mix,conditional_prob_ratio,decision_latency_days,friction_model,friction_alpha,n_servers_proto
+S1_1_HighPerf_Optimized,30,365,0.4,5,15,3,30,30,10,0.9,0.2,3,0.7,3,2,0,2,5,1,0.5,2,linear,0.05,3
+S1_2_HighPerf_FastDR,30,365,0.5,5,15,3,20,20,10,0.9,0.4,3,0.7,3,2,0,2,5,1,0.5,2,linear,0.05,3
+S1_3_HighPerf_LowRework,30,365,0.6,5,15,3,40,40,10,0.9,0.1,3,0.7,3,2,0,2,5,1,0.5,2,linear,0.05,3
+S1_4_HighPerf_HighCap,30,365,0.7,5,15,5,30,30,10,0.9,0.3,3,0.7,5,0,0,2,5,1,0.5,2,linear,0.05,5
+S1_5_HighPerf_Balanced,30,365,0.5,5,15,3,30,30,10,0.9,0.5,3,0.7,2,2,1,2,5,1,0.5,2,linear,0.05,3
+S2_1_Std_Baseline,30,365,0.5,7,21,5,90,90,10,0.8,1.0,5,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+S2_2_Std_MedLoad,30,365,0.6,7,21,5,60,60,10,0.8,1.2,5,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+S2_3_Std_HighRework,30,365,0.4,7,21,5,90,90,10,0.7,1.5,5,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+S2_4_Std_SlowDR,30,365,0.5,7,21,5,120,120,10,0.8,1.0,5,0.7,2,2,2,2,5,1,0.5,3,linear,0.05,2
+S2_5_Std_SmallTeam,30,365,0.4,7,21,3,60,60,10,0.8,1.0,5,0.7,1,1,1,2,5,1,0.5,3,linear,0.05,2
+S3_1_LowPerf_Congested,30,365,0.8,10,30,10,180,180,10,0.6,2.0,10,0.9,1,0,3,2,5,1,0.3,5,linear,0.1,1
+S3_2_LowPerf_HeavyRework,30,365,0.9,10,30,5,120,120,10,0.5,2.5,10,0.9,1,0,3,2,5,1,0.2,5,linear,0.1,1
+S3_3_LowPerf_WaitHell,30,365,0.7,10,30,10,240,240,10,0.6,1.5,10,0.9,1,0,3,2,5,1,0.5,10,linear,0.1,1
+S3_4_LowPerf_Friction,30,365,0.8,5,15,3,90,90,10,0.7,1.0,5,0.7,1,1,10,2,5,1,0.5,3,linear,0.3,1
+S3_5_LowPerf_Disaster,30,365,1.0,15,45,10,360,360,10,0.4,3.0,20,0.99,0,0,5,2,5,1,0.1,20,linear,0.2,1

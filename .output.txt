@@ -1,0 +1,336 @@
+=== DX4MGR Ver11: 並列実験プラットフォームモデル ===
+Output directory: G:\DX4MGR\2026\RDIssues\Ver11\20260124DOE\val_results
+[Step 1: 各シナリオの並列モンテカルロシミュレーション]
+  シナリオ実行中: S1_1_HighPerf_Optimized ...
+  シナリオ実行中: S1_2_HighPerf_FastDR ...
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+  シナリオ実行中: S1_3_HighPerf_LowRework ...
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+  シナリオ実行中: S1_4_HighPerf_HighCap ...
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+  シナリオ実行中: S1_5_HighPerf_Balanced ...
+  シナリオ実行中: S2_1_Std_Baseline ...
+  シナリオ実行中: S2_2_Std_MedLoad ...
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
+    self.tk.call('image', 'delete', self.name)
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
+Traceback (most recent call last):
+  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
+    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
+RuntimeError: main thread is not in main loop
+Tcl_AsyncDelete: async handler deleted by the wrong thread
