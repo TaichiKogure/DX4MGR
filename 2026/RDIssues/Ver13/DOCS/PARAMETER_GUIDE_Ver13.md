@@ -1,4 +1,4 @@
-# DX4MGR Ver12 パラメーターガイド
+# DX4MGR Ver13 パラメーターガイド
 
 ## 1. 使い方の前提
 - `scenarios.csv` の1行が1シナリオです。
@@ -33,14 +33,18 @@
 | bundle_size_mid | MidからDR2に出す束のサイズ | 同上 |
 | bundle_size_fin | FinからDR3に出す束のサイズ | 同上 |
 
-### 2.4 DR会議の周期・容量・コスト
+### 2.4 DRカレンダー・容量・コスト
 | パラメータ | 意味 | 例・影響 |
 | --- | --- | --- |
-| dr1_period / dr2_period / dr3_period | 会議の開催間隔(日) | 短くすると待ちが減る |
+| dr1_period / dr2_period / dr3_period | 会議の開催間隔(日) | Ver13ではDRCalendar生成に使用 |
 | dr_capacity | DR共通の容量 (未指定時の既定) | dr1/2/3が空なら使う |
 | dr1_capacity / dr2_capacity / dr3_capacity | DRごとの処理上限 | 大きいほど詰まりにくい |
 | dr1_cost_per_review / dr2_cost_per_review / dr3_cost_per_review | DR1件あたりのコスト | `dr_cost_summary.csv` に反映 |
 | decision_latency_days | 会議後の意思決定遅延 | 大きいほどリードタイム増 |
+
+補足:
+- DRの日時は `dr*_period` から固定スケジュールを生成しています。
+- 不規則なDR日時を使いたい場合は `runner/adapters.py` の `DRCalendar` を編集してください。
 
 ### 2.5 差し戻し (Rework)
 | パラメータ | 意味 | 例・影響 |
@@ -76,11 +80,22 @@ Small実験の並列数は固定(999)で、パラメータはありません。
 | friction_model | 摩擦モデル | `linear` または `pairs` |
 | friction_alpha | 摩擦の強さ | 大きいほど遅くなる |
 
-### 2.9 予約・現状未使用の項目
+### 2.9 Scheduler / LatentRisk
+| パラメータ | 意味 | 例・影響 |
+| --- | --- | --- |
+| engineer_pool_size | 計画上のエンジニア人数 | 大きいほどWorkPackageが増える |
+| hours_per_day_per_engineer | 1人あたりの計画工数/日 | 大きいほどLatentRiskが下がりやすい |
+
+補足:
+- Schedulerは日次(SCHED_TICK)で動き、WorkPackageを生成してLatentRiskを更新します。
+- `tick_days` や `LatentRisk.scale_factor` は現状固定値で、変更する場合はコード側で調整します。
+
+### 2.10 予約・現状未使用の項目
 | パラメータ | 状態 | 補足 |
 | --- | --- | --- |
-| dr_quality | 未使用 | DR品質は承認者構成で計算 | 
-| rework_task_type_mix | 未使用 | 現状はログのみ | 
+| dr_quality | 未使用 | DR品質は承認者構成で計算 |
+| rework_task_type_mix | 未使用 | 現状はログのみ |
+| sampling_interval | 任意 | `simulate_standard_flow` に渡せばWIPの記録間隔を変更可能 |
 
 ## 3. 具体例 (Baselineの読み方)
 `arrival_rate=0.2` の場合、平均5日に1件の到着です。
@@ -92,3 +107,4 @@ Small実験の並列数は固定(999)で、パラメータはありません。
 - **バンドル待ちを減らす**: `bundle_size_*` を小さく
 - **差し戻しを減らす**: `n_senior` を増やす / `conditional_prob_ratio` を下げる
 - **処理能力を上げる**: `n_servers_mid` / `n_servers_fin` を増やす
+- **DR2爆発を抑える**: `engineer_pool_size` / `hours_per_day_per_engineer` を増やす

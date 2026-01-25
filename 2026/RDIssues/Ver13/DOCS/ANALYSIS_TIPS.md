@@ -1,4 +1,4 @@
-# DX4MGR Ver12 分析のコツ
+# DX4MGR Ver13 分析のコツ
 
 ## 1. まず見る順番 (迷ったらこれ)
 1) `quality_gate_summary.csv`
@@ -36,6 +36,13 @@
   - `n_senior` を増やし、`n_new` を減らす
   - `conditional_prob_ratio` を下げる
   - `rework_load_factor` を下げる
+
+### DR2でNOGOが増える (潜伏リスク爆発)
+- 原因候補: LatentRiskの evidence が不足
+- 手当て例:
+  - `engineer_pool_size` / `hours_per_day_per_engineer` を増やす
+  - `dr2_period` を長くして準備期間を確保
+  - `arrival_rate` を下げて計画余力を作る
 
 ### DRコストが高い
 - 原因候補: DRが多すぎる / バンドルが小さすぎる

@@ -1,34 +1,36 @@
-# DX4MGR Ver12 計算数式ガイド
+# DX4MGR Ver13 計算数式ガイド
 
 ## 1. フロー構成 (DR3回)
 ```mermaid
 flowchart LR
     A[案件の到着] --> B[SMALL_EXP 小実験]
-    B --> C[DR1 第1定期判定]
-    C -->|GO| D[MID_EXP 中実験]
-    C -->|CONDITIONAL/NOGO| B
+    B --> C[BUNDLE_SMALL まとめ]
+    C --> D[DR1 第1定期判定]
+    D -->|GO| E[MID_EXP 中実験]
+    D -->|CONDITIONAL/NOGO| B
 
-    D --> E[BUNDLE_MID まとめ]
-    E --> F[DR2 試作ライン検証]
-    F -->|GO| G[FIN_EXP 最終実験]
-    F -->|CONDITIONAL/NOGO| D
+    E --> F[BUNDLE_MID まとめ]
+    F --> G[DR2 試作ライン検証]
+    G -->|GO| H[FIN_EXP 最終実験]
+    G -->|CONDITIONAL/NOGO| E
 
-    G --> H[BUNDLE_FIN まとめ]
-    H --> I[DR3 商品化判定]
-    I -->|GO| J[ミッション完了]
-    I -->|CONDITIONAL/NOGO| G
+    H --> I[BUNDLE_FIN まとめ]
+    I --> J[DR3 商品化判定]
+    J -->|GO| K[ミッション完了]
+    J -->|CONDITIONAL/NOGO| H
 ```
 
 - 差し戻し先は「直前の実験工程」。
 - BUNDLEは「一定件数がたまったら束ねる」処理です。
 
 ## 2. 離散イベントシミュレーションの仕組み
-Ver12はイベント駆動型のシミュレーションです。
+Ver13はイベント駆動型のシミュレーションです。
 主なイベント:
 - ARRIVAL: ジョブがゲートに到着
 - PROCESS_READY: すぐ処理可能な場合に作業開始
 - WORK_COMPLETE: 作業完了
 - MEETING_START: DR会議のタイミング
+- SCHED_TICK: Schedulerの定期イベント
 
 ## 3. 到着プロセス (Poisson)
 到着間隔は指数分布に従います。
@@ -51,15 +53,41 @@ Ver12はイベント駆動型のシミュレーションです。
 - その他: M = 1
 
 注意: n_serversを増やすと速くなる一方、摩擦で逆効果になる場合があります。
-SMALL_EXPは n_servers=999 固定のため、摩擦を無視したい場合は friction_alpha を小さめにします。
 
 ## 5. バンドル処理 (BundleGate)
 - キュー長が bundle_size に達すると処理が発火。
 - bundle_size は定数 (分布ではなく固定値)。
 - バンドル後は1つのJobとしてDRに進む。
 
-## 6. DR会議の容量と品質 (MeetingGate)
-### 6.1 容量
+Ver13追加: BundleJobはLatentRiskを合成して保持します。
+- uncertainty / latent_risk / scale_factor は max
+- evidence は平均
+
+## 6. DRカレンダー (DRCalendar)
+- 各DRの固定開催時刻を `schedule_by_gate` に持つ
+- 次回時刻: next_after(gate_id, now)
+- Ver13では `dr*_period` から定期カレンダーを生成
+
+## 7. Scheduler と WorkPackage
+Schedulerは日次で「締切までの残り」を見て工数を配分し、WorkPackage(計画)を生成します。
+
+- 1日の総工数 = engineer_pool_size * hours_per_day_per_engineer
+- 緊急度: urgency = 1 / max(slack, 0.25)
+- 割当工数: alloc = min(total_hours_today, 2 + 6 * urgency)
+
+WorkPackage生成後に LatentRisk を更新します。
+
+## 8. LatentRisk の更新
+工数割当に応じて evidence / uncertainty / latent_risk が更新されます。
+
+- gain = 1 - exp(-k * effort_hours)
+- evidence += gain
+- uncertainty *= (1 - 0.5 * gain)
+- latent_risk *= (1 - 0.6 * (1 - exp(-risk_k * effort_hours)))
+- uncertainty / latent_risk は下限 0.02 でクリップ
+
+## 9. DR会議の容量と品質 (MeetingGate)
+### 9.1 容量
 承認者の構成から実効容量を計算します。
 
 - capacity = Σ(人数_i * capacity_i)
@@ -69,20 +97,24 @@ SMALL_EXPは n_servers=999 固定のため、摩擦を無視したい場合は f
 - Coordinator: capacity=3, quality=0.70
 - New: capacity=1, quality=0.40
 
-### 6.2 品質 (GOの確率)
+### 9.2 品質 (GOの確率)
 容量を重みとした加重平均で品質を算出します。
 
 - quality = Σ(quality_i * capacity_i) / capacity
 
-### 6.3 判定ロジック
+LatentRisk補正:
+- q = quality * quality_mult - nogo_add
+- cond_ratio = conditional_prob_ratio + conditional_add
+
+### 9.3 判定ロジック
 乱数 u ~ Uniform(0,1)
-- GO: u < quality
-- CONDITIONAL: quality <= u < quality + (1 - quality) * conditional_prob_ratio
+- GO: u < q
+- CONDITIONAL: q <= u < q + (1 - q) * cond_ratio
 - NOGO: それ以外
 
 判定後の遷移は decision_latency_days の遅延を持ちます。
 
-## 7. 差し戻し (Rework) の数式
+## 10. 差し戻し (Rework) の数式
 CONDITIONAL時のみ差し戻しを発生させます。
 
 - rework_count を +1
@@ -93,17 +125,15 @@ CONDITIONAL時のみ差し戻しを発生させます。
 
 DR2だけは `dr2_rework_multiplier` が掛かります。
 
-- DR2では: rework_load_factor * dr2_rework_multiplier
-
 注意:
 - rework_count > max_rework_cycles の場合、新規タスクは追加しません。
 - 生成タスクは「計測用ログ」であり、追加ジョブとしては処理されません。
 
-## 8. WIP計算
+## 11. WIP計算
 - 各時点の WIP = (キュー内 + 処理中) の合計
 - sampling_interval 間隔でサンプルされます (既定は1日)
 
-## 9. 主要指標の定義
+## 12. 主要指標の定義
 - Completed count = 完了ジョブ数
 - Throughput = Completed / days
 - Lead time = 完了時刻 - 作成時刻
@@ -111,7 +141,7 @@ DR2だけは `dr2_rework_multiplier` が掛かります。
 - Avg reworks = 平均差し戻し回数
 - Avg WIP = WIPの平均
 
-## 10. 品質ゲート判定 (Quality Gates)
+## 13. 品質ゲート判定 (Quality Gates)
 - Gate1: 完了ジョブ数下限 (min_completed)
 - Gate2: 95% CI幅 / 平均TP < max_ci_width
 - Gate3: P90待ち時間 < max_wait_p90

@@ -68,6 +68,7 @@ class WorkGate(GateNode):
 
     def enqueue(self, job: Job, now: float):
         job.add_history(self.node_id, "ENQUEUE", now)
+        job.current_node = self.node_id
         job.temp_enqueue_time = now
         self.queue.append(job)
 
@@ -135,6 +136,7 @@ class BundleGate(GateNode):
 
     def enqueue(self, job: Job, now: float):
         job.add_history(self.node_id, "ENQUEUE", now)
+        job.current_node = self.node_id
         job.temp_enqueue_time = now
         self.queue.append(job)
 
@@ -231,6 +233,7 @@ class MeetingGate(GateNode):
 
     def enqueue(self, job: Job, now: float):
         job.add_history(self.node_id, "ENQUEUE", now)
+        job.current_node = self.node_id
         job.temp_enqueue_time = now
         self.queue.append(job)
 
@@ -255,7 +258,9 @@ class MeetingGate(GateNode):
             if getattr(job, "latent", None) is not None:
                 mods = job.latent.gate_modifiers(self.node_id)
 
-            q = max(min(self.quality * mods["quality_mult"], 0.99), 0.01)
+            q = self.quality * mods["quality_mult"]
+            q -= mods.get("nogo_add", 0.0)
+            q = max(min(q, 0.99), 0.01)
             # conditional比率も増える（ただし0..1クリップ）
             cond_ratio = max(min(self.conditional_prob_ratio + mods["conditional_add"], 0.99), 0.01)
 
