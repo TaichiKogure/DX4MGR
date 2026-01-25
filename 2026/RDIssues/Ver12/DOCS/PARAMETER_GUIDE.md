@@ -1,12 +1,9 @@
-# DX4MGR Ver12 ????????????
+# DX4MGR Ver12 パラメーターガイド (簡易)
 
-- **bundle_size_small**: DR1???????
-- **bundle_size_mid / bundle_size_fin**: ?????
-- **dr1_period / dr2_period / dr3_period**: DR??
-- **dr1_capacity / dr2_capacity / dr3_capacity**: DR???????????????
-- **dr1_cost_per_review / dr2_cost_per_review / dr3_cost_per_review**: DR?????
-- **dr2_rework_multiplier**: DR2???????????
-- **n_servers_mid / n_servers_fin**: Mid/Fin?????
-- **n_senior / n_coordinator / n_new**: ?????
+このファイルは概要のみです。詳細は `PARAMETER_GUIDE_Ver12.md` を参照してください。
 
-?????? `PARAMETER_GUIDE_Ver12.md` ??????????
+- `bundle_size_*`: バンドルのサイズ。小さいほど待ちが減るがDR負荷は増える
+- `dr*_period`: DR会議の間隔。短くすると待ちが減る
+- `dr*_capacity`: DR会議で処理できる件数
+- `n_servers_mid` / `n_servers_fin`: Mid/Finの並列数
+- `n_senior` / `n_coordinator` / `n_new`: 承認者の構成 (品質と容量に影響)
