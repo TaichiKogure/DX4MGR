@@ -3,6 +3,41 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/2026/RDIssues/Ver12/20260125DOE/doe_param_correlations.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver12/20260125DOE/doe_results.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver12/20260125DOE/doe_results_scored.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver12/20260125DOE/doe_top_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver12/20260125DOE/scenarios_from_doe.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver12/output/dr_cost_summary.csv">
           <value>
             <Attribute>

@@ -24,7 +24,14 @@ def _safe_mean(values, default=np.nan):
     vals = [v for v in values if v is not None and not (isinstance(v, float) and np.isnan(v))]
     return float(np.mean(vals)) if vals else float(default)
 
-def run_pipeline(scenarios_path="scenarios.csv", out_dir=None):
+def _resolve_scenarios_path(scenarios_path, scenarios_dir, scenarios_file):
+    if scenarios_path:
+        return scenarios_path
+    if scenarios_dir:
+        return os.path.join(scenarios_dir, scenarios_file or "scenarios.csv")
+    return scenarios_file or "scenarios.csv"
+
+def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenarios.csv", out_dir=None):
     print("=== DX4MGR Ver12: 並列実験プラットフォームモデル ===")
     
     OUT_DIR = out_dir or DEFAULT_OUT_DIR
@@ -32,7 +39,7 @@ def run_pipeline(scenarios_path="scenarios.csv", out_dir=None):
     print(f"Output directory: {OUT_DIR}")
 
     # 1. シナリオ読み込み (Step 8.1: Scenario sweep)
-    csv_path = scenarios_path
+    csv_path = _resolve_scenarios_path(scenarios_path, scenarios_dir, scenarios_file)
     if not os.path.isabs(csv_path):
         csv_path = os.path.join(CURRENT_DIR, csv_path)
     if not os.path.exists(csv_path):
@@ -409,7 +416,14 @@ def run_pipeline(scenarios_path="scenarios.csv", out_dir=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--scenarios', default='scenarios.csv', help='scenarios csv path')
+    parser.add_argument('--scenarios', default=None, help='scenarios csv path')
+    parser.add_argument('--scenarios-dir', default=None, help='directory for scenarios csv')
+    parser.add_argument('--scenarios-file', default='scenarios.csv', help='scenarios csv filename')
     parser.add_argument('--out', default=None, help='output directory')
     args = parser.parse_args()
-    run_pipeline(scenarios_path=args.scenarios, out_dir=args.out)
+    run_pipeline(
+        scenarios_path=args.scenarios,
+        scenarios_dir=args.scenarios_dir,
+        scenarios_file=args.scenarios_file,
+        out_dir=args.out,
+    )

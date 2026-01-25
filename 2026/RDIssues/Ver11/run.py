@@ -18,11 +18,41 @@ import visualizer as viz
 
 # 出力ディレクトリ (デフォルトは "output")
 DEFAULT_OUT_DIR = os.path.join(CURRENT_DIR, "output")
+DEFAULT_SCENARIOS = "scenarios.csv"
 
 def _safe_mean(values, default=np.nan):
     """空リストでも落ちずに平均を返す（長期運用向けの安全策）。"""
     vals = [v for v in values if v is not None and not (isinstance(v, float) and np.isnan(v))]
     return float(np.mean(vals)) if vals else float(default)
+
+def _prompt_scenarios_input() -> str:
+    print("シナリオCSVのパスを入力してください。")
+    print("  - 空入力: デフォルトの scenarios.csv を使用")
+    print("  - ファイル: 指定ファイルを実行")
+    print("  - ディレクトリ: 内部のCSVを全て実行")
+    return input("Path: ").strip()
+
+def _resolve_csv_paths(raw_input: str):
+    if not raw_input:
+        default_path = os.path.join(CURRENT_DIR, DEFAULT_SCENARIOS)
+        return [default_path] if os.path.exists(default_path) else []
+
+    candidates = [raw_input]
+    if not os.path.isabs(raw_input):
+        candidates.append(os.path.join(CURRENT_DIR, raw_input))
+
+    for path in candidates:
+        if os.path.isfile(path):
+            return [os.path.abspath(path)]
+        if os.path.isdir(path):
+            csvs = [
+                os.path.join(path, name)
+                for name in os.listdir(path)
+                if name.lower().endswith(".csv")
+            ]
+            return sorted(os.path.abspath(p) for p in csvs)
+
+    return []
 
 def run_pipeline(scenarios_path="scenarios.csv", out_dir=None):
     print("=== DX4MGR Ver11: 並列実験プラットフォームモデル ===")
@@ -302,7 +332,20 @@ def run_pipeline(scenarios_path="scenarios.csv", out_dir=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--scenarios', default='scenarios.csv', help='scenarios csv path')
     parser.add_argument('--out', default=None, help='output directory')
     args = parser.parse_args()
-    run_pipeline(scenarios_path=args.scenarios, out_dir=args.out)
+
+    raw_input = _prompt_scenarios_input()
+    csv_paths = _resolve_csv_paths(raw_input)
+    if not csv_paths:
+        print("Error: 指定されたパスが見つかりませんでした。")
+        sys.exit(1)
+
+    if len(csv_paths) == 1:
+        run_pipeline(scenarios_path=csv_paths[0], out_dir=args.out)
+    else:
+        base_out = args.out or DEFAULT_OUT_DIR
+        for csv_path in csv_paths:
+            stem = os.path.splitext(os.path.basename(csv_path))[0]
+            out_dir = os.path.join(base_out, stem)
+            run_pipeline(scenarios_path=csv_path, out_dir=out_dir)
