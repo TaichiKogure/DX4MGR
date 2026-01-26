@@ -59,7 +59,35 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/2026/RDIssues/Ver13/output/dr_cost_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver13/output/flow_time_breakdown.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver13/output/quality_gate_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver13/scenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/scenarios_test.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

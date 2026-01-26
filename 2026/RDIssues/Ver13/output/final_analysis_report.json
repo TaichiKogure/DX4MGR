@@ -18,28 +18,28 @@
                 {
                     "name": "Gate2: 統計品質(CI幅)",
                     "status": "PASS",
-                    "value": 0.2537,
+                    "value": 0.287,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 65.2323,
+                    "value": 61.5734,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.8467,
+                    "value": 1.0333,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.0013515981735159816,
-                "avg_p90_lt": 65.23229874539729,
-                "avg_reworks": 0.8466666666666667,
-                "ci_width_tp": 0.2537109091523888
+                "avg_tp": 0.0012054794520547946,
+                "avg_p90_lt": 61.573447780675814,
+                "avg_reworks": 1.0333333333333332,
+                "ci_width_tp": 0.28698337812094443
             }
         },
         "02_High_Load": {
@@ -54,28 +54,28 @@
                 {
                     "name": "Gate2: 統計品質(CI幅)",
                     "status": "PASS",
-                    "value": 0.1642,
+                    "value": 0.1987,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 79.7289,
+                    "value": 76.5799,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 1.0853,
+                    "value": 1.229,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.0029589041095890406,
-                "avg_p90_lt": 79.72890462294083,
-                "avg_reworks": 1.0853333333333333,
-                "ci_width_tp": 0.16418837830648908
+                "avg_tp": 0.002666666666666666,
+                "avg_p90_lt": 76.57987149791477,
+                "avg_reworks": 1.2289999999999999,
+                "ci_width_tp": 0.198712992724097
             }
         },
         "03_Few_Engineers": {
@@ -90,231 +90,231 @@
                 {
                     "name": "Gate2: 統計品質(CI幅)",
                     "status": "PASS",
-                    "value": 0.247,
+                    "value": 0.289,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 65.7943,
+                    "value": 59.4768,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.9567,
-                    "threshold": 5.0
-                }
-            ],
-            "metrics": {
-                "avg_completed": 0.0,
-                "avg_tp": 0.0013881278538812783,
-                "avg_p90_lt": 65.79432527151612,
-                "avg_reworks": 0.9566666666666666,
-                "ci_width_tp": 0.24703431108974364
-            }
-        },
-        "04_Many_Engineers": {
-            "overall_status": "FAIL",
-            "gates": [
-                {
-                    "name": "Gate1: 完了ジョブ数下限",
-                    "status": "FAIL",
-                    "value": 0.0,
-                    "threshold": 5
-                },
-                {
-                    "name": "Gate2: 統計品質(CI幅)",
-                    "status": "PASS",
-                    "value": 0.2537,
-                    "threshold": 0.5
-                },
-                {
-                    "name": "Gate3: P90待ち時間基準",
-                    "status": "PASS",
-                    "value": 65.2323,
-                    "threshold": 300.0
-                },
-                {
-                    "name": "Gate4: 平均差し戻し回数",
-                    "status": "PASS",
-                    "value": 0.8467,
-                    "threshold": 5.0
-                }
-            ],
-            "metrics": {
-                "avg_completed": 0.0,
-                "avg_tp": 0.0013515981735159816,
-                "avg_p90_lt": 65.23229874539729,
-                "avg_reworks": 0.8466666666666667,
-                "ci_width_tp": 0.2537109091523888
-            }
-        },
-        "05_High_Uncertainty": {
-            "overall_status": "FAIL",
-            "gates": [
-                {
-                    "name": "Gate1: 完了ジョブ数下限",
-                    "status": "FAIL",
-                    "value": 0.0,
-                    "threshold": 5
-                },
-                {
-                    "name": "Gate2: 統計品質(CI幅)",
-                    "status": "PASS",
-                    "value": 0.2537,
-                    "threshold": 0.5
-                },
-                {
-                    "name": "Gate3: P90待ち時間基準",
-                    "status": "PASS",
-                    "value": 65.2323,
-                    "threshold": 300.0
-                },
-                {
-                    "name": "Gate4: 平均差し戻し回数",
-                    "status": "PASS",
-                    "value": 0.8467,
-                    "threshold": 5.0
-                }
-            ],
-            "metrics": {
-                "avg_completed": 0.0,
-                "avg_tp": 0.0013515981735159816,
-                "avg_p90_lt": 65.23229874539729,
-                "avg_reworks": 0.8466666666666667,
-                "ci_width_tp": 0.2537109091523888
-            }
-        },
-        "06_Tight_DR": {
-            "overall_status": "FAIL",
-            "gates": [
-                {
-                    "name": "Gate1: 完了ジョブ数下限",
-                    "status": "FAIL",
-                    "value": 0.0,
-                    "threshold": 5
-                },
-                {
-                    "name": "Gate2: 統計品質(CI幅)",
-                    "status": "PASS",
-                    "value": 0.3136,
-                    "threshold": 0.5
-                },
-                {
-                    "name": "Gate3: P90待ち時間基準",
-                    "status": "PASS",
-                    "value": 28.0055,
-                    "threshold": 300.0
-                },
-                {
-                    "name": "Gate4: 平均差し戻し回数",
-                    "status": "PASS",
-                    "value": 1.52,
+                    "value": 1.0633,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
                 "avg_tp": 0.001187214611872146,
-                "avg_p90_lt": 28.005492981655408,
-                "avg_reworks": 1.52,
-                "ci_width_tp": 0.31360446954062665
+                "avg_p90_lt": 59.47684198085677,
+                "avg_reworks": 1.0633333333333332,
+                "ci_width_tp": 0.28896854138416284
+            }
+        },
+        "04_Many_Engineers": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: 完了ジョブ数下限",
+                    "status": "FAIL",
+                    "value": 0.0,
+                    "threshold": 5
+                },
+                {
+                    "name": "Gate2: 統計品質(CI幅)",
+                    "status": "PASS",
+                    "value": 0.2848,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate3: P90待ち時間基準",
+                    "status": "PASS",
+                    "value": 61.5268,
+                    "threshold": 300.0
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 1.0533,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_completed": 0.0,
+                "avg_tp": 0.001223744292237443,
+                "avg_p90_lt": 61.526781227435585,
+                "avg_reworks": 1.0533333333333332,
+                "ci_width_tp": 0.28479278282812015
+            }
+        },
+        "05_High_Uncertainty": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: 完了ジョブ数下限",
+                    "status": "FAIL",
+                    "value": 0.0,
+                    "threshold": 5
+                },
+                {
+                    "name": "Gate2: 統計品質(CI幅)",
+                    "status": "PASS",
+                    "value": 0.287,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate3: P90待ち時間基準",
+                    "status": "PASS",
+                    "value": 61.5734,
+                    "threshold": 300.0
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 1.0333,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_completed": 0.0,
+                "avg_tp": 0.0012054794520547946,
+                "avg_p90_lt": 61.573447780675814,
+                "avg_reworks": 1.0333333333333332,
+                "ci_width_tp": 0.28698337812094443
+            }
+        },
+        "06_Tight_DR": {
+            "overall_status": "FAIL",
+            "gates": [
+                {
+                    "name": "Gate1: 完了ジョブ数下限",
+                    "status": "FAIL",
+                    "value": 0.0,
+                    "threshold": 5
+                },
+                {
+                    "name": "Gate2: 統計品質(CI幅)",
+                    "status": "PASS",
+                    "value": 0.4174,
+                    "threshold": 0.5
+                },
+                {
+                    "name": "Gate3: P90待ち時間基準",
+                    "status": "PASS",
+                    "value": 23.0103,
+                    "threshold": 300.0
+                },
+                {
+                    "name": "Gate4: 平均差し戻し回数",
+                    "status": "PASS",
+                    "value": 1.33,
+                    "threshold": 5.0
+                }
+            ],
+            "metrics": {
+                "avg_completed": 0.0,
+                "avg_tp": 0.0008219178082191779,
+                "avg_p90_lt": 23.010328934582617,
+                "avg_reworks": 1.33,
+                "ci_width_tp": 0.41739884796469556
             }
         }
     },
     "comparison_summary": {
         "01_Baseline": {
-            "mean": 0.0013515981735159816,
+            "mean": 0.0012054794520547946,
             "ci": [
-                0.0011801404459548031,
-                0.00152305590107716
+                0.0010325030258600705,
+                0.0013784558782495187
             ]
         },
         "02_High_Load": {
-            "mean": 0.0029589041095890406,
+            "mean": 0.002666666666666666,
             "ci": [
-                0.002715995193835936,
-                0.003201813025342145
+                0.002401715910344707,
+                0.002931617422988625
             ]
         },
         "03_Few_Engineers": {
-            "mean": 0.0013881278538812783,
+            "mean": 0.001187214611872146,
             "ci": [
-                0.0012166701263200998,
-                0.0015595855814424567
+                0.0010156806300365459,
+                0.0013587485937077463
             ]
         },
         "04_Many_Engineers": {
-            "mean": 0.0013515981735159816,
+            "mean": 0.001223744292237443,
             "ci": [
-                0.0011801404459548031,
-                0.00152305590107716
+                0.0010494873786128867,
+                0.0013980012058619992
             ]
         },
         "05_High_Uncertainty": {
-            "mean": 0.0013515981735159816,
+            "mean": 0.0012054794520547946,
             "ci": [
-                0.0011801404459548031,
-                0.00152305590107716
+                0.0010325030258600705,
+                0.0013784558782495187
             ]
         },
         "06_Tight_DR": {
-            "mean": 0.001187214611872146,
+            "mean": 0.0008219178082191779,
             "ci": [
-                0.0010010565507763886,
-                0.0013733726729679035
+                0.0006503838263835777,
+                0.0009934517900547781
             ]
         }
     },
     "cost_summary": [
         {
             "scenario": "01_Baseline",
-            "dr1_cost_avg": 24.28,
-            "dr2_cost_avg": 15.64,
-            "dr3_cost_avg": 5.94,
-            "total_review_cost_avg": 45.86,
-            "cost_per_completed_job_avg": 35.14539007092199
+            "dr1_cost_avg": 23.72,
+            "dr2_cost_avg": 15.16,
+            "dr3_cost_avg": 5.22,
+            "total_review_cost_avg": 44.1,
+            "cost_per_completed_job_avg": 37.637681159420296
         },
         {
             "scenario": "02_High_Load",
-            "dr1_cost_avg": 51.1,
-            "dr2_cost_avg": 34.8,
-            "dr3_cost_avg": 13.32,
-            "total_review_cost_avg": 99.22,
-            "cost_per_completed_job_avg": 33.25899999999999
+            "dr1_cost_avg": 51.28,
+            "dr2_cost_avg": 34.36,
+            "dr3_cost_avg": 11.64,
+            "total_review_cost_avg": 97.28,
+            "cost_per_completed_job_avg": 38.742333333333335
         },
         {
             "scenario": "03_Few_Engineers",
-            "dr1_cost_avg": 24.34,
-            "dr2_cost_avg": 15.68,
-            "dr3_cost_avg": 5.94,
-            "total_review_cost_avg": 45.96,
-            "cost_per_completed_job_avg": 34.07092198581561
+            "dr1_cost_avg": 23.76,
+            "dr2_cost_avg": 14.92,
+            "dr3_cost_avg": 5.16,
+            "total_review_cost_avg": 43.84,
+            "cost_per_completed_job_avg": 37.85507246376812
         },
         {
             "scenario": "04_Many_Engineers",
-            "dr1_cost_avg": 24.28,
-            "dr2_cost_avg": 15.64,
-            "dr3_cost_avg": 5.94,
-            "total_review_cost_avg": 45.86,
-            "cost_per_completed_job_avg": 35.14539007092199
+            "dr1_cost_avg": 23.72,
+            "dr2_cost_avg": 15.16,
+            "dr3_cost_avg": 5.28,
+            "total_review_cost_avg": 44.16,
+            "cost_per_completed_job_avg": 37.137681159420296
         },
         {
             "scenario": "05_High_Uncertainty",
-            "dr1_cost_avg": 24.28,
-            "dr2_cost_avg": 15.64,
-            "dr3_cost_avg": 5.94,
-            "total_review_cost_avg": 45.86,
-            "cost_per_completed_job_avg": 35.14539007092199
+            "dr1_cost_avg": 23.72,
+            "dr2_cost_avg": 15.16,
+            "dr3_cost_avg": 5.22,
+            "total_review_cost_avg": 44.1,
+            "cost_per_completed_job_avg": 37.637681159420296
         },
         {
             "scenario": "06_Tight_DR",
-            "dr1_cost_avg": 22.4,
-            "dr2_cost_avg": 16.36,
-            "dr3_cost_avg": 5.64,
-            "total_review_cost_avg": 44.4,
-            "cost_per_completed_job_avg": 38.48837209302326
+            "dr1_cost_avg": 18.86,
+            "dr2_cost_avg": 12.92,
+            "dr3_cost_avg": 3.42,
+            "total_review_cost_avg": 35.2,
+            "cost_per_completed_job_avg": 42.708333333333336
         }
     ]
 }
