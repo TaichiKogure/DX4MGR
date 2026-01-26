@@ -1,336 +1,647 @@
-=== DX4MGR Ver11: 並列実験プラットフォームモデル ===
-Output directory: G:\DX4MGR\2026\RDIssues\Ver11\20260124DOE\val_results
-[Step 1: 各シナリオの並列モンテカルロシミュレーション]
-  シナリオ実行中: S1_1_HighPerf_Optimized ...
-  シナリオ実行中: S1_2_HighPerf_FastDR ...
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-  シナリオ実行中: S1_3_HighPerf_LowRework ...
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-  シナリオ実行中: S1_4_HighPerf_HighCap ...
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-  シナリオ実行中: S1_5_HighPerf_Balanced ...
-  シナリオ実行中: S2_1_Std_Baseline ...
-  シナリオ実行中: S2_2_Std_MedLoad ...
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Image.__del__ at 0x0000027067CF99E0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 4242, in __del__
-    self.tk.call('image', 'delete', self.name)
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Exception ignored in: <function Variable.__del__ at 0x0000027067AAB1A0>
-Traceback (most recent call last):
-  File "C:\Users\taich\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 414, in __del__
-    if self._tk.getboolean(self._tk.call("info", "exists", self._name)):
-RuntimeError: main thread is not in main loop
-Tcl_AsyncDelete: async handler deleted by the wrong thread
+Collecting numpy
+  Downloading numpy-2.0.2.tar.gz (18.9 MB)
+     |████████████████████████████████| 18.9 MB 322 kB/s
+  Installing build dependencies ... done
+  Getting requirements to build wheel ... done
+  Installing backend dependencies ... done
+    Preparing wheel metadata ... error
+    ERROR: Command errored out with exit status 1:
+     command: /Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3 /Users/koguretaichi/.pyenv/versions/3.9.1/lib/python3.9/site-packages/pip/_vendor/pep517/_in_process.py prepare_metadata_for_build_wheel /var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/tmprdo4orwe
+         cwd: /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy
+    Complete output (634 lines):
+    + /Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3 /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/vendored-meson/meson/meson.py setup /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/.mesonpy-5yne8nnx -Dbuildtype=release -Db_ndebug=if-release -Db_vscrt=md --native-file=/private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/.mesonpy-5yne8nnx/meson-python-native-file.ini
+    The Meson build system
+    Version: 1.4.99
+    Source dir: /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy
+    Build dir: /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/.mesonpy-5yne8nnx
+    Build type: native build
+    Project name: NumPy
+    Project version: 2.0.2
+    C compiler for the host machine: cc (clang 17.0.0 "Apple clang version 17.0.0 (clang-1700.6.3.2)")
+    C linker for the host machine: cc ld64 1230.1
+    C++ compiler for the host machine: c++ (clang 17.0.0 "Apple clang version 17.0.0 (clang-1700.6.3.2)")
+    C++ linker for the host machine: c++ ld64 1230.1
+    Cython compiler for the host machine: cython (cython 3.2.4)
+    Host machine cpu family: aarch64
+    Host machine cpu: aarch64
+    Program python found: YES (/Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3)
+    Found pkg-config: YES (/opt/homebrew/bin/pkg-config) 0.29.2
+    Run-time dependency python found: YES 3.9
+    Has header "Python.h" with dependency python-3.9: YES
+    Compiler for C supports arguments -fno-strict-aliasing: YES
+    Compiler for C supports arguments -ftrapping-math: YES
+    Compiler for C supports link arguments -Wl,-ld_classic: YES
+    Message: During parsing cpu-dispatch: The following CPU features were ignored due to platform incompatibility or lack of support:
+    "XOP FMA4"
+    Test features "NEON NEON_FP16 NEON_VFPV4 ASIMD" : Supported
+    Test features "ASIMDHP" : Supported
+    Test features "ASIMDFHM" : Supported
+    Test features "SVE" : Supported
+    Configuring npy_cpu_dispatch_config.h using configuration
+    Message:
+    CPU Optimization Options
+      baseline:
+        Requested : min
+        Enabled   : NEON NEON_FP16 NEON_VFPV4 ASIMD
+      dispatch:
+        Requested : max -xop -fma4
+        Enabled   : ASIMDHP ASIMDFHM SVE
+
+    Library m found: YES
+    Run-time dependency scipy-openblas found: NO (tried pkgconfig)
+    Run-time dependency accelerate found: YES
+    ../numpy/meson.build:135: WARNING: Project targets '>=1.2.99' but uses feature introduced in '1.3.0': dep 'accelerate' custom lookup.
+    Message: BLAS symbol suffix: $NEWLAPACK
+    Program _build_utils/process_src_template.py found: YES (/Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3 /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/_build_utils/process_src_template.py)
+    Program _build_utils/tempita.py found: YES (/Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3 /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/_build_utils/tempita.py)
+    Configuring __config__.py using configuration
+    Checking for size of "short" : 2
+    Checking for size of "int" : 4
+    Checking for size of "long" : 8
+    Checking for size of "long long" : 8
+    Checking for size of "float" : 4
+    Checking for size of "double" : 8
+    Checking for size of "long double" : 8
+    Checking for size of "size_t" : 8
+    Checking for size of "size_t" : 8 (cached)
+    Checking for size of "wchar_t" : 4
+    Checking for size of "off_t" : 8
+    Checking for size of "Py_intptr_t" with dependency python-3.9: 8
+    Checking for size of "PY_LONG_LONG" with dependency python-3.9: 8
+    Has header "complex.h" : YES
+    Checking for type "complex float" : YES
+    Checking for size of "complex float" : 8
+    Checking for type "complex double" : YES
+    Checking for size of "complex double" : 16
+    Checking for type "complex long double" : YES
+    Checking for size of "complex long double" : 16
+    Checking for function "sin" with dependency -lm: YES
+    Checking for function "cos" with dependency -lm: YES
+    Checking for function "tan" with dependency -lm: YES
+    Checking for function "sinh" with dependency -lm: YES
+    Checking for function "cosh" with dependency -lm: YES
+    Checking for function "tanh" with dependency -lm: YES
+    Checking for function "fabs" with dependency -lm: YES
+    Checking for function "floor" with dependency -lm: YES
+    Checking for function "ceil" with dependency -lm: YES
+    Checking for function "sqrt" with dependency -lm: YES
+    Checking for function "log10" with dependency -lm: YES
+    Checking for function "log" with dependency -lm: YES
+    Checking for function "exp" with dependency -lm: YES
+    Checking for function "asin" with dependency -lm: YES
+    Checking for function "acos" with dependency -lm: YES
+    Checking for function "atan" with dependency -lm: YES
+    Checking for function "fmod" with dependency -lm: YES
+    Checking for function "modf" with dependency -lm: YES
+    Checking for function "frexp" with dependency -lm: YES
+    Checking for function "ldexp" with dependency -lm: YES
+    Checking for function "expm1" with dependency -lm: YES
+    Checking for function "log1p" with dependency -lm: YES
+    Checking for function "acosh" with dependency -lm: YES
+    Checking for function "asinh" with dependency -lm: YES
+    Checking for function "atanh" with dependency -lm: YES
+    Checking for function "rint" with dependency -lm: YES
+    Checking for function "trunc" with dependency -lm: YES
+    Checking for function "exp2" with dependency -lm: YES
+    Checking for function "copysign" with dependency -lm: YES
+    Checking for function "nextafter" with dependency -lm: YES
+    Checking for function "cbrt" with dependency -lm: YES
+    Checking for function "log2" with dependency -lm: YES
+    Checking for function "pow" with dependency -lm: YES
+    Checking for function "hypot" with dependency -lm: YES
+    Checking for function "atan2" with dependency -lm: YES
+    Checking for function "csin" with dependency -lm: YES
+    Checking for function "csinh" with dependency -lm: YES
+    Checking for function "ccos" with dependency -lm: YES
+    Checking for function "ccosh" with dependency -lm: YES
+    Checking for function "ctan" with dependency -lm: YES
+    Checking for function "ctanh" with dependency -lm: YES
+    Checking for function "creal" with dependency -lm: YES
+    Checking for function "cimag" with dependency -lm: YES
+    Checking for function "conj" with dependency -lm: YES
+    Checking for function "strtoll" : YES
+    Checking for function "strtoull" : YES
+    Checking for function "cabs" with dependency -lm: YES
+    Checking for function "cabsf" with dependency -lm: YES
+    Checking for function "cabsl" with dependency -lm: YES
+    Checking for function "cacos" with dependency -lm: YES
+    Checking for function "cacosf" with dependency -lm: YES
+    Checking for function "cacosl" with dependency -lm: YES
+    Checking for function "cacosh" with dependency -lm: YES
+    Checking for function "cacoshf" with dependency -lm: YES
+    Checking for function "cacoshl" with dependency -lm: YES
+    Checking for function "carg" with dependency -lm: YES
+    Checking for function "cargf" with dependency -lm: YES
+    Checking for function "cargl" with dependency -lm: YES
+    Checking for function "casin" with dependency -lm: YES
+    Checking for function "casinf" with dependency -lm: YES
+    Checking for function "casinl" with dependency -lm: YES
+    Checking for function "casinh" with dependency -lm: YES
+    Checking for function "casinhf" with dependency -lm: YES
+    Checking for function "casinhl" with dependency -lm: YES
+    Checking for function "catan" with dependency -lm: YES
+    Checking for function "catanf" with dependency -lm: YES
+    Checking for function "catanl" with dependency -lm: YES
+    Checking for function "catanh" with dependency -lm: YES
+    Checking for function "catanhf" with dependency -lm: YES
+    Checking for function "catanhl" with dependency -lm: YES
+    Checking for function "cexp" with dependency -lm: YES
+    Checking for function "cexpf" with dependency -lm: YES
+    Checking for function "cexpl" with dependency -lm: YES
+    Checking for function "clog" with dependency -lm: YES
+    Checking for function "clogf" with dependency -lm: YES
+    Checking for function "clogl" with dependency -lm: YES
+    Checking for function "cpow" with dependency -lm: YES
+    Checking for function "cpowf" with dependency -lm: YES
+    Checking for function "cpowl" with dependency -lm: YES
+    Checking for function "csqrt" with dependency -lm: YES
+    Checking for function "csqrtf" with dependency -lm: YES
+    Checking for function "csqrtl" with dependency -lm: YES
+    Checking for function "csin" with dependency -lm: YES (cached)
+    Checking for function "csinf" with dependency -lm: YES
+    Checking for function "csinl" with dependency -lm: YES
+    Checking for function "csinh" with dependency -lm: YES (cached)
+    Checking for function "csinhf" with dependency -lm: YES
+    Checking for function "csinhl" with dependency -lm: YES
+    Checking for function "ccos" with dependency -lm: YES (cached)
+    Checking for function "ccosf" with dependency -lm: YES
+    Checking for function "ccosl" with dependency -lm: YES
+    Checking for function "ccosh" with dependency -lm: YES (cached)
+    Checking for function "ccoshf" with dependency -lm: YES
+    Checking for function "ccoshl" with dependency -lm: YES
+    Checking for function "ctan" with dependency -lm: YES (cached)
+    Checking for function "ctanf" with dependency -lm: YES
+    Checking for function "ctanl" with dependency -lm: YES
+    Checking for function "ctanh" with dependency -lm: YES (cached)
+    Checking for function "ctanhf" with dependency -lm: YES
+    Checking for function "ctanhl" with dependency -lm: YES
+    Checking for function "isfinite" with dependency -lm: YES
+    Header "Python.h" has symbol "isfinite" with dependency python-3.9: YES
+    Checking for function "isinf" with dependency -lm: YES
+    Header "Python.h" has symbol "isinf" with dependency python-3.9: YES
+    Checking for function "isnan" with dependency -lm: YES
+    Header "Python.h" has symbol "isnan" with dependency python-3.9: YES
+    Checking for function "signbit" with dependency -lm: YES
+    Header "Python.h" has symbol "signbit" with dependency python-3.9: YES
+    Checking for function "fallocate" : NO
+    Header "Python.h" has symbol "HAVE_FTELLO" with dependency python-3.9: YES
+    Header "Python.h" has symbol "HAVE_FSEEKO" with dependency python-3.9: YES
+    Checking for function "backtrace" : YES
+    Checking for function "madvise" : YES
+    Has header "features.h" : NO
+    Has header "xlocale.h" : YES
+    Has header "dlfcn.h" : YES
+    Has header "execinfo.h" : YES
+    Has header "libunwind.h" : YES
+    Has header "sys/mman.h" : YES
+    Checking for function "strtold_l" : YES
+    Compiler for C supports arguments -O3: YES
+    Has header "endian.h" : NO
+    Has header "sys/endian.h" : YES
+    Compiler for C supports function attribute visibility:hidden: YES
+    Configuring config.h using configuration
+    Configuring _numpyconfig.h using configuration
+    Configuring npymath.ini using configuration
+    Configuring mlib.ini using configuration
+    Configuring numpy.pc using configuration
+    Generating multi-targets for "_umath_tests.dispatch.h"
+      Enabled targets: ASIMDHP, baseline
+    Generating multi-targets for "argfunc.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "x86_simd_argsort.dispatch.h"
+      Enabled targets:
+    Generating multi-targets for "x86_simd_qsort.dispatch.h"
+      Enabled targets:
+    Generating multi-targets for "x86_simd_qsort_16bit.dispatch.h"
+      Enabled targets:
+    Generating multi-targets for "highway_qsort.dispatch.h"
+      Enabled targets: SVE, ASIMD
+    Generating multi-targets for "highway_qsort_16bit.dispatch.h"
+      Enabled targets: ASIMDHP
+    Generating multi-targets for "loops_arithm_fp.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_arithmetic.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_comparison.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_exponent_log.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_hyperbolic.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_logical.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_minmax.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_modulo.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_trigonometric.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_umath_fp.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_unary.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_unary_fp.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_unary_fp_le.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_unary_complex.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "loops_autovec.dispatch.h"
+      Enabled targets: baseline
+    Generating multi-targets for "_simd.dispatch.h"
+      Enabled targets: baseline
+    Build targets in project: 64
+    WARNING: Project specifies a minimum meson_version '>=1.2.99' but uses features which were added in newer versions:
+     * 1.3.0: {'dep 'accelerate' custom lookup'}
+
+    NumPy 2.0.2
+
+      User defined options
+        Native files: /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/.mesonpy-5yne8nnx/meson-python-native-file.ini
+        buildtype   : release
+        b_ndebug    : if-release
+        b_vscrt     : md
+
+    Found ninja-1.13.0.git.kitware.jobserver-pipe-1 at /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-build-env-4n6i7cj6/normal/bin/ninja
+    + /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-build-env-4n6i7cj6/normal/bin/ninja
+    [1/322] Generating 'numpy/_core/libargfunc.dispatch.h_baseline.a.p/arraytypes.h'
+    [2/322] Generating numpy/_core/npy_math_internal.h with a custom command
+    [3/322] Generating 'numpy/_core/libargfunc.dispatch.h_baseline.a.p/npy_sort.h'
+    [4/322] Generating 'numpy/_core/libnpymath.a.p/ieee754.c'
+    [5/322] Generating 'numpy/_core/libnpymath.a.p/npy_math_complex.c'
+    [6/322] Copying file numpy/__init__.py
+    [7/322] Copying file numpy/__init__.pxd
+    [8/322] Copying file numpy/__init__.cython-30.pxd
+    [9/322] Generating numpy/_core/__umath_generated with a custom command
+    [10/322] Generating 'numpy/_core/libhighway_qsort.dispatch.h_SVE.a.p/arraytypes.h'
+    [11/322] Generating 'numpy/_core/libhighway_qsort.dispatch.h_ASIMD.a.p/arraytypes.h'
+    [12/322] Generating 'numpy/_core/libhighway_qsort.dispatch.h_ASIMD.a.p/npy_sort.h'
+    [13/322] Generating 'numpy/_core/libargfunc.dispatch.h_baseline.a.p/argfunc.dispatch.c'
+    [14/322] Generating 'numpy/_core/libhighway_qsort_16bit.dispatch.h_ASIMDHP.a.p/arraytypes.h'
+    [15/322] Generating 'numpy/_core/libhighway_qsort.dispatch.h_SVE.a.p/npy_sort.h'
+    [16/322] Generating 'numpy/_core/libhighway_qsort_16bit.dispatch.h_ASIMDHP.a.p/npy_sort.h'
+    [17/322] Generating 'numpy/_core/libloops_arithm_fp.dispatch.h_baseline.a.p/loops_utils.h'
+    [18/322] Generating 'numpy/_core/libloops_arithm_fp.dispatch.h_baseline.a.p/loops_arithm_fp.dispatch.c'
+    [19/322] Generating 'numpy/_core/libloops_arithm_fp.dispatch.h_baseline.a.p/loops.h'
+    [20/322] Generating 'numpy/_core/libloops_arithmetic.dispatch.h_baseline.a.p/loops_utils.h'
+    [21/322] Generating 'numpy/_core/libloops_arithmetic.dispatch.h_baseline.a.p/loops_arithmetic.dispatch.c'
+    [22/322] Generating 'numpy/_core/libloops_comparison.dispatch.h_baseline.a.p/loops.h'
+    [23/322] Generating 'numpy/_core/libloops_arithmetic.dispatch.h_baseline.a.p/loops.h'
+    [24/322] Generating 'numpy/_core/libloops_comparison.dispatch.h_baseline.a.p/loops_utils.h'
+    [25/322] Generating 'numpy/_core/libloops_exponent_log.dispatch.h_baseline.a.p/loops_utils.h'
+    [26/322] Generating 'numpy/_core/libloops_exponent_log.dispatch.h_baseline.a.p/loops_exponent_log.dispatch.c'
+    [27/322] Generating numpy/_core/__ufunc_api with a custom command
+    [28/322] Generating 'numpy/_core/libloops_comparison.dispatch.h_baseline.a.p/loops_comparison.dispatch.c'
+    [29/322] Generating 'numpy/_core/libloops_hyperbolic.dispatch.h_baseline.a.p/loops_utils.h'
+    [30/322] Generating 'numpy/_core/libloops_hyperbolic.dispatch.h_baseline.a.p/loops_hyperbolic.dispatch.c'
+    [31/322] Generating 'numpy/_core/libloops_hyperbolic.dispatch.h_baseline.a.p/loops.h'
+    [32/322] Generating 'numpy/_core/libloops_logical.dispatch.h_baseline.a.p/loops.h'
+    [33/322] Generating 'numpy/_core/libloops_logical.dispatch.h_baseline.a.p/loops_utils.h'
+    [34/322] Generating 'numpy/_core/libloops_logical.dispatch.h_baseline.a.p/loops_logical.dispatch.c'
+    [35/322] Generating 'numpy/_core/libloops_modulo.dispatch.h_baseline.a.p/loops.h'
+    [36/322] Generating 'numpy/_core/libloops_minmax.dispatch.h_baseline.a.p/loops_utils.h'
+    [37/322] Generating 'numpy/_core/libloops_minmax.dispatch.h_baseline.a.p/loops.h'
+    [38/322] Generating 'numpy/_core/libloops_modulo.dispatch.h_baseline.a.p/loops_utils.h'
+    [39/322] Generating 'numpy/_core/libloops_modulo.dispatch.h_baseline.a.p/loops_modulo.dispatch.c'
+    [40/322] Generating 'numpy/_core/libloops_exponent_log.dispatch.h_baseline.a.p/loops.h'
+    [41/322] Generating 'numpy/_core/libloops_trigonometric.dispatch.h_baseline.a.p/loops_utils.h'
+    [42/322] Generating 'numpy/_core/libloops_trigonometric.dispatch.h_baseline.a.p/loops.h'
+    [43/322] Generating 'numpy/_core/libloops_trigonometric.dispatch.h_baseline.a.p/loops_trigonometric.dispatch.c'
+    [44/322] Generating 'numpy/_core/libloops_umath_fp.dispatch.h_baseline.a.p/loops_utils.h'
+    [45/322] Generating 'numpy/_core/libloops_umath_fp.dispatch.h_baseline.a.p/loops_umath_fp.dispatch.c'
+    [46/322] Generating 'numpy/_core/libloops_unary.dispatch.h_baseline.a.p/loops_utils.h'
+    [47/322] Generating 'numpy/_core/libloops_unary.dispatch.h_baseline.a.p/loops.h'
+    [48/322] Generating 'numpy/_core/libloops_umath_fp.dispatch.h_baseline.a.p/loops.h'
+    [49/322] Generating 'numpy/_core/libloops_unary_fp.dispatch.h_baseline.a.p/loops_utils.h'
+    [50/322] Generating 'numpy/_core/libloops_unary_fp.dispatch.h_baseline.a.p/loops.h'
+    [51/322] Generating 'numpy/_core/libloops_unary.dispatch.h_baseline.a.p/loops_unary.dispatch.c'
+    [52/322] Generating 'numpy/_core/libloops_minmax.dispatch.h_baseline.a.p/loops_minmax.dispatch.c'
+    [53/322] Generating 'numpy/_core/libloops_unary_fp_le.dispatch.h_baseline.a.p/loops_utils.h'
+    [54/322] Generating 'numpy/_core/libloops_unary_complex.dispatch.h_baseline.a.p/loops_utils.h'
+    [55/322] Generating 'numpy/_core/libloops_unary_fp_le.dispatch.h_baseline.a.p/loops_unary_fp_le.dispatch.c'
+    [56/322] Generating 'numpy/_core/libloops_autovec.dispatch.h_baseline.a.p/loops.h'
+    [57/322] Generating 'numpy/_core/libloops_unary_complex.dispatch.h_baseline.a.p/loops.h'
+    [58/322] Generating 'numpy/_core/libloops_unary_complex.dispatch.h_baseline.a.p/loops_unary_complex.dispatch.c'
+    [59/322] Generating 'numpy/_core/libloops_unary_fp_le.dispatch.h_baseline.a.p/loops.h'
+    [60/322] Generating 'numpy/_core/libloops_autovec.dispatch.h_baseline.a.p/loops_autovec.dispatch.c'
+    [61/322] Generating 'numpy/_core/lib_simd.dispatch.h_baseline.a.p/_simd_inc.h'
+    [62/322] Generating 'numpy/_core/libloops_autovec.dispatch.h_baseline.a.p/loops_utils.h'
+    [63/322] Generating 'numpy/_core/lib_simd.dispatch.h_baseline.a.p/_simd_data.inc'
+    [64/322] Copying file numpy/random/__init__.py
+    [65/322] Copying file numpy/random/__init__.pxd
+    [66/322] Copying file numpy/random/_common.pxd
+    [67/322] Generating 'numpy/_core/libloops_unary_fp.dispatch.h_baseline.a.p/loops_unary_fp.dispatch.c'
+    [68/322] Copying file numpy/random/bit_generator.pxd
+    [69/322] Generating numpy/random/_bounded_integer_pxd with a custom command
+    [70/322] Generating numpy/random/_bounded_integer_pyx with a custom command
+    [71/322] Copying file numpy/random/c_distributions.pxd
+    [72/322] Copying file numpy/random/_generator.pyx
+    [73/322] Copying file numpy/random/mtrand.pyx
+    [74/322] Generating numpy/_core/_umath_doc_generated with a custom command
+    [75/322] Generating 'numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/templ_common.h'
+    [76/322] Generating 'numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/_multiarray_tests.c'
+    [77/322] Generating numpy/_core/__multiarray_api with a custom command
+    [78/322] Generating 'numpy/_core/lib_simd.dispatch.h_baseline.a.p/_simd.dispatch.c'
+    [79/322] Generating 'numpy/_core/_umath_tests.cpython-39-darwin.so.p/_umath_tests.c'
+    [80/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/arraytypes.h'
+    [81/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/npy_sort.h'
+    [82/322] Compiling C object numpy/_core/libnpymath.a.p/meson-generated_ieee754.c.o
+    [83/322] Compiling C object numpy/_core/libnpymath.a.p/meson-generated_npy_math_complex.c.o
+    [84/322] Compiling C object numpy/_core/lib_umath_tests.dispatch.h_ASIMDHP.a.p/src_umath__umath_tests.dispatch.c.o
+    [85/322] Compiling C object numpy/_core/lib_umath_tests.dispatch.h_baseline.a.p/src_umath__umath_tests.dispatch.c.o
+    [86/322] Compiling C object numpy/_core/libnpymath.a.p/src_npymath_npy_math.c.o
+    [87/322] Compiling C object numpy/_core/libloops_exponent_log.dispatch.h_baseline.a.p/meson-generated_loops_exponent_log.dispatch.c.o
+    [88/322] Compiling C++ object numpy/_core/libhighway.a.p/src_highway_hwy_abort.cc.o
+    [89/322] Compiling C object numpy/_core/libloops_arithmetic.dispatch.h_baseline.a.p/meson-generated_loops_arithmetic.dispatch.c.o
+    [90/322] Compiling C object numpy/_core/libloops_hyperbolic.dispatch.h_baseline.a.p/meson-generated_loops_hyperbolic.dispatch.c.o
+    [91/322] Compiling C object numpy/_core/libloops_logical.dispatch.h_baseline.a.p/meson-generated_loops_logical.dispatch.c.o
+    [92/322] Compiling C object numpy/_core/libargfunc.dispatch.h_baseline.a.p/meson-generated_argfunc.dispatch.c.o
+    [93/322] Compiling C object numpy/_core/libloops_arithm_fp.dispatch.h_baseline.a.p/meson-generated_loops_arithm_fp.dispatch.c.o
+    [94/322] Compiling C++ object numpy/_core/libnpymath.a.p/src_npymath_halffloat.cpp.o
+    [95/322] Compiling C object numpy/_core/libloops_modulo.dispatch.h_baseline.a.p/meson-generated_loops_modulo.dispatch.c.o
+    [96/322] Compiling C object numpy/_core/libloops_trigonometric.dispatch.h_baseline.a.p/meson-generated_loops_trigonometric.dispatch.c.o
+    [97/322] Compiling C object numpy/_core/libloops_umath_fp.dispatch.h_baseline.a.p/meson-generated_loops_umath_fp.dispatch.c.o
+    [98/322] Compiling C object numpy/_core/libloops_unary_complex.dispatch.h_baseline.a.p/meson-generated_loops_unary_complex.dispatch.c.o
+    [99/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/arraytypes.c'
+    [100/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/einsum.c'
+    [101/322] Compiling C object numpy/_core/libloops_unary_fp_le.dispatch.h_baseline.a.p/meson-generated_loops_unary_fp_le.dispatch.c.o
+    [102/322] Compiling C object numpy/_core/libloops_unary.dispatch.h_baseline.a.p/meson-generated_loops_unary.dispatch.c.o
+    [103/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/nditer_templ.c'
+    [104/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/einsum_sumprod.c'
+    [105/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/scalartypes.c'
+    [106/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/templ_common.h'
+    [107/322] Compiling C object numpy/_core/libloops_unary_fp.dispatch.h_baseline.a.p/meson-generated_loops_unary_fp.dispatch.c.o
+    [108/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/loops.h'
+    [109/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/loops_utils.h'
+    [110/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/funcs.inc'
+    [111/322] Compiling C object numpy/_core/libloops_comparison.dispatch.h_baseline.a.p/meson-generated_loops_comparison.dispatch.c.o
+    [112/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/loops.c'
+    [113/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/matmul.c'
+    [114/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/matmul.h'
+    [115/322] Compiling C object numpy/random/libnpyrandom.a.p/src_distributions_logfactorial.c.o
+    [116/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/scalarmath.c'
+    [117/322] Generating 'numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/lowlevel_strided_loops.c'
+    [118/322] Compiling C object numpy/random/libnpyrandom.a.p/src_distributions_random_hypergeometric.c.o
+    [119/322] Compiling C object numpy/random/libnpyrandom.a.p/src_distributions_random_mvhg_count.c.o
+    [120/322] Compiling C object numpy/random/libnpyrandom.a.p/src_distributions_random_mvhg_marginals.c.o
+    [121/322] Compiling C object numpy/random/libnpyrandom.a.p/src_distributions_distributions.c.o
+    [122/322] Compiling C object numpy/_core/libloops_minmax.dispatch.h_baseline.a.p/meson-generated_loops_minmax.dispatch.c.o
+    [123/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/_mt19937.pyx
+    [124/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/_philox.pyx
+    [125/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/_pcg64.pyx
+    [126/322] Compiling C object numpy/_core/lib_simd.dispatch.h_baseline.a.p/meson-generated__simd.dispatch.c.o
+    [127/322] Compiling Cython source numpy/random/_bounded_integers.pyx
+    [128/322] Compiling C++ object numpy/_core/libhighway_qsort_16bit.dispatch.h_ASIMDHP.a.p/src_npysort_highway_qsort_16bit.dispatch.cpp.o
+    [129/322] Linking static target numpy/_core/libhighway.a
+    [130/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/_common.pyx
+    [131/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/_sfc64.pyx
+    [132/322] Compiling C object numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/src_common_mem_overlap.c.o
+    [133/322] Compiling C object numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/src_common_npy_argparse.c.o
+    [134/322] Linking static target numpy/_core/lib_umath_tests_mtargets.a
+    [135/322] Compiling C object numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/meson-generated__multiarray_tests.c.o
+    [136/322] Compiling C object numpy/_core/_multiarray_tests.cpython-39-darwin.so.p/src_common_npy_hashtable.c.o
+    [137/322] Compiling Cython source /private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/numpy/random/bit_generator.pyx
+    [138/322] Compiling C object numpy/_core/_umath_tests.cpython-39-darwin.so.p/src_common_npy_cpu_features.c.o
+    [139/322] Compiling C++ object numpy/_core/libhighway_qsort.dispatch.h_SVE.a.p/src_npysort_highway_qsort.dispatch.cpp.o
+    [140/322] Compiling C object numpy/_core/_umath_tests.cpython-39-darwin.so.p/meson-generated__umath_tests.c.o
+    [141/322] Compiling C++ object numpy/_core/libhighway_qsort.dispatch.h_ASIMD.a.p/src_npysort_highway_qsort.dispatch.cpp.o
+    [142/322] Compiling C object numpy/_core/_struct_ufunc_tests.cpython-39-darwin.so.p/src_umath__struct_ufunc_tests.c.o
+    [143/322] Compiling C object numpy/_core/libloops_autovec.dispatch.h_baseline.a.p/meson-generated_loops_autovec.dispatch.c.o
+    [144/322] Compiling C object numpy/_core/_operand_flag_tests.cpython-39-darwin.so.p/src_umath__operand_flag_tests.c.o
+    [145/322] Linking static target numpy/_core/lib_multiarray_umath_mtargets.a
+    [146/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_einsum.c.o
+    [147/322] Compiling C object numpy/_core/_rational_tests.cpython-39-darwin.so.p/src_umath__rational_tests.c.o
+    [148/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_scalartypes.c.o
+    [149/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_nditer_templ.c.o
+    [150/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_matmul.c.o
+    [151/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_abstractdtypes.c.o
+    [152/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_alloc.c.o
+    [153/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_arrayobject.c.o
+    [154/322] Linking static target numpy/_core/libnpymath.a
+    [155/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_array_coercion.c.o
+    [156/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_loops.c.o
+    [157/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_array_converter.c.o
+    [158/322] Compiling Cython source numpy/random/mtrand.pyx
+    [159/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_array_assign_scalar.c.o
+    [160/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_array_method.c.o
+    [161/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_arraytypes.c.o
+    [162/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_array_assign_array.c.o
+    [163/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_arrayfunction_override.c.o
+    [164/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_arraywrap.c.o
+    [165/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_calculation.c.o
+    [166/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_buffer.c.o
+    [167/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_common.c.o
+    [168/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_common_dtype.c.o
+    [169/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_convert.c.o
+    [170/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_conversion_utils.c.o
+    [171/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_compiled_base.c.o
+    [172/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_datetime_strings.c.o
+    [173/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_scalarmath.c.o
+    [174/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_datetime_busdaycal.c.o
+    [175/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_datetime_busday.c.o
+    [176/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_datetime.c.o
+    [177/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_convert_datatype.c.o
+    [178/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_ctors.c.o
+    [179/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_dlpack.c.o
+    [180/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_dtype_traversal.c.o
+    [181/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_dtypemeta.c.o
+    [182/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_public_dtype_api.c.o
+    [183/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_einsum_sumprod.c.o
+    [184/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_flagsobject.c.o
+    [185/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_descriptor.c.o
+    [186/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_hashdescr.c.o
+    [187/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_getset.c.o
+    [188/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_legacy_dtype_implementation.c.o
+    [189/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_dragon4.c.o
+    [190/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_dtype_transfer.c.o
+    [191/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_methods.c.o
+    [192/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_iterators.c.o
+    [193/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_mapping.c.o
+    [194/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_nditer_pywrap.c.o
+    [195/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_refcount.c.o
+    [196/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_nditer_api.c.o
+    [197/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_number.c.o
+    [198/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_item_selection.c.o
+    [199/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_sequence.c.o
+    [200/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_strfuncs.c.o
+    [201/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_scalarapi.c.o
+    [202/322] Compiling Cython source numpy/random/_generator.pyx
+    [203/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_stringdtype_dtype.c.o
+    [204/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_multiarraymodule.c.o
+    [205/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_stringdtype_utf8_utils.c.o
+    [206/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_stringdtype_static_string.c.o
+    [207/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_nditer_constr.c.o
+    [208/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_shape.c.o
+    [209/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_temp_elide.c.o
+    [210/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_usertypes.c.o
+    [211/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/meson-generated_lowlevel_strided_loops.c.o
+    [212/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_vdot.c.o
+    [213/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_stringdtype_casts.c.o
+    [214/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_conversions.c.o
+    [215/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_field_types.c.o
+    [216/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_growth.c.o
+    [217/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_readtext.c.o
+    [218/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_rows.c.o
+    [219/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_stream_pyobject.c.o
+    [220/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npymath_arm64_exports.c.o
+    [221/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_str_to_int.c.o
+    [222/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_array_assign.c.o
+    [223/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_radixsort.cpp.o
+    [224/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_gil_utils.c.o
+    [225/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_multiarray_textreading_tokenize.cpp.o
+    [226/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_heapsort.cpp.o
+    [227/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_npy_hashtable.c.o
+    [228/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_npy_argparse.c.o
+    [229/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_npy_longdouble.c.o
+    [230/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_mem_overlap.c.o
+    [231/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_ucsnarrow.c.o
+    [232/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_npy_cpu_features.c.o
+    [233/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_mergesort.cpp.o
+    [234/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_ufunc_override.c.o
+    [235/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_npy_cpu_dispatch.c.o
+    [236/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_numpyos.c.o
+    [237/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_python_xerbla.c.o
+    [238/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_common_cblasfuncs.c.o
+    [239/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_binsearch.cpp.o
+    [240/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_extobj.c.o
+    [241/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_dispatching.c.o
+    [242/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_legacy_array_method.c.o
+    [243/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_override.c.o
+    [244/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_reduction.c.o
+    [245/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_ufunc_type_resolution.c.o
+    [246/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_wrapping_array_method.c.o
+    [247/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_special_integer_comparisons.cpp.o
+    [248/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_string_ufuncs.cpp.o
+    FAILED: [code=1] numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_string_ufuncs.cpp.o
+    c++ -Inumpy/_core/_multiarray_umath.cpython-39-darwin.so.p -Inumpy/_core -I../numpy/_core -Inumpy/_core/include -I../numpy/_core/include -I../numpy/_core/src/common -I../numpy/_core/src/multiarray -I../numpy/_core/src/npymath -I../numpy/_core/src/umath -I../numpy/_core/src/highway -I/Users/koguretaichi/.pyenv/versions/3.9.1/include/python3.9 -I/private/var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/pip-install-mo_b2xj_/numpy/.mesonpy-5yne8nnx/meson_cpu -fvisibility=hidden -fvisibility-inlines-hidden -fdiagnostics-color=always -DNDEBUG -Wall -Winvalid-pch -std=c++17 -O3 -ftrapping-math -DNPY_HAVE_CLANG_FPSTRICT -DNPY_HAVE_NEON_VFPV4 -DNPY_HAVE_NEON_FP16 -DNPY_HAVE_NEON -DNPY_HAVE_ASIMD -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework -idirafter/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework/Headers -DACCELERATE_NEW_LAPACK -DHAVE_CBLAS '-DBLAS_SYMBOL_SUFFIX=$NEWLAPACK' -DNPY_INTERNAL_BUILD -DHAVE_NPY_CONFIG_H -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE=1 -D_LARGEFILE64_SOURCE=1 -D__STDC_VERSION__=0 -fno-exceptions -fno-rtti -MD -MQ numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_string_ufuncs.cpp.o -MF numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_string_ufuncs.cpp.o.d -o numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_string_ufuncs.cpp.o -c ../numpy/_core/src/umath/string_ufuncs.cpp
+    In file included from ../numpy/_core/src/umath/string_ufuncs.cpp:20:
+    ../numpy/_core/src/umath/string_fastsearch.h:132:5: error: no type named 'ptrdiff_t' in namespace 'std'; did you mean simply 'ptrdiff_t'?
+      132 |     std::ptrdiff_t
+          |     ^~~~~~~~~~~~~~
+          |     ptrdiff_t
+    /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_ptrdiff_t.h:18:26: note: 'ptrdiff_t' declared here
+       18 | typedef __PTRDIFF_TYPE__ ptrdiff_t;
+          |                          ^
+    In file included from ../numpy/_core/src/umath/string_ufuncs.cpp:20:
+    ../numpy/_core/src/umath/string_fastsearch.h:219:23: error: invalid operands to binary expression ('CheckedIndexer<char>' and 'CheckedIndexer<char>')
+      219 |             return (p - s);
+          |                     ~ ^ ~
+    ../numpy/_core/src/umath/string_fastsearch.h:826:20: note: in instantiation of function template specialization 'rfindchar<char>' requested here
+      826 |             return rfindchar(s_, n, p_[0]);
+          |                    ^
+    ../numpy/_core/src/umath/string_buffer.h:898:19: note: in instantiation of function template specialization 'fastsearch<char>' requested here
+      898 |             pos = fastsearch(start_loc, end_loc - start_loc, buf2.buf, buf2.after - buf2.buf, -1, FAST_SEARCH);
+          |                   ^
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1114:9: note: in instantiation of function template specialization 'string_find<ENCODING::ASCII>' requested here
+     1114 |         string_find<ENCODING::ASCII>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:720:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      720 | operator-(Buffer<enc> lhs, Buffer<enc> rhs)
+          | ^
+    ../numpy/_core/src/umath/string_buffer.h:736:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      736 | operator-(Buffer<enc> lhs, npy_int64 rhs)
+          | ^
+    ../numpy/_core/src/umath/string_fastsearch.h:139:5: note: candidate function not viable: no known conversion from 'CheckedIndexer<char>' to 'size_t' (aka 'unsigned long') for 1st argument
+      139 |     operator-(size_t rhs)
+          |     ^         ~~~~~~~~~~
+    ../numpy/_core/src/umath/string_fastsearch.h:495:27: error: invalid operands to binary expression ('CheckedIndexer<char>' and 'CheckedIndexer<char>')
+      495 |             return window - haystack;
+          |                    ~~~~~~ ^ ~~~~~~~~
+    ../numpy/_core/src/umath/string_fastsearch.h:576:18: note: in instantiation of function template specialization '_two_way<char>' requested here
+      576 |         result = _two_way(haystack + index,
+          |                  ^
+    ../numpy/_core/src/umath/string_fastsearch.h:846:24: note: in instantiation of function template specialization '_two_way_count<char>' requested here
+      846 |                 return _two_way_count(s_, n, p_, m, maxcount);
+          |                        ^
+    ../numpy/_core/src/umath/string_buffer.h:898:19: note: in instantiation of function template specialization 'fastsearch<char>' requested here
+      898 |             pos = fastsearch(start_loc, end_loc - start_loc, buf2.buf, buf2.after - buf2.buf, -1, FAST_SEARCH);
+          |                   ^
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1114:9: note: in instantiation of function template specialization 'string_find<ENCODING::ASCII>' requested here
+     1114 |         string_find<ENCODING::ASCII>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:720:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      720 | operator-(Buffer<enc> lhs, Buffer<enc> rhs)
+          | ^
+    ../numpy/_core/src/umath/string_buffer.h:736:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      736 | operator-(Buffer<enc> lhs, npy_int64 rhs)
+          | ^
+    ../numpy/_core/src/umath/string_fastsearch.h:139:5: note: candidate function not viable: no known conversion from 'CheckedIndexer<char>' to 'size_t' (aka 'unsigned long') for 1st argument
+      139 |     operator-(size_t rhs)
+          |     ^         ~~~~~~~~~~
+    ../numpy/_core/src/umath/string_fastsearch.h:219:23: error: invalid operands to binary expression ('CheckedIndexer<unsigned int>' and 'CheckedIndexer<unsigned int>')
+      219 |             return (p - s);
+          |                     ~ ^ ~
+    ../numpy/_core/src/umath/string_fastsearch.h:826:20: note: in instantiation of function template specialization 'rfindchar<unsigned int>' requested here
+      826 |             return rfindchar(s_, n, p_[0]);
+          |                    ^
+    ../numpy/_core/src/umath/string_buffer.h:908:19: note: in instantiation of function template specialization 'fastsearch<unsigned int>' requested here
+      908 |             pos = fastsearch((npy_ucs4 *)start_loc, end - start,
+          |                   ^
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1114:9: note: in instantiation of function template specialization 'string_find<ENCODING::ASCII>' requested here
+     1114 |         string_find<ENCODING::ASCII>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:720:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      720 | operator-(Buffer<enc> lhs, Buffer<enc> rhs)
+          | ^
+    ../numpy/_core/src/umath/string_buffer.h:736:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      736 | operator-(Buffer<enc> lhs, npy_int64 rhs)
+          | ^
+    ../numpy/_core/src/umath/string_fastsearch.h:139:5: note: candidate function not viable: no known conversion from 'CheckedIndexer<unsigned int>' to 'size_t' (aka 'unsigned long') for 1st argument
+      139 |     operator-(size_t rhs)
+          |     ^         ~~~~~~~~~~
+    ../numpy/_core/src/umath/string_fastsearch.h:495:27: error: invalid operands to binary expression ('CheckedIndexer<unsigned int>' and 'CheckedIndexer<unsigned int>')
+      495 |             return window - haystack;
+          |                    ~~~~~~ ^ ~~~~~~~~
+    ../numpy/_core/src/umath/string_fastsearch.h:576:18: note: in instantiation of function template specialization '_two_way<unsigned int>' requested here
+      576 |         result = _two_way(haystack + index,
+          |                  ^
+    ../numpy/_core/src/umath/string_fastsearch.h:846:24: note: in instantiation of function template specialization '_two_way_count<unsigned int>' requested here
+      846 |                 return _two_way_count(s_, n, p_, m, maxcount);
+          |                        ^
+    ../numpy/_core/src/umath/string_buffer.h:908:19: note: in instantiation of function template specialization 'fastsearch<unsigned int>' requested here
+      908 |             pos = fastsearch((npy_ucs4 *)start_loc, end - start,
+          |                   ^
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1114:9: note: in instantiation of function template specialization 'string_find<ENCODING::ASCII>' requested here
+     1114 |         string_find<ENCODING::ASCII>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:720:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      720 | operator-(Buffer<enc> lhs, Buffer<enc> rhs)
+          | ^
+    ../numpy/_core/src/umath/string_buffer.h:736:1: note: candidate template ignored: could not match 'Buffer' against 'CheckedIndexer'
+      736 | operator-(Buffer<enc> lhs, npy_int64 rhs)
+          | ^
+    ../numpy/_core/src/umath/string_fastsearch.h:139:5: note: candidate function not viable: no known conversion from 'CheckedIndexer<unsigned int>' to 'size_t' (aka 'unsigned long') for 1st argument
+      139 |     operator-(size_t rhs)
+          |     ^         ~~~~~~~~~~
+    In file included from ../numpy/_core/src/umath/string_ufuncs.cpp:21:
+    ../numpy/_core/src/umath/string_buffer.h:924:20: error: no matching function for call to 'string_find'
+      924 |     npy_intp pos = string_find(buf1, buf2, start, end);
+          |                    ^~~~~~~~~~~
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1116:9: note: in instantiation of function template specialization 'string_index<ENCODING::ASCII>' requested here
+     1116 |         string_index<ENCODING::ASCII>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:831:1: note: candidate template ignored: substitution failure [with enc = ENCODING::ASCII]
+      831 | string_find(Buffer<enc> buf1, Buffer<enc> buf2, npy_int64 start, npy_int64 end)
+          | ^
+    ../numpy/_core/src/umath/string_buffer.h:924:20: error: no matching function for call to 'string_find'
+      924 |     npy_intp pos = string_find(buf1, buf2, start, end);
+          |                    ^~~~~~~~~~~
+    ../numpy/_core/src/umath/string_ufuncs.cpp:1124:9: note: in instantiation of function template specialization 'string_index<ENCODING::UTF32>' requested here
+     1124 |         string_index<ENCODING::UTF32>,
+          |         ^
+    ../numpy/_core/src/umath/string_buffer.h:831:1: note: candidate template ignored: substitution failure [with enc = ENCODING::UTF32]
+      831 | string_find(Buffer<enc> buf1, Buffer<enc> buf2, npy_int64 start, npy_int64 end)
+          | ^
+    7 errors generated.
+    [249/322] Linking static target numpy/_core/lib_simd_mtargets.a
+    [250/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_clip.cpp.o
+    [251/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath__scaled_float_dtype.c.o
+    [252/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_umathmodule.c.o
+    [253/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_stringdtype_ufuncs.cpp.o
+    [254/322] Compiling C object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_umath_ufunc_object.c.o
+    [255/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_selection.cpp.o
+    [256/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_quicksort.cpp.o
+    [257/322] Compiling C++ object numpy/_core/_multiarray_umath.cpython-39-darwin.so.p/src_npysort_timsort.cpp.o
+    ninja: build stopped: subcommand failed.
+    ----------------------------------------
+ERROR: Command errored out with exit status 1: /Users/koguretaichi/.pyenv/versions/3.9.1/bin/python3 /Users/koguretaichi/.pyenv/versions/3.9.1/lib/python3.9/site-packages/pip/_vendor/pep517/_in_process.py prepare_metadata_for_build_wheel /var/folders/lg/1vqz_hg54y398m4k2nx6vkh80000gn/T/tmprdo4orwe Check the logs for full command output.

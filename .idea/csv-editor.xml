@@ -619,6 +619,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/2026/RDIssues/Ver13/20260127DOE/job_details_01_Baseline.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver13/20260127DOE/quality_gate_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver13/output/dr_cost_summary.csv">
           <value>
             <Attribute>
@@ -655,6 +669,13 @@
           </value>
         </entry>
         <entry key="/2026/RDIssues/Ver13/output/rework_job_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver13/output/rework_loss_summary.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

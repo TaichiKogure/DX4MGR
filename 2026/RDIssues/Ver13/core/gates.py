@@ -55,13 +55,17 @@ class WorkGate(GateNode):
 
     def _get_friction_multiplier(self) -> float:
         """人数増加に伴う摩擦（コミュニケーションコスト）倍率を計算する"""
-        if self.n_servers <= 1:
+        # Ver13修正: n_serversではなくbusy_servers（現在稼働中のジョブ数）に基づくように変更
+        # 理由: SMALL_EXPのようにn=999の設定で、実際には少人数しか働いていないのに最大摩擦が掛かるのを防ぐため
+        effective_n = self.busy_servers
+        
+        if effective_n <= 1:
             return 1.0
         
         if self.friction_model == "linear":
-            return 1.0 + self.friction_alpha * (self.n_servers - 1)
+            return 1.0 + self.friction_alpha * (effective_n - 1)
         elif self.friction_model == "pairs":
-            return 1.0 + self.friction_alpha * self.n_servers * (self.n_servers - 1) / 2.0
+            return 1.0 + self.friction_alpha * effective_n * (effective_n - 1) / 2.0
         else:
             # 未知のモデルの場合は摩擦なし
             return 1.0
@@ -259,7 +263,13 @@ class MeetingGate(GateNode):
             self.processed_count += 1
             self.total_cost += self.cost_per_review
             
-            job.add_history(self.node_id, "REVIEW", now, wait_time=wait_time)
+            job.add_history(
+                self.node_id,
+                "REVIEW",
+                now,
+                wait_time=wait_time,
+                cost_per_review=self.cost_per_review
+            )
             
             # Ver13 added: LatentRisk modifiers
             mods = {"quality_mult": 1.0, "conditional_add": 0.0, "nogo_add": 0.0}
@@ -277,8 +287,24 @@ class MeetingGate(GateNode):
             decision_time = now + self.decision_latency_days # 意思決定の遅延
             
             if rand < q: # GO (次へ)
+                job.add_history(
+                    self.node_id,
+                    "DECISION",
+                    decision_time,
+                    outcome="GO",
+                    decision_latency=self.decision_latency_days,
+                    target_node=self.next_node_id
+                )
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.next_node_id}, priority=5)
             elif rand < q + (1.0 - q) * cond_ratio: # CONDITIONAL (差し戻し：重み付き)
+                job.add_history(
+                    self.node_id,
+                    "DECISION",
+                    decision_time,
+                    outcome="CONDITIONAL",
+                    decision_latency=self.decision_latency_days,
+                    target_node=self.rework_node_id
+                )
                 job.rework_count += 1
                 # Step 5: 増殖ルールの適用
                 rework_result = self.rework_policy.apply_rework(job, decision_time)
@@ -325,6 +351,14 @@ class MeetingGate(GateNode):
                             )
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.rework_node_id}, priority=5)
             else: # NO_GO (終了 or 大差し戻し)
+                job.add_history(
+                    self.node_id,
+                    "DECISION",
+                    decision_time,
+                    outcome="NO_GO",
+                    decision_latency=self.decision_latency_days,
+                    target_node=self.nogo_node_id
+                )
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.nogo_node_id}, priority=5)
 
         # 次の会議をスケジュール (Step 4.3 ⚠️引っかかり：無駄な日次ループ禁止のためイベントジャンプ方式)

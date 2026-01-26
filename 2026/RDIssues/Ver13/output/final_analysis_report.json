@@ -17,29 +17,29 @@
                 },
                 {
                     "name": "Gate2: 統計品質(CI幅)",
-                    "status": "FAIL",
-                    "value": 3.9198,
+                    "status": "PASS",
+                    "value": 0.1282,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 1.7302,
+                    "value": 80.9763,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.02,
+                    "value": 1.298,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 1.8264840182648402e-05,
-                "avg_p90_lt": 1.730165793217534,
-                "avg_reworks": 0.02,
-                "ci_width_tp": 3.919785391749802
+                "avg_tp": 0.003214611872146119,
+                "avg_p90_lt": 80.97633295201823,
+                "avg_reworks": 1.298,
+                "ci_width_tp": 0.1282236798915715
             }
         },
         "02_High_Load": {
@@ -54,28 +54,28 @@
                 {
                     "name": "Gate2: 統計品質(CI幅)",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 0.1117,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 83.923,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 1.1857,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.0,
-                "avg_p90_lt": 0.0,
-                "avg_reworks": 0.0,
-                "ci_width_tp": 0.0
+                "avg_tp": 0.006210045662100458,
+                "avg_p90_lt": 83.92295456360347,
+                "avg_reworks": 1.1856507936507936,
+                "ci_width_tp": 0.11170894643951958
             }
         },
         "03_Few_Engineers": {
@@ -90,28 +90,28 @@
                 {
                     "name": "Gate2: 統計品質(CI幅)",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 0.1538,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 75.7054,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 1.575,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.0,
-                "avg_p90_lt": 0.0,
-                "avg_reworks": 0.0,
-                "ci_width_tp": 0.0
+                "avg_tp": 0.0026301369863013704,
+                "avg_p90_lt": 75.70541580716036,
+                "avg_reworks": 1.5749999999999997,
+                "ci_width_tp": 0.15379554100676054
             }
         },
         "04_Many_Engineers": {
@@ -125,29 +125,29 @@
                 },
                 {
                     "name": "Gate2: 統計品質(CI幅)",
-                    "status": "FAIL",
-                    "value": 0.8854,
+                    "status": "PASS",
+                    "value": 0.1215,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 23.0732,
+                    "value": 80.4941,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.13,
+                    "value": 1.298,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.000365296803652968,
-                "avg_p90_lt": 23.073217140619715,
-                "avg_reworks": 0.13,
-                "ci_width_tp": 0.885435320967955
+                "avg_tp": 0.0032694063926940638,
+                "avg_p90_lt": 80.49413139135909,
+                "avg_reworks": 1.298,
+                "ci_width_tp": 0.12152887652399812
             }
         },
         "05_High_Uncertainty": {
@@ -161,29 +161,29 @@
                 },
                 {
                     "name": "Gate2: 統計品質(CI幅)",
-                    "status": "PASS",
-                    "value": 0.0,
+                    "status": "FAIL",
+                    "value": 0.6318,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 30.5482,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.0,
+                    "value": 1.12,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 0.0,
-                "avg_p90_lt": 0.0,
-                "avg_reworks": 0.0,
-                "ci_width_tp": 0.0
+                "avg_tp": 0.00040182648401826474,
+                "avg_p90_lt": 30.54820546717562,
+                "avg_reworks": 1.12,
+                "ci_width_tp": 0.6317636315659515
             }
         },
         "06_Tight_DR": {
@@ -197,124 +197,545 @@
                 },
                 {
                     "name": "Gate2: 統計品質(CI幅)",
-                    "status": "FAIL",
-                    "value": 3.9198,
+                    "status": "PASS",
+                    "value": 0.145,
                     "threshold": 0.5
                 },
                 {
                     "name": "Gate3: P90待ち時間基準",
                     "status": "PASS",
-                    "value": 0.5631,
+                    "value": 38.0608,
                     "threshold": 300.0
                 },
                 {
                     "name": "Gate4: 平均差し戻し回数",
                     "status": "PASS",
-                    "value": 0.02,
+                    "value": 1.733,
                     "threshold": 5.0
                 }
             ],
             "metrics": {
                 "avg_completed": 0.0,
-                "avg_tp": 1.8264840182648402e-05,
-                "avg_p90_lt": 0.5630507054719714,
-                "avg_reworks": 0.02,
-                "ci_width_tp": 3.919785391749801
+                "avg_tp": 0.0030136986301369855,
+                "avg_p90_lt": 38.06076751927335,
+                "avg_reworks": 1.733,
+                "ci_width_tp": 0.14498910635597284
             }
         }
     },
     "comparison_summary": {
         "01_Baseline": {
-            "mean": 1.8264840182648402e-05,
+            "mean": 0.003214611872146119,
             "ci": [
-                -1.7534246575342465e-05,
-                5.406392694063927e-05
+                0.0030085171261994242,
+                0.0034207066180928134
             ]
         },
         "02_High_Load": {
-            "mean": 0.0,
+            "mean": 0.006210045662100458,
             "ci": [
-                0.0,
-                0.0
+                0.005863186777118709,
+                0.0065569045470822065
             ]
         },
         "03_Few_Engineers": {
-            "mean": 0.0,
+            "mean": 0.0026301369863013704,
             "ci": [
-                0.0,
-                0.0
+                0.002427885239038545,
+                0.002832388733564196
             ]
         },
         "04_Many_Engineers": {
-            "mean": 0.000365296803652968,
+            "mean": 0.0032694063926940638,
             "ci": [
-                0.0002035730146397906,
-                0.0005270205926661453
+                0.003070742689027382,
+                0.0034680700963607455
             ]
         },
         "05_High_Uncertainty": {
-            "mean": 0.0,
+            "mean": 0.00040182648401826474,
             "ci": [
-                0.0,
-                0.0
+                0.0002748964887350706,
+                0.0005287564793014589
             ]
         },
         "06_Tight_DR": {
-            "mean": 1.8264840182648402e-05,
+            "mean": 0.0030136986301369855,
             "ci": [
-                -1.753424657534246e-05,
-                5.406392694063926e-05
+                0.002795221822037542,
+                0.0032321754382364292
             ]
         }
     },
     "cost_summary": [
         {
             "scenario": "01_Baseline",
-            "dr1_cost_avg": 0.56,
-            "dr2_cost_avg": 0.48,
-            "dr3_cost_avg": 0.06,
-            "total_review_cost_avg": 1.1,
-            "cost_per_completed_job_avg": 55.0
+            "dr1_cost_avg": 39.4,
+            "dr2_cost_avg": 29.8,
+            "dr3_cost_avg": 13.02,
+            "total_review_cost_avg": 82.22,
+            "cost_per_completed_job_avg": 24.908333333333335
         },
         {
             "scenario": "02_High_Load",
-            "dr1_cost_avg": 0.0,
-            "dr2_cost_avg": 0.0,
-            "dr3_cost_avg": 0.0,
-            "total_review_cost_avg": 0.0,
-            "cost_per_completed_job_avg": 0.0
+            "dr1_cost_avg": 78.08,
+            "dr2_cost_avg": 59.44,
+            "dr3_cost_avg": 26.88,
+            "total_review_cost_avg": 164.4,
+            "cost_per_completed_job_avg": 25.177865079365077
         },
         {
             "scenario": "03_Few_Engineers",
-            "dr1_cost_avg": 0.0,
-            "dr2_cost_avg": 0.0,
-            "dr3_cost_avg": 0.0,
-            "total_review_cost_avg": 0.0,
-            "cost_per_completed_job_avg": 0.0
+            "dr1_cost_avg": 39.66,
+            "dr2_cost_avg": 30.8,
+            "dr3_cost_avg": 12.24,
+            "total_review_cost_avg": 82.7,
+            "cost_per_completed_job_avg": 31.910000000000004
         },
         {
             "scenario": "04_Many_Engineers",
-            "dr1_cost_avg": 8.38,
-            "dr2_cost_avg": 6.84,
-            "dr3_cost_avg": 1.5,
-            "total_review_cost_avg": 16.72,
-            "cost_per_completed_job_avg": 45.84375
+            "dr1_cost_avg": 39.34,
+            "dr2_cost_avg": 29.76,
+            "dr3_cost_avg": 13.08,
+            "total_review_cost_avg": 82.18,
+            "cost_per_completed_job_avg": 24.045000000000005
         },
         {
             "scenario": "05_High_Uncertainty",
-            "dr1_cost_avg": 0.0,
-            "dr2_cost_avg": 0.0,
-            "dr3_cost_avg": 0.0,
-            "total_review_cost_avg": 0.0,
-            "cost_per_completed_job_avg": 0.0
+            "dr1_cost_avg": 19.02,
+            "dr2_cost_avg": 7.68,
+            "dr3_cost_avg": 1.98,
+            "total_review_cost_avg": 28.68,
+            "cost_per_completed_job_avg": 65.18181818181819
         },
         {
             "scenario": "06_Tight_DR",
-            "dr1_cost_avg": 0.54,
-            "dr2_cost_avg": 0.32,
-            "dr3_cost_avg": 0.06,
-            "total_review_cost_avg": 0.92,
-            "cost_per_completed_job_avg": 46.0
+            "dr1_cost_avg": 39.82,
+            "dr2_cost_avg": 33.08,
+            "dr3_cost_avg": 13.32,
+            "total_review_cost_avg": 86.22,
+            "cost_per_completed_job_avg": 29.065
+        }
+    ],
+    "loss_breakdown": [
+        {
+            "scenario": "01_Baseline",
+            "primary_completed_avg": 3.52,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 65.00542778812502,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 68.00542778812502,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 68.00542778812502,
+            "review_cost_total_avg": 10.56,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        },
+        {
+            "scenario": "02_High_Load",
+            "primary_completed_avg": 6.8,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 64.07340613200432,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 67.07340613200432,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 67.07340613200432,
+            "review_cost_total_avg": 20.4,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        },
+        {
+            "scenario": "03_Few_Engineers",
+            "primary_completed_avg": 2.88,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 60.86077780207542,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 63.86077780207542,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 63.86077780207542,
+            "review_cost_total_avg": 8.64,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        },
+        {
+            "scenario": "04_Many_Engineers",
+            "primary_completed_avg": 3.58,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 64.38601577491697,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 67.38601577491697,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 67.38601577491697,
+            "review_cost_total_avg": 10.74,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        },
+        {
+            "scenario": "05_High_Uncertainty",
+            "primary_completed_avg": 1.0,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 66.42773969812642,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 69.42773969812642,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 69.42773969812642,
+            "review_cost_total_avg": 3.0,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        },
+        {
+            "scenario": "06_Tight_DR",
+            "primary_completed_avg": 3.3,
+            "rework_jobs_avg": 0.0,
+            "primary_work_avg_days": 0.0,
+            "primary_wait_avg_days": 27.982549352330434,
+            "primary_decision_avg_days": 3.0,
+            "primary_flow_avg_days": 30.98254935233043,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_time_per_primary_avg_days": 0.0,
+            "time_loss_per_primary_avg_days": 30.98254935233043,
+            "review_cost_total_avg": 9.9,
+            "review_cost_per_primary_avg": 3.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0,
+            "rework_review_ratio_avg": 0.0
+        }
+    ],
+    "rework_loss_summary": [
+        {
+            "scenario": "01_Baseline",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        },
+        {
+            "scenario": "02_High_Load",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        },
+        {
+            "scenario": "03_Few_Engineers",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        },
+        {
+            "scenario": "04_Many_Engineers",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        },
+        {
+            "scenario": "05_High_Uncertainty",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        },
+        {
+            "scenario": "06_Tight_DR",
+            "rework_jobs_avg": 0.0,
+            "rework_flow_avg_days": 0.0,
+            "rework_wait_avg_days": 0.0,
+            "rework_work_avg_days": 0.0,
+            "rework_decision_avg_days": 0.0,
+            "rework_review_cost_avg": 0.0,
+            "rework_review_cost_per_primary_avg": 0.0
+        }
+    ],
+    "rework_source_gate_summary": [],
+    "dr_gate_cycle_times": [
+        {
+            "scenario": "01_Baseline",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "01_Baseline",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "01_Baseline",
+            "gate": "DR3",
+            "cycle_p50": 69.93675283619089,
+            "cycle_p90": 80.97633295201823,
+            "cycle_p95": 82.30069558299765,
+            "wait_p50": 66.93675283619089,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 3.52
+        },
+        {
+            "scenario": "02_High_Load",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "02_High_Load",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "02_High_Load",
+            "gate": "DR3",
+            "cycle_p50": 70.71476756726179,
+            "cycle_p90": 83.92295456360347,
+            "cycle_p95": 85.3704503153252,
+            "wait_p50": 67.71476756726179,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 6.8
+        },
+        {
+            "scenario": "03_Few_Engineers",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "03_Few_Engineers",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "03_Few_Engineers",
+            "gate": "DR3",
+            "cycle_p50": 65.90665420029985,
+            "cycle_p90": 75.70541580716036,
+            "cycle_p95": 76.8384458248266,
+            "wait_p50": 62.906654200299855,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 2.88
+        },
+        {
+            "scenario": "04_Many_Engineers",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "04_Many_Engineers",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "04_Many_Engineers",
+            "gate": "DR3",
+            "cycle_p50": 69.31526914963533,
+            "cycle_p90": 80.49413139135909,
+            "cycle_p95": 81.81753129102563,
+            "wait_p50": 66.31526914963533,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 3.58
+        },
+        {
+            "scenario": "05_High_Uncertainty",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "05_High_Uncertainty",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "05_High_Uncertainty",
+            "gate": "DR3",
+            "cycle_p50": 69.42773969812642,
+            "cycle_p90": 69.42773969812642,
+            "cycle_p95": 69.42773969812642,
+            "wait_p50": 66.42773969812642,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 1.0
+        },
+        {
+            "scenario": "06_Tight_DR",
+            "gate": "DR1",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "06_Tight_DR",
+            "gate": "DR2",
+            "cycle_p50": 0.0,
+            "cycle_p90": 0.0,
+            "cycle_p95": 0.0,
+            "wait_p50": 0.0,
+            "decision_p50": 0.0,
+            "pass_rate": 0.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 0.0
+        },
+        {
+            "scenario": "06_Tight_DR",
+            "gate": "DR3",
+            "cycle_p50": 31.943669532755948,
+            "cycle_p90": 38.06076751927335,
+            "cycle_p95": 38.71084301291635,
+            "wait_p50": 28.943669532755948,
+            "decision_p50": 3.0,
+            "pass_rate": 1.0,
+            "conditional_rate": 0.0,
+            "nogo_rate": 0.0,
+            "count_avg": 3.3
         }
     ]
 }

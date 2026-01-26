@@ -320,7 +320,7 @@ def plot_proliferated_tasks_distribution(tasks_dict, title="増殖した小実�
 def plot_scorecard(scenario_metrics: dict, baseline_name: str, title="シナリオ性能スコアカード"):
     """
     各シナリオの主要指標を並べたスコアカード（表形式の画像）を生成。
-    指標: LT(P90), TP, AvgWIP, Rework
+    指標: LT(P90), TP, AvgWIP, Rework, TimeLoss, CostLoss, DRゲートP90
     """
     import pandas as pd
     
@@ -340,13 +340,21 @@ def plot_scorecard(scenario_metrics: dict, baseline_name: str, title="シナリ�
             "AvgWIP": f"{m['wip']:.1f}",
             "AvgWIP vs Base": f"{m['wip'] / (base['wip'] + 1e-9):.2f}x",
             "Rework": f"{m['rework']:.2f}",
-            "Rework vs Base": f"{m['rework'] / (base['rework'] + 1e-9):.2f}x"
+            "Rework vs Base": f"{m['rework'] / (base['rework'] + 1e-9):.2f}x",
+            "TimeLoss": f"{m.get('time_loss', 0.0):.2f}",
+            "TimeLoss vs Base": f"{(m.get('time_loss', 0.0) / (base.get('time_loss', 1e-9) + 1e-9)):.2f}x",
+            "CostLoss": f"{m.get('cost_loss', 0.0):.2f}",
+            "CostLoss vs Base": f"{(m.get('cost_loss', 0.0) / (base.get('cost_loss', 1e-9) + 1e-9)):.2f}x",
+            "DR1(P90)": f"{m.get('dr1_p90', 0.0):.1f}",
+            "DR2(P90)": f"{m.get('dr2_p90', 0.0):.1f}",
+            "DR3(P90)": f"{m.get('dr3_p90', 0.0):.1f}",
         }
         rows.append(row)
     
     df = pd.DataFrame(rows)
     
-    fig, ax = plt.subplots(figsize=(14, 2 + 0.5 * len(rows)))
+    fig_width = max(14, 1.2 * len(df.columns))
+    fig, ax = plt.subplots(figsize=(fig_width, 2 + 0.5 * len(rows)))
     ax.axis('off')
     table = ax.table(cellText=df.values, colLabels=df.columns, loc='center', cellLoc='center')
     table.auto_set_font_size(False)
@@ -360,6 +368,75 @@ def plot_scorecard(scenario_metrics: dict, baseline_name: str, title="シナリ�
         table[0, j].get_text().set_weight('bold')
 
     plt.title(title, pad=30, fontsize=14, fontweight='bold')
+    plt.tight_layout()
+
+def plot_loss_breakdown(loss_df, title="損失分解 (時間ロス: 1件あたり)"):
+    """
+    loss_df columns (scenario-level):
+      scenario, primary_wait_avg_days, primary_decision_avg_days, rework_time_per_primary_avg_days
+    """
+    if loss_df is None or loss_df.empty:
+        return
+    required = {"scenario", "primary_wait_avg_days", "primary_decision_avg_days", "rework_time_per_primary_avg_days"}
+    if not required.issubset(set(loss_df.columns)):
+        return
+
+    df = loss_df.copy()
+    df = df.sort_values("scenario")
+    labels = df["scenario"].tolist()
+    wait_vals = df["primary_wait_avg_days"].astype(float).tolist()
+    decision_vals = df["primary_decision_avg_days"].astype(float).tolist()
+    rework_vals = df["rework_time_per_primary_avg_days"].astype(float).tolist()
+
+    plt.figure(figsize=(12, max(4, 0.6 * len(labels))))
+    plt.barh(labels, wait_vals, label="待ち")
+    left = np.array(wait_vals)
+    plt.barh(labels, decision_vals, left=left, label="意思決定遅延")
+    left = left + np.array(decision_vals)
+    plt.barh(labels, rework_vals, left=left, label="差し戻し(再作業)")
+    plt.title(title)
+    plt.xlabel("日数")
+    plt.legend()
+    plt.grid(axis="x", linestyle="--", alpha=0.4)
+    plt.tight_layout()
+
+def plot_cost_loss(loss_df, title="差し戻しコストロス (1件あたり)"):
+    """
+    loss_df columns (scenario-level):
+      scenario, rework_review_cost_per_primary_avg
+    """
+    if loss_df is None or loss_df.empty:
+        return
+    required = {"scenario", "rework_review_cost_per_primary_avg"}
+    if not required.issubset(set(loss_df.columns)):
+        return
+
+    df = loss_df.copy().sort_values("scenario")
+    plt.figure(figsize=(10, max(4, 0.5 * len(df))))
+    plt.barh(df["scenario"], df["rework_review_cost_per_primary_avg"].astype(float), color="salmon")
+    plt.title(title)
+    plt.xlabel("コスト (1件あたり)")
+    plt.grid(axis="x", linestyle="--", alpha=0.4)
+    plt.tight_layout()
+
+def plot_dr_cycle_heatmap(dr_df, value_col="cycle_p90", title="DRゲート突破時間 (P90)"):
+    """
+    dr_df columns: scenario, gate, value_col
+    """
+    if dr_df is None or dr_df.empty:
+        return
+    required = {"scenario", "gate", value_col}
+    if not required.issubset(set(dr_df.columns)):
+        return
+
+    pivot = dr_df.pivot_table(index="scenario", columns="gate", values=value_col, aggfunc="mean").fillna(0.0)
+    if pivot.empty:
+        return
+    plt.figure(figsize=(max(6, 1.2 * pivot.shape[1]), max(4, 0.6 * pivot.shape[0])))
+    sns.heatmap(pivot, annot=True, fmt=".1f", cmap="YlGnBu")
+    plt.title(title)
+    plt.xlabel("Gate")
+    plt.ylabel("Scenario")
     plt.tight_layout()
 
 def plot_job_gantt(job_log_df, title="ジョブ進行（サンプル）", max_jobs=30):

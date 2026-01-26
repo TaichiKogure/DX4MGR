@@ -19,6 +19,114 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
     rework_lead_times = [job.history[-1]["time"] - job.created_at for job in rework_jobs if job.history]
     rework_stats = _lead_time_stats(rework_lead_times)
 
+    def _init_gate_bucket():
+        return {
+            "cycle_times": [],
+            "wait_times": [],
+            "decision_latencies": [],
+            "outcomes": {"GO": 0, "CONDITIONAL": 0, "NO_GO": 0}
+        }
+
+    def _sum_job_components(job: Job, gate_buckets: Dict[str, Any], rework_source_bucket: Dict[str, Any]):
+        work_time = 0.0
+        wait_time = 0.0
+        decision_latency = 0.0
+        review_cost = 0.0
+
+        if not getattr(job, "history", None):
+            return work_time, wait_time, decision_latency, review_cost
+
+        # Sort by time to stabilize ENQUEUE -> DECISION matching
+        history = sorted(job.history, key=lambda h: (h.get("time", 0.0), h.get("event", "")))
+        last_enqueue = {}
+        last_review_wait = {}
+
+        for h in history:
+            event = h.get("event")
+            node_id = h.get("node_id")
+
+            if event == "START_WORK":
+                work_time += float(h.get("effective_duration", 0.0) or 0.0)
+                wait_time += float(h.get("wait_time", 0.0) or 0.0)
+                continue
+
+            if event == "REVIEW":
+                wait_time += float(h.get("wait_time", 0.0) or 0.0)
+                review_cost += float(h.get("cost_per_review", 0.0) or 0.0)
+                if node_id:
+                    last_review_wait[node_id] = float(h.get("wait_time", 0.0) or 0.0)
+                continue
+
+            if event == "BUNDLED":
+                wait_time += float(h.get("wait_time", 0.0) or 0.0)
+                continue
+
+            if event == "ENQUEUE" and isinstance(node_id, str) and node_id.startswith("DR"):
+                last_enqueue[node_id] = float(h.get("time", 0.0))
+                continue
+
+            if event == "DECISION" and isinstance(node_id, str) and node_id.startswith("DR"):
+                decision_latency += float(h.get("decision_latency", 0.0) or 0.0)
+                gate = node_id
+                bucket = gate_buckets.setdefault(gate, _init_gate_bucket())
+                start = last_enqueue.get(gate)
+                if start is not None:
+                    bucket["cycle_times"].append(float(h.get("time", 0.0)) - float(start))
+                wait_val = last_review_wait.get(gate)
+                if wait_val is not None:
+                    bucket["wait_times"].append(float(wait_val))
+                bucket["decision_latencies"].append(float(h.get("decision_latency", 0.0) or 0.0))
+                outcome = h.get("outcome")
+                if outcome in bucket["outcomes"]:
+                    bucket["outcomes"][outcome] += 1
+
+        if getattr(job, "is_rework_task", False):
+            source_gate = getattr(job, "rework_source_gate", None) or "UNKNOWN"
+            src_bucket = rework_source_bucket.setdefault(source_gate, {
+                "count": 0,
+                "work_total": 0.0,
+                "wait_total": 0.0,
+                "decision_total": 0.0,
+                "flow_total": 0.0
+            })
+            src_bucket["count"] += 1
+            src_bucket["work_total"] += work_time
+            src_bucket["wait_total"] += wait_time
+            src_bucket["decision_total"] += decision_latency
+            if job.history:
+                src_bucket["flow_total"] += float(job.history[-1]["time"]) - float(job.created_at)
+
+        return work_time, wait_time, decision_latency, review_cost
+
+    def _summarize_gate_bucket(bucket: Dict[str, Any]):
+        cycle = bucket.get("cycle_times", [])
+        waits = bucket.get("wait_times", [])
+        decisions = bucket.get("decision_latencies", [])
+        stats = {
+            "cycle_avg": float(np.mean(cycle)) if cycle else 0.0,
+            "cycle_p50": float(np.percentile(cycle, 50)) if cycle else 0.0,
+            "cycle_p90": float(np.percentile(cycle, 90)) if cycle else 0.0,
+            "cycle_p95": float(np.percentile(cycle, 95)) if cycle else 0.0,
+            "wait_avg": float(np.mean(waits)) if waits else 0.0,
+            "wait_p50": float(np.percentile(waits, 50)) if waits else 0.0,
+            "wait_p90": float(np.percentile(waits, 90)) if waits else 0.0,
+            "decision_avg": float(np.mean(decisions)) if decisions else 0.0,
+            "decision_p50": float(np.percentile(decisions, 50)) if decisions else 0.0,
+            "decision_p90": float(np.percentile(decisions, 90)) if decisions else 0.0,
+            "count": int(len(cycle))
+        }
+        outcomes = bucket.get("outcomes", {}) or {}
+        total = float(sum(outcomes.values()))
+        if total > 0:
+            stats["pass_rate"] = outcomes.get("GO", 0) / total
+            stats["conditional_rate"] = outcomes.get("CONDITIONAL", 0) / total
+            stats["nogo_rate"] = outcomes.get("NO_GO", 0) / total
+        else:
+            stats["pass_rate"] = 0.0
+            stats["conditional_rate"] = 0.0
+            stats["nogo_rate"] = 0.0
+        return stats
+
     if not primary_jobs:
         return {
             "error": "No primary jobs completed",
@@ -75,6 +183,8 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
             "rework_lead_time_p95": rework_stats["p95"],
         },
         "gate_stats": nodes_stats,
+        "dr_gate": {},
+        "loss": {},
         "wip": {
             "avg_total": avg_wip_total,
             "avg_by_node": avg_wip_by_node,
@@ -89,6 +199,97 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
         "raw_rework_weights": rework_weights,
         "raw_proliferated_tasks": proliferated_tasks,
         "raw_rework_lead_times": rework_lead_times,
+    }
+
+    # --- Loss decomposition & DR cycle times ---
+    primary_gate_buckets: Dict[str, Any] = {}
+    rework_gate_buckets: Dict[str, Any] = {}
+    rework_by_source_gate: Dict[str, Any] = {}
+
+    primary_work = primary_wait = primary_decision = primary_review_cost = 0.0
+    rework_work = rework_wait = rework_decision = rework_review_cost = 0.0
+    primary_flow_total = 0.0
+    rework_flow_total = 0.0
+
+    for job in primary_jobs:
+        w, wt, dlat, rcost = _sum_job_components(job, primary_gate_buckets, rework_by_source_gate)
+        primary_work += w
+        primary_wait += wt
+        primary_decision += dlat
+        primary_review_cost += rcost
+        if job.history:
+            primary_flow_total += float(job.history[-1]["time"]) - float(job.created_at)
+
+    for job in rework_jobs:
+        w, wt, dlat, rcost = _sum_job_components(job, rework_gate_buckets, rework_by_source_gate)
+        rework_work += w
+        rework_wait += wt
+        rework_decision += dlat
+        rework_review_cost += rcost
+        if job.history:
+            rework_flow_total += float(job.history[-1]["time"]) - float(job.created_at)
+
+    primary_count = len(primary_jobs)
+    rework_count = len(rework_jobs)
+
+    time_primary_avg = {
+        "count": primary_count,
+        "work_total": primary_work,
+        "wait_total": primary_wait,
+        "decision_total": primary_decision,
+        "flow_total": primary_flow_total,
+        "avg_work": primary_work / primary_count if primary_count else 0.0,
+        "avg_wait": primary_wait / primary_count if primary_count else 0.0,
+        "avg_decision": primary_decision / primary_count if primary_count else 0.0,
+        "avg_flow": primary_flow_total / primary_count if primary_count else 0.0,
+    }
+    time_rework_avg = {
+        "count": rework_count,
+        "work_total": rework_work,
+        "wait_total": rework_wait,
+        "decision_total": rework_decision,
+        "flow_total": rework_flow_total,
+        "avg_work": rework_work / rework_count if rework_count else 0.0,
+        "avg_wait": rework_wait / rework_count if rework_count else 0.0,
+        "avg_decision": rework_decision / rework_count if rework_count else 0.0,
+        "avg_flow": rework_flow_total / rework_count if rework_count else 0.0,
+    }
+
+    loss_per_primary = 0.0
+    rework_time_per_primary = 0.0
+    if primary_count > 0:
+        loss_per_primary = (primary_wait + primary_decision + rework_flow_total) / primary_count
+        rework_time_per_primary = rework_flow_total / primary_count
+
+    metrics["loss"] = {
+        "time": {
+            "primary": time_primary_avg,
+            "rework": time_rework_avg,
+            "loss_per_primary": loss_per_primary,
+            "rework_time_per_primary": rework_time_per_primary,
+            "loss_time_total": primary_wait + primary_decision + rework_flow_total
+        },
+        "cost": {
+            "review_total": primary_review_cost + rework_review_cost,
+            "review_primary": primary_review_cost,
+            "review_rework": rework_review_cost,
+            "review_per_primary": (primary_review_cost + rework_review_cost) / primary_count if primary_count else 0.0,
+            "rework_review_per_primary": rework_review_cost / primary_count if primary_count else 0.0,
+            "rework_review_ratio": rework_review_cost / (primary_review_cost + rework_review_cost) if (primary_review_cost + rework_review_cost) > 0 else 0.0
+        },
+        "rework_by_source_gate": rework_by_source_gate
+    }
+
+    dr_gate_summary_primary = {}
+    for gate, bucket in primary_gate_buckets.items():
+        dr_gate_summary_primary[gate] = _summarize_gate_bucket(bucket)
+    dr_gate_summary_rework = {}
+    for gate, bucket in rework_gate_buckets.items():
+        dr_gate_summary_rework[gate] = _summarize_gate_bucket(bucket)
+
+    metrics["dr_gate"] = {
+        "primary": dr_gate_summary_primary,
+        "rework": dr_gate_summary_rework
     }
 
     return metrics

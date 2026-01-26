@@ -134,7 +134,13 @@ class Scheduler:
                 kind = "doc"
 
             # ざっくり：緊急度に応じて今日の割当を決める
-            alloc = min(total_hours_today, 2.0 + 6.0 * urgency)  # 2h〜多め
+            # Ver13修正: SMALL_EXP に滞留がある場合、優先的に工数を割り当てる
+            is_small_exp = (job.current_node == "SMALL_EXP")
+            base_alloc = 2.0 + 6.0 * urgency
+            if is_small_exp:
+                base_alloc *= 1.5 # SMALL_EXP優先
+
+            alloc = min(total_hours_today, base_alloc)
             total_hours_today -= alloc
 
             wp = WorkPackage(

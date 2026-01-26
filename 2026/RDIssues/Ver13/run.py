@@ -24,6 +24,14 @@ def _safe_mean(values, default=np.nan):
     vals = [v for v in values if v is not None and not (isinstance(v, float) and np.isnan(v))]
     return float(np.mean(vals)) if vals else float(default)
 
+def _safe_get(d, keys, default=None):
+    cur = d
+    for k in keys:
+        if not isinstance(cur, dict):
+            return default
+        cur = cur.get(k)
+    return cur if cur is not None else default
+
 def _resolve_scenarios_path(scenarios_path, scenarios_dir, scenarios_file):
     if scenarios_path:
         return scenarios_path
@@ -71,6 +79,12 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
     flow_rows = []
     cost_summary_rows = []
     rework_summary_rows = []
+    loss_rows = []
+    rework_loss_rows = []
+    rework_source_rows = []
+    dr_gate_rows = []
+    loss_summary_by_scenario = {}
+    dr_gate_summary_by_scenario = {}
     flow_node_order = [
         "SMALL_EXP",
         "BUNDLE_SMALL",
@@ -262,12 +276,147 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
         gate_res = analyzer.run_quality_gates(summaries, criteria)
         gate_reports[name] = gate_res
 
+        # --- Loss & DR gate metrics (new) ---
+        loss_metrics = [m.get("loss", {}) for m in all_metrics[name] if isinstance(m, dict) and m.get("loss")]
+        dr_metrics = [m.get("dr_gate", {}) for m in all_metrics[name] if isinstance(m, dict) and m.get("dr_gate")]
+
+        primary_work_avg = _safe_mean([_safe_get(l, ["time", "primary", "avg_work"]) for l in loss_metrics], default=0.0)
+        primary_wait_avg = _safe_mean([_safe_get(l, ["time", "primary", "avg_wait"]) for l in loss_metrics], default=0.0)
+        primary_decision_avg = _safe_mean([_safe_get(l, ["time", "primary", "avg_decision"]) for l in loss_metrics], default=0.0)
+        primary_flow_avg = _safe_mean([_safe_get(l, ["time", "primary", "avg_flow"]) for l in loss_metrics], default=0.0)
+        primary_completed_avg = _safe_mean([_safe_get(l, ["time", "primary", "count"]) for l in loss_metrics], default=0.0)
+
+        rework_count_avg = _safe_mean([_safe_get(l, ["time", "rework", "count"]) for l in loss_metrics], default=0.0)
+        rework_flow_avg = _safe_mean([_safe_get(l, ["time", "rework", "avg_flow"]) for l in loss_metrics], default=0.0)
+        rework_wait_avg = _safe_mean([_safe_get(l, ["time", "rework", "avg_wait"]) for l in loss_metrics], default=0.0)
+        rework_work_avg = _safe_mean([_safe_get(l, ["time", "rework", "avg_work"]) for l in loss_metrics], default=0.0)
+        rework_decision_avg = _safe_mean([_safe_get(l, ["time", "rework", "avg_decision"]) for l in loss_metrics], default=0.0)
+
+        loss_per_primary_avg = _safe_mean([_safe_get(l, ["time", "loss_per_primary"]) for l in loss_metrics], default=0.0)
+        rework_time_per_primary_avg = _safe_mean([_safe_get(l, ["time", "rework_time_per_primary"]) for l in loss_metrics], default=0.0)
+
+        review_total_avg = _safe_mean([_safe_get(l, ["cost", "review_total"]) for l in loss_metrics], default=0.0)
+        review_rework_avg = _safe_mean([_safe_get(l, ["cost", "review_rework"]) for l in loss_metrics], default=0.0)
+        review_per_primary_avg = _safe_mean([_safe_get(l, ["cost", "review_per_primary"]) for l in loss_metrics], default=0.0)
+        rework_review_per_primary_avg = _safe_mean([_safe_get(l, ["cost", "rework_review_per_primary"]) for l in loss_metrics], default=0.0)
+        rework_review_ratio_avg = _safe_mean([_safe_get(l, ["cost", "rework_review_ratio"]) for l in loss_metrics], default=0.0)
+
+        loss_rows.append({
+            "scenario": name,
+            "primary_completed_avg": primary_completed_avg,
+            "rework_jobs_avg": rework_count_avg,
+            "primary_work_avg_days": primary_work_avg,
+            "primary_wait_avg_days": primary_wait_avg,
+            "primary_decision_avg_days": primary_decision_avg,
+            "primary_flow_avg_days": primary_flow_avg,
+            "rework_flow_avg_days": rework_flow_avg,
+            "rework_wait_avg_days": rework_wait_avg,
+            "rework_work_avg_days": rework_work_avg,
+            "rework_decision_avg_days": rework_decision_avg,
+            "rework_time_per_primary_avg_days": rework_time_per_primary_avg,
+            "time_loss_per_primary_avg_days": loss_per_primary_avg,
+            "review_cost_total_avg": review_total_avg,
+            "review_cost_per_primary_avg": review_per_primary_avg,
+            "rework_review_cost_avg": review_rework_avg,
+            "rework_review_cost_per_primary_avg": rework_review_per_primary_avg,
+            "rework_review_ratio_avg": rework_review_ratio_avg
+        })
+
+        rework_loss_rows.append({
+            "scenario": name,
+            "rework_jobs_avg": rework_count_avg,
+            "rework_flow_avg_days": rework_flow_avg,
+            "rework_wait_avg_days": rework_wait_avg,
+            "rework_work_avg_days": rework_work_avg,
+            "rework_decision_avg_days": rework_decision_avg,
+            "rework_review_cost_avg": review_rework_avg,
+            "rework_review_cost_per_primary_avg": rework_review_per_primary_avg
+        })
+
+        # Aggregate rework loss by source gate across trials
+        rework_source_acc = {}
+        for mm in all_metrics[name]:
+            rb = _safe_get(mm, ["loss", "rework_by_source_gate"], {}) or {}
+            if not isinstance(rb, dict):
+                continue
+            for gate, stats in rb.items():
+                if not isinstance(stats, dict):
+                    continue
+                acc = rework_source_acc.setdefault(gate, {
+                    "count": 0,
+                    "work_total": 0.0,
+                    "wait_total": 0.0,
+                    "decision_total": 0.0,
+                    "flow_total": 0.0
+                })
+                acc["count"] += int(stats.get("count", 0) or 0)
+                acc["work_total"] += float(stats.get("work_total", 0.0) or 0.0)
+                acc["wait_total"] += float(stats.get("wait_total", 0.0) or 0.0)
+                acc["decision_total"] += float(stats.get("decision_total", 0.0) or 0.0)
+                acc["flow_total"] += float(stats.get("flow_total", 0.0) or 0.0)
+
+        for gate, acc in rework_source_acc.items():
+            cnt = acc.get("count", 0)
+            rework_source_rows.append({
+                "scenario": name,
+                "source_gate": gate,
+                "rework_count": cnt,
+                "avg_flow_days": acc["flow_total"] / cnt if cnt else 0.0,
+                "avg_wait_days": acc["wait_total"] / cnt if cnt else 0.0,
+                "avg_work_days": acc["work_total"] / cnt if cnt else 0.0,
+                "avg_decision_days": acc["decision_total"] / cnt if cnt else 0.0
+            })
+
+        # DR gate cycle time summary (primary jobs)
+        dr_gate_summary = {}
+        for gate_id in ["DR1", "DR2", "DR3"]:
+            cycle_p50 = _safe_mean([_safe_get(d, ["primary", gate_id, "cycle_p50"]) for d in dr_metrics], default=0.0)
+            cycle_p90 = _safe_mean([_safe_get(d, ["primary", gate_id, "cycle_p90"]) for d in dr_metrics], default=0.0)
+            cycle_p95 = _safe_mean([_safe_get(d, ["primary", gate_id, "cycle_p95"]) for d in dr_metrics], default=0.0)
+            wait_p50 = _safe_mean([_safe_get(d, ["primary", gate_id, "wait_p50"]) for d in dr_metrics], default=0.0)
+            decision_p50 = _safe_mean([_safe_get(d, ["primary", gate_id, "decision_p50"]) for d in dr_metrics], default=0.0)
+            pass_rate = _safe_mean([_safe_get(d, ["primary", gate_id, "pass_rate"]) for d in dr_metrics], default=0.0)
+            conditional_rate = _safe_mean([_safe_get(d, ["primary", gate_id, "conditional_rate"]) for d in dr_metrics], default=0.0)
+            nogo_rate = _safe_mean([_safe_get(d, ["primary", gate_id, "nogo_rate"]) for d in dr_metrics], default=0.0)
+            count_avg = _safe_mean([_safe_get(d, ["primary", gate_id, "count"]) for d in dr_metrics], default=0.0)
+            dr_gate_rows.append({
+                "scenario": name,
+                "gate": gate_id,
+                "cycle_p50": cycle_p50,
+                "cycle_p90": cycle_p90,
+                "cycle_p95": cycle_p95,
+                "wait_p50": wait_p50,
+                "decision_p50": decision_p50,
+                "pass_rate": pass_rate,
+                "conditional_rate": conditional_rate,
+                "nogo_rate": nogo_rate,
+                "count_avg": count_avg
+            })
+            dr_gate_summary[gate_id] = {
+                "cycle_p50": cycle_p50,
+                "cycle_p90": cycle_p90,
+                "cycle_p95": cycle_p95
+            }
+
+        loss_summary_by_scenario[name] = {
+            "time_loss_per_primary_avg_days": loss_per_primary_avg,
+            "rework_time_per_primary_avg_days": rework_time_per_primary_avg,
+            "review_cost_per_primary_avg": review_per_primary_avg,
+            "rework_review_cost_per_primary_avg": rework_review_per_primary_avg
+        }
+        dr_gate_summary_by_scenario[name] = dr_gate_summary
+
         # スコアカード用データの蓄積
         all_metrics_for_scorecard[name] = {
             "p90": _safe_mean([s.get("p90_wait") if "p90_wait" in s else s.get("lead_time_p90") for s in summaries]),
             "tp": _safe_mean([s.get("throughput") for s in summaries]),
             "wip": _safe_mean([s.get("avg_wip") for s in summaries]),
-            "rework": _safe_mean([s.get("avg_reworks") for s in summaries])
+            "rework": _safe_mean([s.get("avg_reworks") for s in summaries]),
+            "time_loss": loss_per_primary_avg,
+            "cost_loss": rework_review_per_primary_avg,
+            "dr1_p90": dr_gate_summary.get("DR1", {}).get("cycle_p90", 0.0),
+            "dr2_p90": dr_gate_summary.get("DR2", {}).get("cycle_p90", 0.0),
+            "dr3_p90": dr_gate_summary.get("DR3", {}).get("cycle_p90", 0.0)
         }
 
         metrics_summaries = []
@@ -320,6 +469,30 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
             index=False
         )
 
+    if loss_rows:
+        pd.DataFrame(loss_rows).to_csv(
+            os.path.join(OUT_DIR, "loss_breakdown.csv"),
+            index=False
+        )
+
+    if rework_loss_rows:
+        pd.DataFrame(rework_loss_rows).to_csv(
+            os.path.join(OUT_DIR, "rework_loss_summary.csv"),
+            index=False
+        )
+
+    if rework_source_rows:
+        pd.DataFrame(rework_source_rows).to_csv(
+            os.path.join(OUT_DIR, "rework_source_gate_summary.csv"),
+            index=False
+        )
+
+    if dr_gate_rows:
+        pd.DataFrame(dr_gate_rows).to_csv(
+            os.path.join(OUT_DIR, "dr_gate_cycle_times.csv"),
+            index=False
+        )
+
     # 4. 統計解析と比較
     print("\n[Step 3: 統計的解析と比較]")
     baseline_name = df_scenarios.iloc[0]['scenario_name']
@@ -328,7 +501,7 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
     print(f"  基準(Baseline): {baseline_name}")
     
     # Step 7: 全指標の表示（標準出力）
-    print("\n  --- 詳細指標 (Ver12 可観測性レポート) ---")
+    print("\n  --- 詳細指標 (Ver13 可観測性レポート) ---")
     header = f"{'Scenario':20} | {'TP':5} | {'P50':5} | {'P90':5} | {'AvgRwk':6} | {'AvgProl':6} | {'AvgWIP':6}"
     print(header)
     print("-" * len(header))
@@ -373,11 +546,11 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
 
     # スコアカード生成 (Ver12カスタム)
     print("  スコアカード生成中...")
-    viz.plot_scorecard(all_metrics_for_scorecard, baseline_name, title="Ver12 シナリオ性能スコアカード")
+    viz.plot_scorecard(all_metrics_for_scorecard, baseline_name, title="Ver13 シナリオ性能スコアカード")
     plt.savefig(os.path.join(OUT_DIR, "scenario_scorecard.png"))
     plt.close()
 
-    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver12)")
+    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver13)")
     plt.savefig(os.path.join(OUT_DIR, "comparison_throughput.png"))
     plt.close()
 
@@ -427,12 +600,32 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
             index=False
         )
 
+    if loss_rows:
+        df_loss = pd.DataFrame(loss_rows)
+        viz.plot_loss_breakdown(df_loss, title="損失分解 (時間ロス: 1件あたり)")
+        plt.savefig(os.path.join(OUT_DIR, "loss_time_breakdown.png"))
+        plt.close()
+
+        viz.plot_cost_loss(df_loss, title="差し戻しコストロス (1件あたり)")
+        plt.savefig(os.path.join(OUT_DIR, "loss_cost_breakdown.png"))
+        plt.close()
+
+    if dr_gate_rows:
+        df_dr = pd.DataFrame(dr_gate_rows)
+        viz.plot_dr_cycle_heatmap(df_dr, value_col="cycle_p90", title="DRゲート突破時間 (P90)")
+        plt.savefig(os.path.join(OUT_DIR, "dr_gate_cycle_p90_heatmap.png"))
+        plt.close()
+
     # 6. レポート保存
     analyzer.save_analysis_report({
         "criteria": criteria,
         "gate_reports": gate_reports,
         "comparison_summary": comparison_summary,
-        "cost_summary": cost_summary_rows
+        "cost_summary": cost_summary_rows,
+        "loss_breakdown": loss_rows,
+        "rework_loss_summary": rework_loss_rows,
+        "rework_source_gate_summary": rework_source_rows,
+        "dr_gate_cycle_times": dr_gate_rows
     }, "final_analysis_report.json")
 
     print(f"\n=== 全工程完了 ===")
