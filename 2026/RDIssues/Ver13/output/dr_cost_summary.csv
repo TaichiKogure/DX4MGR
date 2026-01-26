@@ -1,0 +1,7 @@
+scenario,dr1_cost_avg,dr2_cost_avg,dr3_cost_avg,total_review_cost_avg,cost_per_completed_job_avg
+01_Baseline,0.56,0.48,0.06,1.1,55.0
+02_High_Load,0.0,0.0,0.0,0.0,0.0
+03_Few_Engineers,0.0,0.0,0.0,0.0,0.0
+04_Many_Engineers,8.38,6.84,1.5,16.72,45.84375
+05_High_Uncertainty,0.0,0.0,0.0,0.0,0.0
+06_Tight_DR,0.54,0.32,0.06,0.92,46.0
