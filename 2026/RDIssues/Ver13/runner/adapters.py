@@ -75,10 +75,20 @@ def setup_standard_flow(rng, **params):
             return int(value)
         except (TypeError, ValueError):
             return None
+    def _optional_float(value):
+        if value is None:
+            return None
+        if isinstance(value, float) and np.isnan(value):
+            return None
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
 
     dr1_capacity = _optional_int(params.get("dr1_capacity", params.get("dr_capacity")))
     dr2_capacity = _optional_int(params.get("dr2_capacity", dr1_capacity))
     dr3_capacity = _optional_int(params.get("dr3_capacity", dr2_capacity))
+    dr_quality_override = _optional_float(params.get("dr_quality"))
 
     dr1_cost = float(params.get("dr1_cost_per_review", 1.0))
     dr2_cost = float(params.get("dr2_cost_per_review", dr1_cost * 2.0))
@@ -122,6 +132,7 @@ def setup_standard_flow(rng, **params):
         conditional_prob_ratio=params.get("conditional_prob_ratio", 0.8),
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr1_capacity,
+        quality_override=dr_quality_override,
         cost_per_review=dr1_cost,
         calendar=dr_calendar
     )
@@ -153,6 +164,7 @@ def setup_standard_flow(rng, **params):
         conditional_prob_ratio=params.get("conditional_prob_ratio", 0.8),
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr2_capacity,
+        quality_override=dr_quality_override,
         cost_per_review=dr2_cost,
         calendar=dr_calendar
     )
@@ -184,6 +196,7 @@ def setup_standard_flow(rng, **params):
         conditional_prob_ratio=params.get("conditional_prob_ratio", 0.8),
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr3_capacity,
+        quality_override=dr_quality_override,
         cost_per_review=dr3_cost,
         calendar=dr_calendar
     )

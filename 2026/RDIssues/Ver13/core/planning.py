@@ -156,14 +156,23 @@ class Scheduler:
             lr.apply_work(kind, alloc)
 
     def _collect_active_jobs(self) -> List[Any]:
-        # 最小実装：全ノードqueueにいるジョブを拾う
+        # 最小実装：全ノードqueue + 稼働中ジョブを拾う
         jobs = []
+        seen = set()
         # SimulationEngineは nodes 属性を持っている想定
         for node in self.engine.nodes.values():
             # nodeがqueueを持っているか確認
             if hasattr(node, "queue"):
                 for job in node.queue:
-                    jobs.append(job)
+                    if job.job_id not in seen:
+                        jobs.append(job)
+                        seen.add(job.job_id)
+            # 稼働中ジョブ (WorkGateのbusy_jobs)
+            if hasattr(node, "busy_jobs"):
+                for job in getattr(node, "busy_jobs", []):
+                    if job.job_id not in seen:
+                        jobs.append(job)
+                        seen.add(job.job_id)
         return jobs
 
     def _target_gate_for(self, job: Any) -> str:

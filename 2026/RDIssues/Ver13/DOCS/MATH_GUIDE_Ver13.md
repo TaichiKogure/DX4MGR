@@ -101,6 +101,7 @@ WorkPackage生成後に LatentRisk を更新します。
 容量を重みとした加重平均で品質を算出します。
 
 - quality = Σ(quality_i * capacity_i) / capacity
+- `dr_quality` が指定されている場合はこの値を上書きします。
 
 LatentRisk補正:
 - q = quality * quality_mult - nogo_add
@@ -122,12 +123,13 @@ CONDITIONAL時のみ差し戻しを発生させます。
   - a = rework_beta_a
   - b = rework_beta_b
 - 生成タスク数: n_new = ceil(rework_load_factor * w)
+- 再投入数: n_reinject = round(n_new * rework_task_type_mix)
 
 DR2だけは `dr2_rework_multiplier` が掛かります。
 
 注意:
 - rework_count > max_rework_cycles の場合、新規タスクは追加しません。
-- 生成タスクは「計測用ログ」であり、追加ジョブとしては処理されません。
+- 再投入分は新規ジョブとしてSMALL_EXPへ戻り、処理負荷に反映されます。
 
 ## 11. WIP計算
 - 各時点の WIP = (キュー内 + 処理中) の合計

@@ -273,8 +273,27 @@ class MeetingGate(GateNode):
             elif rand < q + (1.0 - q) * cond_ratio: # CONDITIONAL (差し戻し：重み付き)
                 job.rework_count += 1
                 # Step 5: 増殖ルールの適用
-                n_new = self.rework_policy.apply_rework(job, decision_time)
-                job.add_history(self.node_id, "REWORK_PROLIFERATED", decision_time, n_new_tasks=n_new)
+                rework_result = self.rework_policy.apply_rework(job, decision_time)
+                n_new = rework_result.get("n_new_tasks", 0)
+                n_reinject = rework_result.get("n_reinject", 0)
+                job.add_history(self.node_id, "REWORK_PROLIFERATED", decision_time, n_new_tasks=n_new, n_reinject=n_reinject)
+                if n_reinject > 0:
+                    for i in range(n_reinject):
+                        rework_job = Job(
+                            job_id=f"{job.job_id}_rework_job_{job.rework_count}_{i}",
+                            created_at=decision_time,
+                            is_rework_task=True,
+                            parent_job_id=job.job_id,
+                            rework_source_gate=self.node_id
+                        )
+                        # Ver13: Initialize LatentRisk for rework jobs
+                        rework_job.latent = LatentRisk()
+                        self.engine.schedule_event(
+                            decision_time,
+                            "ARRIVAL",
+                            {"job": rework_job, "target_node": "SMALL_EXP"},
+                            priority=5
+                        )
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.rework_node_id}, priority=5)
             else: # NO_GO (終了 or 大差し戻し)
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.nogo_node_id}, priority=5)

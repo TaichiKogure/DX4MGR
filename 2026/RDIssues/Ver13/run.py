@@ -121,7 +121,7 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
         ]:
             if k in params and pd.notna(params[k]):
                 params[k] = int(params[k])
-        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer']:
+        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer', 'dr_quality', 'rework_task_type_mix']:
             if k in params and pd.notna(params[k]):
                 params[k] = float(params[k])
 

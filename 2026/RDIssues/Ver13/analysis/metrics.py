@@ -3,16 +3,18 @@ from typing import List, Dict, Any
 from core.entities import Job
 
 def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any]], total_days: float, wip_history: List[Dict[str, Any]] = None):
-    if not completed_jobs:
-        return {"error": "No jobs completed"}
+    primary_jobs = [job for job in completed_jobs if not getattr(job, "is_rework_task", False)]
+    rework_jobs = [job for job in completed_jobs if getattr(job, "is_rework_task", False)]
+    if not primary_jobs:
+        return {"error": "No primary jobs completed", "rework_jobs_completed": len(rework_jobs)}
 
     # Step 7: リードタイムと差し戻しの集計
-    lead_times = [job.history[-1]["time"] - job.created_at for job in completed_jobs]
-    rework_counts = [job.rework_count for job in completed_jobs]
-    rework_weights = [job.rework_weight for job in completed_jobs]
+    lead_times = [job.history[-1]["time"] - job.created_at for job in primary_jobs]
+    rework_counts = [job.rework_count for job in primary_jobs]
+    rework_weights = [job.rework_weight for job in primary_jobs]
     
     # 増殖した小実験数
-    proliferated_tasks = [sum(1 for t in job.tasks if t.generated_by == "REWORK") for job in completed_jobs]
+    proliferated_tasks = [sum(1 for t in job.tasks if t.generated_by == "REWORK") for job in primary_jobs]
 
     # CCDFの計算用データ (Step 7: CCDFを固定で出す)
     sorted_lt = np.sort(lead_times)
@@ -35,8 +37,8 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
 
     metrics = {
         "summary": {
-            "completed_count": len(completed_jobs),
-            "throughput": len(completed_jobs) / total_days,
+            "completed_count": len(primary_jobs),
+            "throughput": len(primary_jobs) / total_days,
             "lead_time_p50": float(np.percentile(lead_times, 50)),
             "lead_time_p90": float(np.percentile(lead_times, 90)),
             "lead_time_p95": float(np.percentile(lead_times, 95)),
@@ -44,7 +46,8 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
             "max_reworks": int(np.max(rework_counts)),
             "avg_rework_weight": float(np.mean(rework_weights)),
             "avg_proliferated_tasks": float(np.mean(proliferated_tasks)),
-            "avg_wip": avg_wip_total
+            "avg_wip": avg_wip_total,
+            "rework_jobs_completed": len(rework_jobs)
         },
         "gate_stats": nodes_stats,
         "wip": {

@@ -39,12 +39,14 @@
 | dr1_period / dr2_period / dr3_period | 会議の開催間隔(日) | Ver13ではDRCalendar生成に使用 |
 | dr_capacity | DR共通の容量 (未指定時の既定) | dr1/2/3が空なら使う |
 | dr1_capacity / dr2_capacity / dr3_capacity | DRごとの処理上限 | 大きいほど詰まりにくい |
+| dr_quality | DR品質の上書き(0..1) | 指定時は承認者構成より優先 |
 | dr1_cost_per_review / dr2_cost_per_review / dr3_cost_per_review | DR1件あたりのコスト | `dr_cost_summary.csv` に反映 |
 | decision_latency_days | 会議後の意思決定遅延 | 大きいほどリードタイム増 |
 
 補足:
 - DRの日時は `dr*_period` から固定スケジュールを生成しています。
 - 不規則なDR日時を使いたい場合は `runner/adapters.py` の `DRCalendar` を編集してください。
+- `dr_quality` が空/NaN の場合は承認者構成から算出した品質を使用します。
 
 ### 2.5 差し戻し (Rework)
 | パラメータ | 意味 | 例・影響 |
@@ -54,7 +56,11 @@
 | max_rework_cycles | 追加差し戻しの上限 | 例: 5なら6回目以降は増殖なし |
 | decay | 差し戻し回数に伴う減衰率 | 小さいほど繰り返しは弱まる |
 | rework_beta_a / rework_beta_b | 重み分布(Beta分布)の形 | a,bで偏りが変わる |
+| rework_task_type_mix | 追加タスクの再投入比率 | SMALL_EXPへ戻す割合(0..1) |
 | conditional_prob_ratio | 条件付き判定の割合 | 1.0でNOGOがほぼ出ない |
+
+補足:
+- `rework_task_type_mix` の比率分だけ、増殖タスクを新規ジョブとしてSMALL_EXPへ再投入します。
 
 ### 2.6 承認者構成 (DR品質と容量)
 | パラメータ | 意味 | 例・影響 |
@@ -65,6 +71,7 @@
 
 品質と容量は人数から自動計算されます。
 例: Senior 2名 + Coordinator 1名 -> 容量 = 2*7 + 1*3 = 17
+`dr_quality` が指定されている場合は、品質の自動計算を上書きします。
 
 ### 2.7 Mid/Finの並列サーバ数
 | パラメータ | 意味 | 例・影響 |
@@ -88,13 +95,12 @@ Small実験の並列数は固定(999)で、パラメータはありません。
 
 補足:
 - Schedulerは日次(SCHED_TICK)で動き、WorkPackageを生成してLatentRiskを更新します。
+- 計画対象はキュー内だけでなく稼働中ジョブも含みます。
 - `tick_days` や `LatentRisk.scale_factor` は現状固定値で、変更する場合はコード側で調整します。
 
 ### 2.10 予約・現状未使用の項目
 | パラメータ | 状態 | 補足 |
 | --- | --- | --- |
-| dr_quality | 未使用 | DR品質は承認者構成で計算 |
-| rework_task_type_mix | 未使用 | 現状はログのみ |
 | sampling_interval | 任意 | `simulate_standard_flow` に渡せばWIPの記録間隔を変更可能 |
 
 ## 3. 具体例 (Baselineの読み方)

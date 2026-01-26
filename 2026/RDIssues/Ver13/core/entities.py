@@ -41,6 +41,9 @@ class Job:
     tasks: List[Task] = field(default_factory=list)
     rework_count: int = 0
     temp_enqueue_time: float = 0.0 # 待ち時間計算用の一時変数
+    is_rework_task: bool = False
+    parent_job_id: Optional[str] = None
+    rework_source_gate: Optional[str] = None
     
     # Ver13 added: AnyLogic features
     latent: Optional[Any] = None # LatentRisk
