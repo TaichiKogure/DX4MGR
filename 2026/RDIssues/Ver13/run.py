@@ -70,6 +70,7 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
     avg_wip_by_node_by_scenario = {}
     flow_rows = []
     cost_summary_rows = []
+    rework_summary_rows = []
     flow_node_order = [
         "SMALL_EXP",
         "BUNDLE_SMALL",
@@ -121,7 +122,7 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
         ]:
             if k in params and pd.notna(params[k]):
                 params[k] = int(params[k])
-        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer', 'dr_quality', 'rework_task_type_mix']:
+        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer', 'dr_quality', 'dr_quality_speed_alpha', 'rework_reinject_ratio']:
             if k in params and pd.notna(params[k]):
                 params[k] = float(params[k])
 
@@ -269,6 +270,21 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
             "rework": _safe_mean([s.get("avg_reworks") for s in summaries])
         }
 
+        metrics_summaries = []
+        for mm in all_metrics[name]:
+            s = (mm or {}).get("summary")
+            if isinstance(s, dict):
+                metrics_summaries.append(s)
+
+        rework_summary_rows.append({
+            "scenario": name,
+            "rework_completed_avg": _safe_mean([s.get("rework_completed_count") for s in metrics_summaries], default=0.0),
+            "rework_throughput_avg": _safe_mean([s.get("rework_throughput") for s in metrics_summaries], default=0.0),
+            "rework_lead_time_p50_avg": _safe_mean([s.get("rework_lead_time_p50") for s in metrics_summaries], default=0.0),
+            "rework_lead_time_p90_avg": _safe_mean([s.get("rework_lead_time_p90") for s in metrics_summaries], default=0.0),
+            "rework_lead_time_p95_avg": _safe_mean([s.get("rework_lead_time_p95") for s in metrics_summaries], default=0.0),
+        })
+
         # Per-scenario gate charts are replaced by a consolidated CSV summary.
 
     # Consolidated quality gate summary (one CSV for all scenarios)
@@ -295,6 +311,12 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
     if gate_rows:
         pd.DataFrame(gate_rows).to_csv(
             os.path.join(OUT_DIR, "quality_gate_summary.csv"),
+            index=False
+        )
+
+    if rework_summary_rows:
+        pd.DataFrame(rework_summary_rows).to_csv(
+            os.path.join(OUT_DIR, "rework_job_summary.csv"),
             index=False
         )
 

@@ -1,0 +1,55 @@
+[dr2_wait]
+  Top + correlation:
+    dr2_period: 0.636
+    dr_quality: 0.450
+    dr2_capacity: 0.144
+    arrival_rate: 0.135
+    hours_per_day_per_engineer: 0.080
+  Top - correlation:
+    engineer_pool_size: -0.115
+    rework_load_factor: 0.046
+    hours_per_day_per_engineer: 0.080
+    arrival_rate: 0.135
+    dr2_capacity: 0.144
+
+[throughput]
+  Top + correlation:
+    dr_quality: 0.636
+    arrival_rate: 0.449
+    hours_per_day_per_engineer: 0.088
+    dr2_capacity: 0.029
+    rework_load_factor: 0.008
+  Top - correlation:
+    dr2_period: -0.127
+    engineer_pool_size: -0.006
+    rework_load_factor: 0.008
+    dr2_capacity: 0.029
+    hours_per_day_per_engineer: 0.088
+
+[avg_reworks]
+  Top + correlation:
+    arrival_rate: 0.260
+    dr_quality: 0.136
+    hours_per_day_per_engineer: 0.049
+    dr2_capacity: 0.007
+    rework_load_factor: 0.001
+  Top - correlation:
+    dr2_period: -0.190
+    engineer_pool_size: -0.097
+    rework_load_factor: 0.001
+    dr2_capacity: 0.007
+    hours_per_day_per_engineer: 0.049
+
+[dr2_cost]
+  Top + correlation:
+    arrival_rate: 0.758
+    dr_quality: 0.440
+    hours_per_day_per_engineer: 0.130
+    dr2_period: -0.056
+    dr2_capacity: -0.058
+  Top - correlation:
+    engineer_pool_size: -0.153
+    rework_load_factor: -0.072
+    dr2_capacity: -0.058
+    dr2_period: -0.056
+    hours_per_day_per_engineer: 0.130

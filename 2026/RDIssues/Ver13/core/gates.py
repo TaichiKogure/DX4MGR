@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple, Any, Callable
-from core.entities import Job, Task
+from core.entities import Job, Task, TaskType
 from core.planning import LatentRisk
 
 class GateNode(ABC):
@@ -193,7 +193,9 @@ class MeetingGate(GateNode):
                  capacity_override: Optional[int] = None,
                  quality_override: Optional[float] = None,
                  cost_per_review: float = 0.0,
-                 calendar: Optional[Any] = None):
+                 calendar: Optional[Any] = None,
+                 quality_speed_tradeoff: Optional[float] = None,
+                 quality_speed_alpha: float = 1.0):
         super().__init__(node_id, engine)
         self.period_days = period_days
         self.approvers = approvers
@@ -228,6 +230,12 @@ class MeetingGate(GateNode):
 
         self.capacity = int(capacity_override) if capacity_override is not None else computed_capacity
         self.quality = float(quality_override) if quality_override is not None else computed_quality
+
+        if quality_speed_tradeoff is not None:
+            baseline = 0.8
+            speed_mult = 1.0 + quality_speed_alpha * (baseline - quality_speed_tradeoff)
+            speed_mult = max(0.5, min(1.5, speed_mult))
+            self.capacity = max(1, int(round(self.capacity * speed_mult)))
 
         self.engine.schedule_event(self.next_meeting_time, "MEETING_START", {"node_id": self.node_id})
 
@@ -276,24 +284,45 @@ class MeetingGate(GateNode):
                 rework_result = self.rework_policy.apply_rework(job, decision_time)
                 n_new = rework_result.get("n_new_tasks", 0)
                 n_reinject = rework_result.get("n_reinject", 0)
-                job.add_history(self.node_id, "REWORK_PROLIFERATED", decision_time, n_new_tasks=n_new, n_reinject=n_reinject)
+                reinject_mode = rework_result.get("reinject_mode")
+                reinject_ratio = rework_result.get("reinject_ratio")
+                reinject_counts = rework_result.get("reinject_counts", {}) or {}
+                task_counts = rework_result.get("task_counts", {}) or {}
+                task_counts_log = {getattr(k, "name", str(k)): int(v) for k, v in task_counts.items()}
+                reinject_log = {getattr(k, "name", str(k)): int(v) for k, v in reinject_counts.items()}
+                job.add_history(
+                    self.node_id,
+                    "REWORK_PROLIFERATED",
+                    decision_time,
+                    n_new_tasks=n_new,
+                    n_reinject=n_reinject,
+                    rework_task_counts=task_counts_log,
+                    rework_reinject_counts=reinject_log,
+                    rework_reinject_mode=reinject_mode,
+                    rework_reinject_ratio=reinject_ratio
+                )
                 if n_reinject > 0:
-                    for i in range(n_reinject):
-                        rework_job = Job(
-                            job_id=f"{job.job_id}_rework_job_{job.rework_count}_{i}",
-                            created_at=decision_time,
-                            is_rework_task=True,
-                            parent_job_id=job.job_id,
-                            rework_source_gate=self.node_id
-                        )
-                        # Ver13: Initialize LatentRisk for rework jobs
-                        rework_job.latent = LatentRisk()
-                        self.engine.schedule_event(
-                            decision_time,
-                            "ARRIVAL",
-                            {"job": rework_job, "target_node": "SMALL_EXP"},
-                            priority=5
-                        )
+                    for task_type, count in reinject_counts.items():
+                        target_node = self._target_node_for_task_type(task_type)
+                        if not target_node:
+                            continue
+                        for i in range(count):
+                            rework_job = Job(
+                                job_id=f"{job.job_id}_rework_job_{job.rework_count}_{task_type.name}_{i}",
+                                created_at=decision_time,
+                                is_rework_task=True,
+                                parent_job_id=job.job_id,
+                                rework_source_gate=self.node_id,
+                                rework_task_type=task_type
+                            )
+                            # Ver13: Initialize LatentRisk for rework jobs
+                            rework_job.latent = LatentRisk()
+                            self.engine.schedule_event(
+                                decision_time,
+                                "ARRIVAL",
+                                {"job": rework_job, "target_node": target_node},
+                                priority=5
+                            )
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.rework_node_id}, priority=5)
             else: # NO_GO (終了 or 大差し戻し)
                 self.engine.schedule_event(decision_time, "ARRIVAL", {"job": job, "target_node": self.nogo_node_id}, priority=5)
@@ -306,3 +335,12 @@ class MeetingGate(GateNode):
             
         if self.next_meeting_time is not None:
             self.engine.schedule_event(self.next_meeting_time, "MEETING_START", {"node_id": self.node_id})
+
+    @staticmethod
+    def _target_node_for_task_type(task_type: TaskType) -> Optional[str]:
+        mapping = {
+            TaskType.SMALL_EXP: "SMALL_EXP",
+            TaskType.MID_EXP: "MID_EXP",
+            TaskType.FIN_EXP: "FIN_EXP",
+        }
+        return mapping.get(task_type)

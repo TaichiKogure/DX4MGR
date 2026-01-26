@@ -102,6 +102,10 @@ WorkPackage生成後に LatentRisk を更新します。
 
 - quality = Σ(quality_i * capacity_i) / capacity
 - `dr_quality` が指定されている場合はこの値を上書きします。
+- 品質⇔速度トレードオフ: `dr_quality` が指定されている場合、DR容量に補正を掛けます。
+  - speed_mult = clamp(1 + alpha * (0.8 - dr_quality), 0.5, 1.5)
+  - capacity = round(capacity * speed_mult)
+  - alpha = dr_quality_speed_alpha (既定1.0)
 
 LatentRisk補正:
 - q = quality * quality_mult - nogo_add
@@ -123,13 +127,19 @@ CONDITIONAL時のみ差し戻しを発生させます。
   - a = rework_beta_a
   - b = rework_beta_b
 - 生成タスク数: n_new = ceil(rework_load_factor * w)
-- 再投入数: n_reinject = round(n_new * rework_task_type_mix)
+- タイプ配分: (p_small, p_mid, p_fin) = normalize(rework_task_type_mix)
+- 生成内訳: (n_small, n_mid, n_fin) = allocate(n_new, p_small, p_mid, p_fin)
+- 再投入方式:
+  - rework_reinject_mode = all: n_reinject = n_new
+  - rework_reinject_mode = ratio: n_reinject = round(n_new * rework_reinject_ratio)
+  - 既定は rework_reinject_mode = all
+- 再投入内訳: (r_small, r_mid, r_fin) = allocate(n_reinject, n_small, n_mid, n_fin)
 
 DR2だけは `dr2_rework_multiplier` が掛かります。
 
 注意:
 - rework_count > max_rework_cycles の場合、新規タスクは追加しません。
-- 再投入分は新規ジョブとしてSMALL_EXPへ戻り、処理負荷に反映されます。
+- 再投入分は新規ジョブとして SMALL/MID/FIN へ戻り、処理負荷に反映されます。
 
 ## 11. WIP計算
 - 各時点の WIP = (キュー内 + 処理中) の合計

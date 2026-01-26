@@ -30,6 +30,7 @@ INT_PARAMS = {
     "dr1_capacity",
     "dr2_capacity",
     "dr3_capacity",
+    "engineer_pool_size",
 }
 
 FLOAT_PARAMS = {
@@ -47,10 +48,12 @@ FLOAT_PARAMS = {
     "dr2_rework_multiplier",
     "rework_beta_a",
     "rework_beta_b",
-    "rework_task_type_mix",
+    "rework_reinject_ratio",
     "conditional_prob_ratio",
     "sampling_interval",
     "dr_quality",
+    "dr_quality_speed_alpha",
+    "hours_per_day_per_engineer",
 }
 
 def _safe_mean(values: Iterable[float], default: float = 0.0) -> float:
@@ -477,13 +480,14 @@ def run_doe(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run DOE exploration (Ver12).")
+    parser = argparse.ArgumentParser(description="Run DOE exploration (Ver13).")
     parser.add_argument("--scenarios", default="scenarios.csv", help="Template scenarios.csv path")
     parser.add_argument("--out", default="output_doe", help="DOE output directory")
-    parser.add_argument("--samples", type=int, default=30, help="DOE sample count")
-    parser.add_argument("--trials", type=int, default=1, help="Trials per DOE sample")
-    parser.add_argument("--top-k", type=int, default=5, help="Top K scenarios to export")
-    parser.add_argument("--scenario-trials", type=int, default=100, help="n_trials for exported scenarios")
+    parser.add_argument("--spec", help="Path to doe_spec.json (optional)")
+    parser.add_argument("--samples", type=int, default=30, help="DOE sample count (ignored if --spec provided)")
+    parser.add_argument("--trials", type=int, default=1, help="Trials per DOE sample (ignored if --spec provided)")
+    parser.add_argument("--top-k", type=int, default=5, help="Top K scenarios to export (ignored if --spec provided)")
+    parser.add_argument("--scenario-trials", type=int, default=100, help="n_trials for exported scenarios (ignored if --spec provided)")
     args = parser.parse_args()
 
     scenarios_path = args.scenarios
@@ -494,14 +498,20 @@ def main():
     if not os.path.isabs(out_dir):
         out_dir = os.path.join(CURRENT_DIR, out_dir)
 
-    run_doe(
-        scenarios_path=scenarios_path,
-        out_dir=out_dir,
-        n_samples=args.samples,
-        n_trials=args.trials,
-        top_k=args.top_k,
-        scenario_trials=args.scenario_trials,
-    )
+    if args.spec:
+        import json
+        with open(args.spec, "r") as f:
+            spec = json.load(f)
+        run_doe_from_spec(spec, scenarios_path, out_dir)
+    else:
+        run_doe(
+            scenarios_path=scenarios_path,
+            out_dir=out_dir,
+            n_samples=args.samples,
+            n_trials=args.trials,
+            top_k=args.top_k,
+            scenario_trials=args.scenario_trials,
+        )
 
     print(f"DOE complete. Output in: {out_dir}")
 

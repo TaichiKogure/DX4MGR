@@ -39,7 +39,8 @@
 | dr1_period / dr2_period / dr3_period | 会議の開催間隔(日) | Ver13ではDRCalendar生成に使用 |
 | dr_capacity | DR共通の容量 (未指定時の既定) | dr1/2/3が空なら使う |
 | dr1_capacity / dr2_capacity / dr3_capacity | DRごとの処理上限 | 大きいほど詰まりにくい |
-| dr_quality | DR品質の上書き(0..1) | 指定時は承認者構成より優先 |
+| dr_quality | DR品質(0..1)と速度トレードオフ | 指定時は承認者構成より優先。高いほど品質↑/処理速度↓ |
+| dr_quality_speed_alpha | 品質⇔速度トレードオフの強さ | 既定1.0、基準0.8 |
 | dr1_cost_per_review / dr2_cost_per_review / dr3_cost_per_review | DR1件あたりのコスト | `dr_cost_summary.csv` に反映 |
 | decision_latency_days | 会議後の意思決定遅延 | 大きいほどリードタイム増 |
 
@@ -47,6 +48,7 @@
 - DRの日時は `dr*_period` から固定スケジュールを生成しています。
 - 不規則なDR日時を使いたい場合は `runner/adapters.py` の `DRCalendar` を編集してください。
 - `dr_quality` が空/NaN の場合は承認者構成から算出した品質を使用します。
+- `dr_quality` が指定されている場合、DR容量に補正が掛かります。`dr_quality` が基準(0.8)より高いと容量が減り、低いと増えます。
 
 ### 2.5 差し戻し (Rework)
 | パラメータ | 意味 | 例・影響 |
@@ -56,11 +58,16 @@
 | max_rework_cycles | 追加差し戻しの上限 | 例: 5なら6回目以降は増殖なし |
 | decay | 差し戻し回数に伴う減衰率 | 小さいほど繰り返しは弱まる |
 | rework_beta_a / rework_beta_b | 重み分布(Beta分布)の形 | a,bで偏りが変わる |
-| rework_task_type_mix | 追加タスクの再投入比率 | SMALL_EXPへ戻す割合(0..1) |
+| rework_task_type_mix | 追加タスクのタイプ配分 | SMALL/MID/FINの比率 (例: `0.6|0.3|0.1`) |
+| rework_reinject_mode | 再投入の方式 | `all` または `ratio` (既定 `all`) |
+| rework_reinject_ratio | 追加タスクの再投入比率 | `ratio` 時のみ使用 (0..1) |
 | conditional_prob_ratio | 条件付き判定の割合 | 1.0でNOGOがほぼ出ない |
 
 補足:
-- `rework_task_type_mix` の比率分だけ、増殖タスクを新規ジョブとしてSMALL_EXPへ再投入します。
+- `rework_task_type_mix` は増殖タスクの内訳を SMALL/MID/FIN で配分します。区切りは `|` `/` `:` `;` が使えます。
+- `rework_reinject_mode=all` の場合、増殖タスクは全数を新規ジョブとして再投入します。
+- `rework_reinject_mode=ratio` の場合は `rework_reinject_ratio` を使います (未指定は 1.0)。
+- 互換性: `rework_task_type_mix` が単一数値の場合は「再投入比率」として扱われます (rework_reinject_mode=ratio時)。配分は `SMALL=1.0` になります。
 
 ### 2.6 承認者構成 (DR品質と容量)
 | パラメータ | 意味 | 例・影響 |
@@ -71,7 +78,7 @@
 
 品質と容量は人数から自動計算されます。
 例: Senior 2名 + Coordinator 1名 -> 容量 = 2*7 + 1*3 = 17
-`dr_quality` が指定されている場合は、品質の自動計算を上書きします。
+`dr_quality` が指定されている場合は、品質の自動計算を上書きし、DR容量にもトレードオフ補正が掛かります。
 
 ### 2.7 Mid/Finの並列サーバ数
 | パラメータ | 意味 | 例・影響 |

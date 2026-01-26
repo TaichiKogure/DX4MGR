@@ -33,6 +33,7 @@ def simulate_standard_flow(
     dr3_capacity=None,
     dr_capacity=10,
     dr_quality=0.8,
+    dr_quality_speed_alpha=1.0,
     dr1_cost_per_review=1.0,
     dr2_cost_per_review=2.0,
     dr3_cost_per_review=3.0,
@@ -74,6 +75,7 @@ def simulate_standard_flow(
         dr3_capacity=dr3_capacity,
         dr_capacity=dr_capacity,
         dr_quality=dr_quality,
+        dr_quality_speed_alpha=dr_quality_speed_alpha,
         dr1_cost_per_review=dr1_cost_per_review,
         dr2_cost_per_review=dr2_cost_per_review,
         dr3_cost_per_review=dr3_cost_per_review,
@@ -124,6 +126,11 @@ def simulate_standard_flow(
             "avg_wip": 0,
             "avg_reworks": 0,
             "max_reworks": 0,
+            "rework_completed_count": 0,
+            "rework_throughput": 0,
+            "rework_lead_time_p50": 0,
+            "rework_lead_time_p90": 0,
+            "rework_lead_time_p95": 0,
         }
     else:
         summary = {
@@ -135,6 +142,11 @@ def simulate_standard_flow(
             "avg_wip": m["summary"].get("avg_wip", 0),
             "avg_reworks": m["summary"]["avg_reworks"],
             "max_reworks": m["summary"]["max_reworks"],
+            "rework_completed_count": m["summary"].get("rework_completed_count", 0),
+            "rework_throughput": m["summary"].get("rework_throughput", 0),
+            "rework_lead_time_p50": m["summary"].get("rework_lead_time_p50", 0),
+            "rework_lead_time_p90": m["summary"].get("rework_lead_time_p90", 0),
+            "rework_lead_time_p95": m["summary"].get("rework_lead_time_p95", 0),
         }
 
     # Job詳細ログ (摩擦の検証用など)
@@ -171,6 +183,7 @@ def simulate_standard_flow(
             "rework_counts": m.get("raw_rework_counts", []),
             "rework_weights": m.get("raw_rework_weights", []),
             "proliferated_tasks": m.get("raw_proliferated_tasks", []),
+            "rework_lead_times": m.get("raw_rework_lead_times", []),
             "wip_history": m.get("wip", {}).get("history", []),
             "job_logs": job_logs,
         }

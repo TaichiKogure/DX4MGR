@@ -44,6 +44,7 @@ class Job:
     is_rework_task: bool = False
     parent_job_id: Optional[str] = None
     rework_source_gate: Optional[str] = None
+    rework_task_type: Optional[TaskType] = None
     
     # Ver13 added: AnyLogic features
     latent: Optional[Any] = None # LatentRisk

@@ -34,7 +34,9 @@ def setup_standard_flow(rng, **params):
         weight_dist_func=partial(_beta_dist, rng, rework_beta_a, rework_beta_b),
         max_rework_cycles=params.get("max_rework_cycles", 5),
         decay=params.get("decay", 0.7),
-        task_type_mix=params.get("rework_task_type_mix", 1.0)
+        task_type_mix=params.get("rework_task_type_mix", 1.0),
+        reinject_ratio=params.get("rework_reinject_ratio"),
+        reinject_mode=params.get("rework_reinject_mode", "all"),
     )
     dr2_rework_multiplier = float(params.get("dr2_rework_multiplier", 1.0))
     if dr2_rework_multiplier != 1.0:
@@ -43,7 +45,9 @@ def setup_standard_flow(rng, **params):
             weight_dist_func=partial(_beta_dist, rng, rework_beta_a, rework_beta_b),
             max_rework_cycles=params.get("max_rework_cycles", 5),
             decay=params.get("decay", 0.7),
-            task_type_mix=params.get("rework_task_type_mix", 1.0)
+            task_type_mix=params.get("rework_task_type_mix", 1.0),
+            reinject_ratio=params.get("rework_reinject_ratio"),
+            reinject_mode=params.get("rework_reinject_mode", "all"),
         )
     else:
         rework_policy_dr2 = rework_policy
@@ -89,6 +93,9 @@ def setup_standard_flow(rng, **params):
     dr2_capacity = _optional_int(params.get("dr2_capacity", dr1_capacity))
     dr3_capacity = _optional_int(params.get("dr3_capacity", dr2_capacity))
     dr_quality_override = _optional_float(params.get("dr_quality"))
+    dr_quality_speed_alpha = _optional_float(params.get("dr_quality_speed_alpha"))
+    if dr_quality_speed_alpha is None:
+        dr_quality_speed_alpha = 1.0
 
     dr1_cost = float(params.get("dr1_cost_per_review", 1.0))
     dr2_cost = float(params.get("dr2_cost_per_review", dr1_cost * 2.0))
@@ -133,6 +140,8 @@ def setup_standard_flow(rng, **params):
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr1_capacity,
         quality_override=dr_quality_override,
+        quality_speed_tradeoff=dr_quality_override,
+        quality_speed_alpha=dr_quality_speed_alpha,
         cost_per_review=dr1_cost,
         calendar=dr_calendar
     )
@@ -165,6 +174,8 @@ def setup_standard_flow(rng, **params):
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr2_capacity,
         quality_override=dr_quality_override,
+        quality_speed_tradeoff=dr_quality_override,
+        quality_speed_alpha=dr_quality_speed_alpha,
         cost_per_review=dr2_cost,
         calendar=dr_calendar
     )
@@ -197,6 +208,8 @@ def setup_standard_flow(rng, **params):
         decision_latency_days=params.get("decision_latency_days", 0.0),
         capacity_override=dr3_capacity,
         quality_override=dr_quality_override,
+        quality_speed_tradeoff=dr_quality_override,
+        quality_speed_alpha=dr_quality_speed_alpha,
         cost_per_review=dr3_cost,
         calendar=dr_calendar
     )

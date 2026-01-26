@@ -1,0 +1,62 @@
+{
+  "use_base_from_csv": true,
+  "n_samples": 80,
+  "n_trials": 3,
+  "top_k": 30,
+  "scenario_trials": 100,
+  "target_metric": "dr2_wait",
+  "scenario_prefix": "DOE_SENS",
+  "param_ranges": {
+    "arrival_rate": {
+      "min": 0.1,
+      "max": 0.6,
+      "type": "float"
+    },
+    "rework_load_factor": {
+      "min": 0.8,
+      "max": 2.5,
+      "type": "float"
+    },
+    "dr2_period": {
+      "min": 30.0,
+      "max": 120.0,
+      "type": "int"
+    },
+    "dr2_capacity": {
+      "min": 10.0,
+      "max": 30.0,
+      "type": "int"
+    },
+    "engineer_pool_size": {
+      "min": 4,
+      "max": 20,
+      "type": "int"
+    },
+    "hours_per_day_per_engineer": {
+      "min": 4.0,
+      "max": 8.0,
+      "type": "float"
+    },
+    "dr_quality": {
+      "min": 0.5,
+      "max": 0.9,
+      "type": "float"
+    }
+  },
+  "score_weights": {
+    "dr2_wait": 1.0,
+    "dr2_cost": 0.5,
+    "throughput": -0.8,
+    "avg_reworks": 0.4
+  },
+  "constraints": {},
+  "fixed_params": {
+    "days": 1095
+  },
+  "insight_metrics": [
+    "dr2_wait",
+    "throughput",
+    "avg_reworks",
+    "dr2_cost"
+  ]
+}
