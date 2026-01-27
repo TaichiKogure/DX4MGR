@@ -689,6 +689,41 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/2026/RDIssues/Ver14/20260127DOE2/dr_cost_summary.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver14/20260127DOE2/flow_time_breakdown.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver14/20260127DOE2/scenarios_20260127DOE2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver14/20260127DOE2/scenarios_20260127DOE2_v2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/RDIssues/Ver14/scenarios.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver14/scenarios_extreme.csv">
           <value>
             <Attribute>

@@ -1,0 +1,7 @@
+scenario,overall_status,gate1_name,gate1_status,gate1_value,gate1_threshold,gate2_name,gate2_status,gate2_value,gate2_threshold,gate3_name,gate3_status,gate3_value,gate3_threshold,gate4_name,gate4_status,gate4_value,gate4_threshold,avg_completed,avg_tp,avg_p90_lt,avg_reworks,ci_width_tp
+01_Baseline,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
+02_High_Load,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
+03_Few_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
+04_Many_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
+05_High_Uncertainty,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
+06_Tight_DR,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0

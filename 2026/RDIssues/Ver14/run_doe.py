@@ -31,6 +31,10 @@ INT_PARAMS = {
     "dr2_capacity",
     "dr3_capacity",
     "engineer_pool_size",
+    "n_servers_small",
+    "dr1_t",
+    "dr2_t",
+    "dr3_t"
 }
 
 FLOAT_PARAMS = {
@@ -54,6 +58,7 @@ FLOAT_PARAMS = {
     "dr_quality",
     "dr_quality_speed_alpha",
     "hours_per_day_per_engineer",
+    "adoption_rate"
 }
 
 def _safe_mean(values: Iterable[float], default: float = 0.0) -> float:
@@ -402,7 +407,7 @@ def run_doe_from_spec(
 
     plot_metric = target_metric if target_metric in doe_df.columns else "throughput"
     plot_cols = [c for c in param_names if c in doe_df.columns] + [plot_metric]
-    viz.plot_doe_analysis(doe_df[plot_cols], target_col=plot_metric, title="Ver12 DOE Sensitivity (exploration)")
+    viz.plot_doe_analysis(doe_df[plot_cols], target_col=plot_metric, title="Ver14 DOE Sensitivity (exploration)")
     plt.savefig(os.path.join(out_dir, "doe_analysis.png"))
     plt.close()
 
@@ -480,7 +485,7 @@ def run_doe(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run DOE exploration (Ver13).")
+    parser = argparse.ArgumentParser(description="Run DOE exploration (Ver14).")
     parser.add_argument("--scenarios", default="scenarios.csv", help="Template scenarios.csv path")
     parser.add_argument("--out", default="output_doe", help="DOE output directory")
     parser.add_argument("--spec", help="Path to doe_spec.json (optional)")

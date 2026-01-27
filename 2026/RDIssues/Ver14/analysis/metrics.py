@@ -3,8 +3,9 @@ from typing import List, Dict, Any
 from core.entities import Job
 
 def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any]], total_days: float, wip_history: List[Dict[str, Any]] = None):
-    primary_jobs = [job for job in completed_jobs if not getattr(job, "is_rework_task", False)]
+    primary_jobs = [job for job in completed_jobs if not getattr(job, "is_rework_task", False) and not getattr(job, "is_rejected", False)]
     rework_jobs = [job for job in completed_jobs if getattr(job, "is_rework_task", False)]
+    rejected_jobs = [job for job in completed_jobs if getattr(job, "is_rejected", False)]
 
     def _lead_time_stats(values):
         if not values:
@@ -165,6 +166,7 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
     metrics = {
         "summary": {
             "completed_count": len(primary_jobs),
+            "rejected_count": len(rejected_jobs),
             "throughput": len(primary_jobs) / total_days,
             "lead_time_p50": float(np.percentile(lead_times, 50)),
             "lead_time_p90": float(np.percentile(lead_times, 90)),

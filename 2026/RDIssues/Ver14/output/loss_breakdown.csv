@@ -1,0 +1,7 @@
+scenario,primary_completed_avg,rework_jobs_avg,primary_work_avg_days,primary_wait_avg_days,primary_decision_avg_days,primary_flow_avg_days,rework_flow_avg_days,rework_wait_avg_days,rework_work_avg_days,rework_decision_avg_days,rework_time_per_primary_avg_days,time_loss_per_primary_avg_days,review_cost_total_avg,review_cost_per_primary_avg,rework_review_cost_avg,rework_review_cost_per_primary_avg,rework_review_ratio_avg
+01_Baseline,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+02_High_Load,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+03_Few_Engineers,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+04_Many_Engineers,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+05_High_Uncertainty,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+06_Tight_DR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0

@@ -1,0 +1,7 @@
+scenario,rework_jobs_avg,rework_flow_avg_days,rework_wait_avg_days,rework_work_avg_days,rework_decision_avg_days,rework_review_cost_avg,rework_review_cost_per_primary_avg
+01_Baseline_v2,31.166666666666668,62.84777601721337,52.56698906094987,10.280786956263503,0.0,0.0,0.0
+02_High_Resource_Extreme,10.5,37.84940059315799,14.761533621225288,23.08786697193269,0.0,0.0,0.0
+03_High_Uncertainty_Extreme,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+04_Efficient_DR_Extreme,5.2,10.658668321145097,2.2853251620807673,8.373343159064328,0.0,0.0,0.0
+05_Heavy_Load_Extreme,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+06_Throughput_Max_Attempt,14.333333333333334,10.152350632183179,3.2070733874587942,6.9452772447243865,0.0,0.0,0.0

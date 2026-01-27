@@ -1,7 +1,7 @@
 import numpy as np
 from core.entities import Job, Approver, TaskType
 from core.engine import SimulationEngine
-from core.gates import WorkGate, BundleGate, MeetingGate
+from core.gates import WorkGate, BundleGate, MeetingGate, AdoptionGate
 from core.policies import ReworkPolicy
 
 
@@ -105,21 +105,36 @@ def setup_standard_flow(rng, **params):
     
     # Ver13: Create DRCalendar
     from core.planning import DRCalendar
+    # 現場版：固定日設定 (270, 450, 630)
+    dr1_t = float(params.get("dr1_t", 270.0))
+    dr2_t = float(params.get("dr2_t", 450.0))
+    dr3_t = float(params.get("dr3_t", 630.0))
+    
     dr_calendar = DRCalendar(schedule_by_gate={
-        "DR1": [float(i * params.get("dr1_period", 30)) for i in range(1, int(days/params.get("dr1_period", 30)) + 2)],
-        "DR2": [float(i * params.get("dr2_period", 60)) for i in range(1, int(days/params.get("dr2_period", 60)) + 2)],
-        "DR3": [float(i * params.get("dr3_period", 90)) for i in range(1, int(days/params.get("dr3_period", 90)) + 2)],
+        "DR1": [dr1_t],
+        "DR2": [dr2_t],
+        "DR3": [dr3_t],
     })
     engine.dr_calendar = dr_calendar # 後でSchedulerが参照できるように保持
 
+    # 延期設定
+    postpone_options = [90.0, 180.0]
+    postpone_probs = [0.5, 0.5]
+
     small_exp_gate = WorkGate(
         "SMALL_EXP", engine,
-        n_servers=999,
+        n_servers=int(params.get("n_servers_small", 7)),
         duration_dist=partial(_exp_dist, rng, params.get("small_exp_duration", 5)),
-        next_node_id="BUNDLE_SMALL",
+        next_node_id="ADOPTION_SMALL",
         task_type=TaskType.SMALL_EXP,
         friction_model=friction_model,
         friction_alpha=friction_alpha
+    )
+
+    adoption_gate = AdoptionGate(
+        "ADOPTION_SMALL", engine,
+        adoption_rate=float(params.get("adoption_rate", 0.55)),
+        next_node_id="BUNDLE_SMALL"
     )
 
     bundle_small_gate = BundleGate(
@@ -143,7 +158,9 @@ def setup_standard_flow(rng, **params):
         quality_speed_tradeoff=dr_quality_override,
         quality_speed_alpha=dr_quality_speed_alpha,
         cost_per_review=dr1_cost,
-        calendar=dr_calendar
+        calendar=dr_calendar,
+        postpone_options=postpone_options,
+        postpone_probs=postpone_probs
     )
 
     mid_exp_gate = WorkGate(
@@ -215,6 +232,7 @@ def setup_standard_flow(rng, **params):
     )
 
     engine.add_node(small_exp_gate)
+    engine.add_node(adoption_gate)
     engine.add_node(bundle_small_gate)
     engine.add_node(dr1_gate)
     engine.add_node(mid_exp_gate)

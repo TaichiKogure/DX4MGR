@@ -172,7 +172,7 @@ def _prompt_weights(default_weights: Dict[str, float]) -> Dict[str, float]:
     return weights if weights else dict(default_weights)
 
 def main():
-    print("=== DX4MGR Ver12 DOE Wizard ===")
+    print("=== DX4MGR Ver14 DOE Wizard ===")
     scenarios_path = _resolve_path(_prompt("scenarios.csv のパス", default="scenarios.csv"))
     out_dir = _resolve_path(_prompt("出力ディレクトリ", default="output_doe"))
     os.makedirs(out_dir, exist_ok=True)

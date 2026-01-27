@@ -40,8 +40,8 @@ def _resolve_scenarios_path(scenarios_path, scenarios_dir, scenarios_file):
     return scenarios_file or "scenarios.csv"
 
 def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenarios.csv", out_dir=None):
-    print("=== DX4MGR Ver13: Scheduler & LatentRisk Integrated Model ===")
-    print("Enabled features: DRCalendar, WorkPackage, LatentRisk, Scheduler")
+    print("=== DX4MGR Ver14: Field Calibration Model ===")
+    print("Enabled features: DRCalendar, WorkPackage, LatentRisk, Scheduler, AdoptionGate, DR Postponement")
     
     OUT_DIR = out_dir or DEFAULT_OUT_DIR
     os.makedirs(OUT_DIR, exist_ok=True)
@@ -132,11 +132,15 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
             'dr1_capacity',
             'dr2_capacity',
             'dr3_capacity',
-            'engineer_pool_size'
+            'engineer_pool_size',
+            'n_servers_small',
+            'dr1_t',
+            'dr2_t',
+            'dr3_t'
         ]:
             if k in params and pd.notna(params[k]):
                 params[k] = int(params[k])
-        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer', 'dr_quality', 'dr_quality_speed_alpha', 'rework_reinject_ratio']:
+        for k in ['arrival_rate', 'small_exp_duration', 'mid_exp_duration', 'fin_exp_duration', 'rework_load_factor', 'decay', 'friction_alpha', 'decision_latency_days', 'dr1_cost_per_review', 'dr2_cost_per_review', 'dr3_cost_per_review', 'dr2_rework_multiplier', 'hours_per_day_per_engineer', 'dr_quality', 'dr_quality_speed_alpha', 'rework_reinject_ratio', 'adoption_rate']:
             if k in params and pd.notna(params[k]):
                 params[k] = float(params[k])
 
@@ -501,7 +505,7 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
     print(f"  基準(Baseline): {baseline_name}")
     
     # Step 7: 全指標の表示（標準出力）
-    print("\n  --- 詳細指標 (Ver13 可観測性レポート) ---")
+    print("\n  --- 詳細指標 (Ver14 可観測性レポート) ---")
     header = f"{'Scenario':20} | {'TP':5} | {'P50':5} | {'P90':5} | {'AvgRwk':6} | {'AvgProl':6} | {'AvgWIP':6}"
     print(header)
     print("-" * len(header))
@@ -546,11 +550,11 @@ def run_pipeline(scenarios_path=None, scenarios_dir=None, scenarios_file="scenar
 
     # スコアカード生成 (Ver12カスタム)
     print("  スコアカード生成中...")
-    viz.plot_scorecard(all_metrics_for_scorecard, baseline_name, title="Ver13 シナリオ性能スコアカード")
+    viz.plot_scorecard(all_metrics_for_scorecard, baseline_name, title="Ver14 シナリオ性能スコアカード")
     plt.savefig(os.path.join(OUT_DIR, "scenario_scorecard.png"))
     plt.close()
 
-    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver13)")
+    viz.plot_comparison_with_ci(comparison_summary, title="全シナリオ比較: スループット(Ver14)")
     plt.savefig(os.path.join(OUT_DIR, "comparison_throughput.png"))
     plt.close()
 

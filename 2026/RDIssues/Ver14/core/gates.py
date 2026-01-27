@@ -188,6 +188,43 @@ class BundleGate(GateNode):
         self.current_bundle_size = self.bundle_size_dist()
         self.engine.check_node_activation(self.node_id)
 
+class AdoptionGate(GateNode):
+    """
+    Small工程完了後の「採用/不採用ゲート」。
+    不採用になったジョブは完了扱いとするが、その後のフロー（Bundle/DR）には進まない。
+    """
+    def __init__(self, node_id: str, engine: Any, adoption_rate: float, next_node_id: str):
+        super().__init__(node_id, engine)
+        self.adoption_rate = adoption_rate
+        self.next_node_id = next_node_id
+
+    def enqueue(self, job: Job, now: float):
+        job.add_history(self.node_id, "ENQUEUE", now)
+        job.current_node = self.node_id
+        job.temp_enqueue_time = now
+        self.queue.append(job)
+
+    def can_process(self, now: float) -> bool:
+        return len(self.queue) > 0
+
+    def process(self, now: float):
+        while self.queue:
+            job = self.queue.pop(0)
+            self.processed_count += 1
+            
+            wait_time = now - job.temp_enqueue_time
+            self.total_wait_time += wait_time
+            
+            rand = self.engine.rng.random()
+            if rand < self.adoption_rate:
+                job.add_history(self.node_id, "ADOPTED", now, wait_time=wait_time, adoption_rate=self.adoption_rate)
+                self.engine.schedule_event(now, "ARRIVAL", {"job": job, "target_node": self.next_node_id}, priority=5)
+            else:
+                job.add_history(self.node_id, "REJECTED", now, wait_time=wait_time, adoption_rate=self.adoption_rate)
+                job.is_rejected = True
+                # エンジン側の完了リストに直接追加（フロー終了）
+                self.engine.results["completed_jobs"].append(job)
+
 class MeetingGate(GateNode):
     def __init__(self, node_id: str, engine: Any, period_days: float, approvers: List[Any], 
                  next_node_id: Optional[str], rework_node_id: Optional[str], 
@@ -199,7 +236,9 @@ class MeetingGate(GateNode):
                  cost_per_review: float = 0.0,
                  calendar: Optional[Any] = None,
                  quality_speed_tradeoff: Optional[float] = None,
-                 quality_speed_alpha: float = 1.0):
+                 quality_speed_alpha: float = 1.0,
+                 postpone_options: Optional[List[float]] = None,
+                 postpone_probs: Optional[List[float]] = None):
         super().__init__(node_id, engine)
         self.period_days = period_days
         self.approvers = approvers
@@ -208,6 +247,9 @@ class MeetingGate(GateNode):
         self.nogo_node_id = nogo_node_id
         self.rework_policy = rework_policy
         self.calendar = calendar
+        self.postpone_options = postpone_options
+        self.postpone_probs = postpone_probs
+        self.postponed_count = 0
         
         if self.calendar:
             self.next_meeting_time = self.calendar.next_after(self.node_id, 0.0) or period_days
@@ -252,8 +294,23 @@ class MeetingGate(GateNode):
     def can_process(self, now: float) -> bool:
         return False
 
+    def stats(self) -> dict:
+        res = super().stats()
+        res["postponed_count"] = self.postponed_count
+        return res
+
     def process(self, now: float):
         """Step 4.3 MeetingGate: 会議周期、容量、判定の実装"""
+        # 延期ロジック：キューが空で、延期設定がある場合
+        if not self.queue and self.postpone_options:
+            # self.engine.rng.choice が使えるか確認。通常 numpy の Generator
+            postpone_days = self.engine.rng.choice(self.postpone_options, p=self.postpone_probs)
+            self.next_meeting_time = now + postpone_days
+            self.postponed_count += 1
+            if self.next_meeting_time is not None:
+                self.engine.schedule_event(self.next_meeting_time, "MEETING_START", {"node_id": self.node_id})
+            return
+
         count = 0
         while self.queue and count < self.capacity:
             job = self.queue.pop(0)

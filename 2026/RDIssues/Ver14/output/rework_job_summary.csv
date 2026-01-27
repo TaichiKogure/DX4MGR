@@ -1,0 +1,7 @@
+scenario,rework_completed_avg,rework_throughput_avg,rework_lead_time_p50_avg,rework_lead_time_p90_avg,rework_lead_time_p95_avg
+01_Baseline,0.0,0.0,0.0,0.0,0.0
+02_High_Load,0.0,0.0,0.0,0.0,0.0
+03_Few_Engineers,0.0,0.0,0.0,0.0,0.0
+04_Many_Engineers,0.0,0.0,0.0,0.0,0.0
+05_High_Uncertainty,0.0,0.0,0.0,0.0,0.0
+06_Tight_DR,0.0,0.0,0.0,0.0,0.0
