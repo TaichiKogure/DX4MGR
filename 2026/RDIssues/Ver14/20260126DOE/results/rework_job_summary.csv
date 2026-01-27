@@ -1,0 +1,7 @@
+scenario,rework_completed_avg,rework_throughput_avg,rework_lead_time_p50_avg,rework_lead_time_p90_avg,rework_lead_time_p95_avg
+S1_Baseline,0.0,0.0,0.0,0.0,0.0
+S2_HeavyRework,0.0,0.0,0.0,0.0,0.0
+S3_DR2_Heavy,0.0,0.0,0.0,0.0,0.0
+S4_Rework_Spiral,0.0,0.0,0.0,0.0,0.0
+S5_Res_Crunch,0.0,0.0,0.0,0.0,0.0
+S6_High_Load_Rework,0.0,0.0,0.0,0.0,0.0

@@ -1,0 +1,55 @@
+[dr2_wait]
+  Top + correlation:
+    dr2_period: 0.800
+    arrival_rate: 0.243
+    dr2_rework_multiplier: 0.150
+    n_servers_mid: 0.145
+    dr2_capacity: -0.031
+  Top - correlation:
+    rework_load_factor: -0.139
+    bundle_size_mid: -0.082
+    dr2_capacity: -0.031
+    n_servers_mid: 0.145
+    dr2_rework_multiplier: 0.150
+
+[dr2_cost]
+  Top + correlation:
+    arrival_rate: 0.541
+    rework_load_factor: 0.107
+    dr2_period: -0.018
+    n_servers_mid: -0.020
+    dr2_capacity: -0.050
+  Top - correlation:
+    bundle_size_mid: -0.695
+    dr2_rework_multiplier: -0.172
+    dr2_capacity: -0.050
+    n_servers_mid: -0.020
+    dr2_period: -0.018
+
+[cost_per_completed]
+  Top + correlation:
+    bundle_size_mid: 0.565
+    dr2_rework_multiplier: 0.131
+    dr2_capacity: 0.119
+    n_servers_mid: 0.072
+    rework_load_factor: -0.004
+  Top - correlation:
+    dr2_period: -0.053
+    arrival_rate: -0.030
+    rework_load_factor: -0.004
+    n_servers_mid: 0.072
+    dr2_capacity: 0.119
+
+[throughput]
+  Top + correlation:
+    arrival_rate: 0.563
+    rework_load_factor: 0.098
+    dr2_period: -0.001
+    n_servers_mid: -0.047
+    dr2_capacity: -0.065
+  Top - correlation:
+    bundle_size_mid: -0.641
+    dr2_rework_multiplier: -0.148
+    dr2_capacity: -0.065
+    n_servers_mid: -0.047
+    dr2_period: -0.001

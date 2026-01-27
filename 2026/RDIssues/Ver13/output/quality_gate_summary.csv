@@ -1,7 +1,7 @@
 scenario,overall_status,gate1_name,gate1_status,gate1_value,gate1_threshold,gate2_name,gate2_status,gate2_value,gate2_threshold,gate3_name,gate3_status,gate3_value,gate3_threshold,gate4_name,gate4_status,gate4_value,gate4_threshold,avg_completed,avg_tp,avg_p90_lt,avg_reworks,ci_width_tp
-01_Baseline,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),FAIL,3.9198,0.5,Gate3: P90待ち時間基準,PASS,1.7302,300.0,Gate4: 平均差し戻し回数,PASS,0.02,5.0,0.0,1.8264840182648402e-05,1.730165793217534,0.02,3.919785391749802
-02_High_Load,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
-03_Few_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
-04_Many_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),FAIL,0.8854,0.5,Gate3: P90待ち時間基準,PASS,23.0732,300.0,Gate4: 平均差し戻し回数,PASS,0.13,5.0,0.0,0.000365296803652968,23.073217140619715,0.13,0.885435320967955
-05_High_Uncertainty,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.0,0.5,Gate3: P90待ち時間基準,PASS,0.0,300.0,Gate4: 平均差し戻し回数,PASS,0.0,5.0,0.0,0.0,0.0,0.0,0.0
-06_Tight_DR,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),FAIL,3.9198,0.5,Gate3: P90待ち時間基準,PASS,0.5631,300.0,Gate4: 平均差し戻し回数,PASS,0.02,5.0,0.0,1.8264840182648402e-05,0.5630507054719714,0.02,3.919785391749801
+01_Baseline,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.1282,0.5,Gate3: P90待ち時間基準,PASS,80.9763,300.0,Gate4: 平均差し戻し回数,PASS,1.298,5.0,0.0,0.003214611872146119,80.97633295201823,1.298,0.1282236798915715
+02_High_Load,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.1117,0.5,Gate3: P90待ち時間基準,PASS,83.923,300.0,Gate4: 平均差し戻し回数,PASS,1.1857,5.0,0.0,0.006210045662100458,83.92295456360347,1.1856507936507936,0.11170894643951958
+03_Few_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.1538,0.5,Gate3: P90待ち時間基準,PASS,75.7054,300.0,Gate4: 平均差し戻し回数,PASS,1.575,5.0,0.0,0.0026301369863013704,75.70541580716036,1.5749999999999997,0.15379554100676054
+04_Many_Engineers,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.1215,0.5,Gate3: P90待ち時間基準,PASS,80.4941,300.0,Gate4: 平均差し戻し回数,PASS,1.298,5.0,0.0,0.0032694063926940638,80.49413139135909,1.298,0.12152887652399812
+05_High_Uncertainty,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),FAIL,0.6318,0.5,Gate3: P90待ち時間基準,PASS,30.5482,300.0,Gate4: 平均差し戻し回数,PASS,1.12,5.0,0.0,0.00040182648401826474,30.54820546717562,1.12,0.6317636315659515
+06_Tight_DR,FAIL,Gate1: 完了ジョブ数下限,FAIL,0.0,5,Gate2: 統計品質(CI幅),PASS,0.145,0.5,Gate3: P90待ち時間基準,PASS,38.0608,300.0,Gate4: 平均差し戻し回数,PASS,1.733,5.0,0.0,0.0030136986301369855,38.06076751927335,1.733,0.14498910635597284

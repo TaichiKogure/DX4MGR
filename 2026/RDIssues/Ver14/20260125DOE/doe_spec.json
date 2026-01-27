@@ -1,0 +1,65 @@
+{
+  "use_base_from_csv": true,
+  "n_samples": 56,
+  "n_trials": 2,
+  "top_k": 20,
+  "scenario_trials": 200,
+  "target_metric": "dr2_wait",
+  "scenario_prefix": "DOE_BLOWUP",
+  "param_ranges": {
+    "arrival_rate": {
+      "min": 0.1,
+      "max": 0.8,
+      "type": "float"
+    },
+    "rework_load_factor": {
+      "min": 0.65,
+      "max": 2.6,
+      "type": "float"
+    },
+    "dr2_rework_multiplier": {
+      "min": 1.0,
+      "max": 4.0,
+      "type": "float"
+    },
+    "dr2_period": {
+      "min": 45.0,
+      "max": 180.0,
+      "type": "int"
+    },
+    "dr2_capacity": {
+      "min": 7.0,
+      "max": 28.0,
+      "type": "int"
+    },
+    "bundle_size_mid": {
+      "min": 1.0,
+      "max": 4.0,
+      "type": "int"
+    },
+    "n_servers_mid": {
+      "min": 1.0,
+      "max": 4.0,
+      "type": "int"
+    }
+  },
+  "score_weights": {
+    "dr2_wait": 1.0,
+    "dr2_cost": 0.7,
+    "cost_per_completed": 0.5,
+    "dr2_wait_ratio": 0.5,
+    "avg_reworks": 0.3,
+    "throughput": -0.6
+  },
+  "constraints": {
+    "dr1_wait_max": 54.8477077009424,
+    "dr1_cost_max": 31.2
+  },
+  "fixed_params": {},
+  "insight_metrics": [
+    "dr2_wait",
+    "dr2_cost",
+    "cost_per_completed",
+    "throughput"
+  ]
+}
