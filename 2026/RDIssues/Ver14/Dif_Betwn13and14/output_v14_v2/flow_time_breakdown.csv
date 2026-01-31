@@ -1,0 +1,10 @@
+Scenario,Node,AvgTime,AvgWait,AvgWork
+Baseline_Short_DR,SMALL_EXP,0.0,0.0,0.0
+Baseline_Short_DR,BUNDLE_SMALL,0.0,0.0,0.0
+Baseline_Short_DR,DR1,3.0,0.0,3.0
+Baseline_Short_DR,MID_EXP,0.0,0.0,0.0
+Baseline_Short_DR,BUNDLE_MID,0.0,0.0,0.0
+Baseline_Short_DR,DR2,3.0,0.0,3.0
+Baseline_Short_DR,FIN_EXP,0.0,0.0,0.0
+Baseline_Short_DR,BUNDLE_FIN,0.0,0.0,0.0
+Baseline_Short_DR,DR3,3.0,0.0,3.0

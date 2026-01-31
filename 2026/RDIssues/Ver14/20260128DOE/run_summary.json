@@ -1,0 +1,16 @@
+{
+  "baseline_summary": {
+    "throughput": 0.000136986301369863,
+    "completed_count": 0.5,
+    "avg_reworks": 0.0,
+    "rework_completed_count": 12.5,
+    "rework_throughput": 0.003424657534246575,
+    "rework_lead_time_p90": 48.76943262197274,
+    "p90_wait": 50.4869304595241,
+    "avg_wip": 232.88729115310875
+  },
+  "n_samples": 30,
+  "n_trials": 2,
+  "effective_count": 13,
+  "throughput_threshold": 0.0005
+}

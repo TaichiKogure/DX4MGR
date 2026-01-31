@@ -1,0 +1,2 @@
+scenario,rework_completed_avg,rework_throughput_avg,rework_lead_time_p50_avg,rework_lead_time_p90_avg,rework_lead_time_p95_avg
+Comparison_Baseline,0.0,0.0,0.0,0.0,0.0

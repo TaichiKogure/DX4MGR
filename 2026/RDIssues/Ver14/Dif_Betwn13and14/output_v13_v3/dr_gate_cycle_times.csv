@@ -1,0 +1,4 @@
+scenario,gate,cycle_p50,cycle_p90,cycle_p95,wait_p50,decision_p50,pass_rate,conditional_rate,nogo_rate,count_avg
+Baseline_Fast,DR1,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Baseline_Fast,DR2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+Baseline_Fast,DR3,23.309681015893876,28.901292876576953,29.39723437469827,0.0,0.0,1.0,0.0,0.0,114.28

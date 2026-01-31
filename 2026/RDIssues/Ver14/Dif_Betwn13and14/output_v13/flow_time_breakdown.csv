@@ -1,0 +1,10 @@
+Scenario,Node,AvgTime,AvgWait,AvgWork
+Comparison_Baseline,SMALL_EXP,0.0,0.0,0.0
+Comparison_Baseline,BUNDLE_SMALL,0.0,0.0,0.0
+Comparison_Baseline,DR1,3.0,0.0,3.0
+Comparison_Baseline,MID_EXP,0.0,0.0,0.0
+Comparison_Baseline,BUNDLE_MID,0.0,0.0,0.0
+Comparison_Baseline,DR2,3.0,0.0,3.0
+Comparison_Baseline,FIN_EXP,0.0,0.0,0.0
+Comparison_Baseline,BUNDLE_FIN,0.0,0.0,0.0
+Comparison_Baseline,DR3,3.0,0.0,3.0

@@ -1,0 +1,2 @@
+scenario,dr1_cost_avg,dr2_cost_avg,dr3_cost_avg,total_review_cost_avg,cost_per_completed_job_avg
+Baseline_Fast,0.32,0.28,0.18,0.78,13.0
