@@ -3,6 +3,20 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/2026/DataAnalysis/Ver1/configs/simulation_params.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/DataAnalysis/Ver1/reports/simulation_results.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/2026/RDIssues/Ver13/2026/RDIssues/Ver13/output_sensitivity_v13/doe_results_scored.csv">
           <value>
             <Attribute>
