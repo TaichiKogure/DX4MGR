@@ -1,0 +1,4 @@
+project_id,team_name,avg_delay,error_rate,rework_count
+PROJ_A,Research,1.5,0.05,2
+PROJ_B,Prototype,3.2,0.15,5
+PROJ_C,Analysis,1.0,0.02,1

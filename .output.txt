@@ -1,184 +1,23 @@
-2026/RDIssues/Ver13:
-2026                            doe_wizard.py
-20260125DOE                     output
-20260126DOE                     output_doe
-20260127DOE                     run.py
-DOCS                            run_doe.py
-__init__.py                     runner
-__pycache__                     scenarios.csv
-analysis                        scenarios_extreme.csv
-analyzer.py                     simulator.py
-core                            visualizer.py
-doe_spec_sensitivity.json
-2026/RDIssues/Ver13/2026:
-RDIssues
-2026/RDIssues/Ver13/2026/RDIssues:
-Ver13
-2026/RDIssues/Ver13/2026/RDIssues/Ver13:
-output_sensitivity_v13
-2026/RDIssues/Ver13/2026/RDIssues/Ver13/output_sensitivity_v13:
-doe_analysis.png                doe_results_scored.csv
-doe_insights.txt                doe_top_summary.csv
-doe_param_correlations.csv      scenarios_from_doe.csv
-doe_results.csv
-2026/RDIssues/Ver13/20260125DOE:
-doe_analysis.png                doe_results_scored.csv
-doe_insights.txt                doe_spec.json
-doe_param_correlations.csv      doe_top_summary.csv
-doe_results.csv                 scenarios_from_doe.csv
-2026/RDIssues/Ver13/20260126DOE:
-Report_20260126.md      results                 scenarios_20260126.csv
-2026/RDIssues/Ver13/20260126DOE/results:
-ccdf_analysis.png                       job_gantt_S3_DR2_Heavy.png
-compare_reworks.png                     job_gantt_S5_Res_Crunch.png
-compare_violin.png                      job_wait_dist_S1_Baseline.png
-comparison_throughput.png               job_wait_dist_S3_DR2_Heavy.png
-dr_cost_summary.csv                     job_wait_dist_S5_Res_Crunch.png
-final_analysis_report.json              job_wait_heatmap_S1_Baseline.png
-flow_time_breakdown.csv                 job_wait_heatmap_S3_DR2_Heavy.png
-flow_time_breakdown.png                 job_wait_heatmap_S5_Res_Crunch.png
-gate_wait_heatmap.png                   proliferated_dist.png
-gate_wip_heatmap.png                    quality_gate_summary.csv
-job_details_S1_Baseline.csv             rework_job_summary.csv
-job_details_S3_DR2_Heavy.csv            rework_weight_dist.png
-job_details_S5_Res_Crunch.csv           scenario_scorecard.png
-job_gantt_S1_Baseline.png               wip_time_series.png
-2026/RDIssues/Ver13/20260127DOE:
-Report_20260127.md
-ccdf_analysis.png
-compare_reworks.png
-compare_violin.png
-comparison_throughput.png
-dr_cost_summary.csv
-final_analysis_report.json
-flow_time_breakdown.csv
-flow_time_breakdown.png
-gate_wait_heatmap.png
-gate_wip_heatmap.png
-job_details_01_Baseline.csv
-job_details_02_High_Load.csv
-job_details_03_Few_Engineers.csv
-job_details_04_Many_Engineers.csv
-job_details_05_High_Uncertainty.csv
-job_details_06_Tight_DR.csv
-job_gantt_01_Baseline.png
-job_gantt_02_High_Load.png
-job_gantt_03_Few_Engineers.png
-job_gantt_04_Many_Engineers.png
-job_gantt_05_High_Uncertainty.png
-job_gantt_06_Tight_DR.png
-job_wait_dist_01_Baseline.png
-job_wait_dist_02_High_Load.png
-job_wait_dist_03_Few_Engineers.png
-job_wait_dist_04_Many_Engineers.png
-job_wait_dist_05_High_Uncertainty.png
-job_wait_dist_06_Tight_DR.png
-job_wait_heatmap_01_Baseline.png
-job_wait_heatmap_02_High_Load.png
-job_wait_heatmap_03_Few_Engineers.png
-job_wait_heatmap_04_Many_Engineers.png
-job_wait_heatmap_05_High_Uncertainty.png
-job_wait_heatmap_06_Tight_DR.png
-proliferated_dist.png
-quality_gate_summary.csv
-rework_job_summary.csv
-rework_weight_dist.png
-scenario_scorecard.png
-wip_time_series.png
-2026/RDIssues/Ver13/DOCS:
-ANALYSIS_TIPS.md                PARAMETER_GUIDE_Ver13.md
-BEGINNER_GUIDE.md               PARAMETER_SANITY_GUIDE_JP.md
-MATH_GUIDE_Ver13.md             REPORT_SCORECARD_EXT_JP.md
-PARAMETER_GUIDE.md
-2026/RDIssues/Ver13/__pycache__:
-__init__.cpython-39.pyc         run_doe.cpython-39.pyc
-analyzer.cpython-311.pyc        simulator.cpython-311.pyc
-analyzer.cpython-39.pyc         simulator.cpython-39.pyc
-doe_wizard.cpython-39.pyc       visualizer.cpython-311.pyc
-run.cpython-39.pyc              visualizer.cpython-39.pyc
-run_doe.cpython-311.pyc
-2026/RDIssues/Ver13/analysis:
-__init__.py     __pycache__     metrics.py      viz.py
-2026/RDIssues/Ver13/analysis/__pycache__:
-__init__.cpython-311.pyc        metrics.cpython-311.pyc
-__init__.cpython-39.pyc         metrics.cpython-39.pyc
-2026/RDIssues/Ver13/core:
-__init__.py     engine.py       gates.py        policies.py
-__pycache__     entities.py     planning.py
-2026/RDIssues/Ver13/core/__pycache__:
-__init__.cpython-311.pyc        gates.cpython-311.pyc
-__init__.cpython-39.pyc         gates.cpython-39.pyc
-engine.cpython-311.pyc          planning.cpython-311.pyc
-engine.cpython-39.pyc           planning.cpython-39.pyc
-entities.cpython-311.pyc        policies.cpython-311.pyc
-entities.cpython-39.pyc         policies.cpython-39.pyc
-2026/RDIssues/Ver13/output:
-ccdf_analysis.png
-compare_reworks.png
-compare_violin.png
-comparison_throughput.png
-dr_cost_summary.csv
-dr_gate_cycle_p90_heatmap.png
-dr_gate_cycle_times.csv
-final_analysis_report.json
-flow_time_breakdown.csv
-flow_time_breakdown.png
-gate_wait_heatmap.png
-gate_wip_heatmap.png
-job_details_02_High_Load.csv
-job_details_03_Few_Engineers.csv
-job_details_05_High_Uncertainty.csv
-job_details_06_Tight_DR.csv
-job_gantt_02_High_Load.png
-job_gantt_03_Few_Engineers.png
-job_gantt_05_High_Uncertainty.png
-job_gantt_06_Tight_DR.png
-job_wait_dist_02_High_Load.png
-job_wait_dist_03_Few_Engineers.png
-job_wait_dist_05_High_Uncertainty.png
-job_wait_dist_06_Tight_DR.png
-job_wait_heatmap_02_High_Load.png
-job_wait_heatmap_03_Few_Engineers.png
-job_wait_heatmap_05_High_Uncertainty.png
-job_wait_heatmap_06_Tight_DR.png
-loss_breakdown.csv
-loss_cost_breakdown.png
-loss_time_breakdown.png
-proliferated_dist.png
-quality_gate_summary.csv
-rework_job_summary.csv
-rework_loss_summary.csv
-rework_weight_dist.png
-scenario_scorecard.png
-wip_time_series.png
-2026/RDIssues/Ver13/output_doe:
-doe_analysis.png        doe_results_scored.csv  scenarios_from_doe.csv
-doe_results.csv         doe_top_summary.csv
-2026/RDIssues/Ver13/runner:
-__init__.py     __pycache__     adapters.py     experiment.py
-2026/RDIssues/Ver13/runner/__pycache__:
-__init__.cpython-311.pyc        adapters.cpython-311.pyc
-__init__.cpython-39.pyc         adapters.cpython-39.pyc
-2026/RDIssues/Ver14:
 20260125DOE                     doe_spec_sensitivity.json
 20260126DOE                     doe_wizard.py
 20260127DOE                     output
 20260127DOE2                    output_doe
-DOCS                            run.py
-Dif Betwn13and14                run_doe.py
-__init__.py                     runner
+20260128DOE                     run.py
+DOCS                            run_doe.py
+Dif_Betwn13and14                runner
+__init__.py                     scenarios
 __pycache__                     scenarios.csv
 analysis                        simulator.py
 analyzer.py                     visualizer.py
 core
-2026/RDIssues/Ver14/20260125DOE:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260125DOE:
 doe_analysis.png                doe_results_scored.csv
 doe_insights.txt                doe_spec.json
 doe_param_correlations.csv      doe_top_summary.csv
 doe_results.csv                 scenarios_from_doe.csv
-2026/RDIssues/Ver14/20260126DOE:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260126DOE:
 Report_20260126.md      results                 scenarios_20260126.csv
-2026/RDIssues/Ver14/20260126DOE/results:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260126DOE/results:
 ccdf_analysis.png                       job_gantt_S3_DR2_Heavy.png
 compare_reworks.png                     job_gantt_S5_Res_Crunch.png
 compare_violin.png                      job_wait_dist_S1_Baseline.png
@@ -193,7 +32,7 @@ job_details_S1_Baseline.csv             rework_job_summary.csv
 job_details_S3_DR2_Heavy.csv            rework_weight_dist.png
 job_details_S5_Res_Crunch.csv           scenario_scorecard.png
 job_gantt_S1_Baseline.png               wip_time_series.png
-2026/RDIssues/Ver14/20260127DOE:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260127DOE:
 Report_20260127.md
 ccdf_analysis.png
 compare_reworks.png
@@ -235,7 +74,7 @@ rework_job_summary.csv
 rework_weight_dist.png
 scenario_scorecard.png
 wip_time_series.png
-2026/RDIssues/Ver14/20260127DOE2:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260127DOE2:
 Report_20260127DOE2.md
 ccdf_analysis.png
 compare_reworks.png
@@ -294,81 +133,153 @@ scenario_scorecard.png
 scenarios_20260127DOE2.csv
 scenarios_20260127DOE2_v2.csv
 wip_time_series.png
-2026/RDIssues/Ver14/DOCS:
-ANALYSIS_TIPS.md                PARAMETER_GUIDE_Ver13.md
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/20260128DOE:
+Report_20260128DOE.md           doe_rework_results.csv
+RunPy_Options_JP.md             effective_ranges.json
+doe_rework_effective.csv        run_summary.json
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/DOCS:
+ANALYSIS_TIPS.md                PARAMETER_GUIDE.md
 BEGINNER_GUIDE.md               PARAMETER_SANITY_GUIDE_JP.md
-MATH_GUIDE_Ver13.md             REPORT_SCORECARD_EXT_JP.md
-PARAMETER_GUIDE.md
-2026/RDIssues/Ver14/Dif Betwn13and14:
-2026/RDIssues/Ver14/__pycache__:
+MATH_GUIDE.md                   REPORT_SCORECARD_EXT_JP.md
+OUTPUT_STRUCTURE_JP.md
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14:
+output_v13                      report_ja.md
+output_v13_v2                   scenarios_comparison_v2.csv
+output_v13_v3                   scenarios_comparison_v3.csv
+output_v14_v2                   scenarios_v13_comparison.csv
+output_v14_v3
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14/output_v13:
+ccdf_analysis.png               gate_wip_heatmap.png
+compare_reworks.png             loss_breakdown.csv
+compare_violin.png              loss_cost_breakdown.png
+comparison_throughput.png       loss_time_breakdown.png
+dr_cost_summary.csv             proliferated_dist.png
+dr_gate_cycle_p90_heatmap.png   quality_gate_summary.csv
+dr_gate_cycle_times.csv         rework_job_summary.csv
+final_analysis_report.json      rework_loss_summary.csv
+flow_time_breakdown.csv         rework_weight_dist.png
+flow_time_breakdown.png         scenario_scorecard.png
+gate_wait_heatmap.png           wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14/output_v13_v2:
+ccdf_analysis.png               gate_wip_heatmap.png
+compare_reworks.png             loss_breakdown.csv
+compare_violin.png              loss_cost_breakdown.png
+comparison_throughput.png       loss_time_breakdown.png
+dr_cost_summary.csv             proliferated_dist.png
+dr_gate_cycle_p90_heatmap.png   quality_gate_summary.csv
+dr_gate_cycle_times.csv         rework_job_summary.csv
+final_analysis_report.json      rework_loss_summary.csv
+flow_time_breakdown.csv         rework_weight_dist.png
+flow_time_breakdown.png         scenario_scorecard.png
+gate_wait_heatmap.png           wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14/output_v13_v3:
+ccdf_analysis.png                       job_gantt_Baseline_Fast.png
+compare_reworks.png                     job_wait_dist_Baseline_Fast.png
+compare_violin.png                      job_wait_heatmap_Baseline_Fast.png
+comparison_throughput.png               loss_breakdown.csv
+dr_cost_summary.csv                     loss_cost_breakdown.png
+dr_gate_cycle_p90_heatmap.png           loss_time_breakdown.png
+dr_gate_cycle_times.csv                 proliferated_dist.png
+final_analysis_report.json              quality_gate_summary.csv
+flow_time_breakdown.csv                 rework_job_summary.csv
+flow_time_breakdown.png                 rework_loss_summary.csv
+gate_wait_heatmap.png                   rework_weight_dist.png
+gate_wip_heatmap.png                    scenario_scorecard.png
+job_details_Baseline_Fast.csv           wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14/output_v14_v2:
+ccdf_analysis.png               gate_wip_heatmap.png
+compare_reworks.png             loss_breakdown.csv
+compare_violin.png              loss_cost_breakdown.png
+comparison_throughput.png       loss_time_breakdown.png
+dr_cost_summary.csv             proliferated_dist.png
+dr_gate_cycle_p90_heatmap.png   quality_gate_summary.csv
+dr_gate_cycle_times.csv         rework_job_summary.csv
+final_analysis_report.json      rework_loss_summary.csv
+flow_time_breakdown.csv         rework_weight_dist.png
+flow_time_breakdown.png         scenario_scorecard.png
+gate_wait_heatmap.png           wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/Dif_Betwn13and14/output_v14_v3:
+ccdf_analysis.png                       job_gantt_Baseline_Fast.png
+compare_reworks.png                     job_wait_dist_Baseline_Fast.png
+compare_violin.png                      job_wait_heatmap_Baseline_Fast.png
+comparison_throughput.png               loss_breakdown.csv
+dr_cost_summary.csv                     loss_cost_breakdown.png
+dr_gate_cycle_p90_heatmap.png           loss_time_breakdown.png
+dr_gate_cycle_times.csv                 proliferated_dist.png
+final_analysis_report.json              quality_gate_summary.csv
+flow_time_breakdown.csv                 rework_job_summary.csv
+flow_time_breakdown.png                 rework_loss_summary.csv
+gate_wait_heatmap.png                   rework_weight_dist.png
+gate_wip_heatmap.png                    scenario_scorecard.png
+job_details_Baseline_Fast.csv           wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/__pycache__:
 analyzer.cpython-311.pyc        simulator.cpython-39.pyc
 analyzer.cpython-39.pyc         visualizer.cpython-311.pyc
-simulator.cpython-311.pyc       visualizer.cpython-39.pyc
-2026/RDIssues/Ver14/analysis:
+run_doe.cpython-39.pyc          visualizer.cpython-39.pyc
+simulator.cpython-311.pyc
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/analysis:
 __init__.py     __pycache__     metrics.py      viz.py
-2026/RDIssues/Ver14/analysis/__pycache__:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/analysis/__pycache__:
 __init__.cpython-311.pyc        metrics.cpython-311.pyc
 __init__.cpython-39.pyc         metrics.cpython-39.pyc
-2026/RDIssues/Ver14/core:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/core:
 __init__.py     engine.py       gates.py        policies.py
 __pycache__     entities.py     planning.py
-2026/RDIssues/Ver14/core/__pycache__:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/core/__pycache__:
 __init__.cpython-311.pyc        gates.cpython-311.pyc
 __init__.cpython-39.pyc         gates.cpython-39.pyc
 engine.cpython-311.pyc          planning.cpython-311.pyc
 engine.cpython-39.pyc           planning.cpython-39.pyc
 entities.cpython-311.pyc        policies.cpython-311.pyc
 entities.cpython-39.pyc         policies.cpython-39.pyc
-2026/RDIssues/Ver14/output:
-ccdf_analysis.png
-compare_reworks.png
-compare_violin.png
-comparison_throughput.png
-dr_cost_summary.csv
-dr_gate_cycle_p90_heatmap.png
-dr_gate_cycle_times.csv
-final_analysis_report.json
-flow_time_breakdown.csv
-flow_time_breakdown.png
-gate_wait_heatmap.png
-gate_wip_heatmap.png
-job_details_01_Baseline.csv
-job_details_02_High_Load.csv
-job_details_03_Few_Engineers.csv
-job_details_04_Many_Engineers.csv
-job_details_05_High_Uncertainty.csv
-job_details_06_Tight_DR.csv
-job_gantt_01_Baseline.png
-job_gantt_02_High_Load.png
-job_gantt_03_Few_Engineers.png
-job_gantt_04_Many_Engineers.png
-job_gantt_05_High_Uncertainty.png
-job_gantt_06_Tight_DR.png
-job_wait_dist_01_Baseline.png
-job_wait_dist_02_High_Load.png
-job_wait_dist_03_Few_Engineers.png
-job_wait_dist_04_Many_Engineers.png
-job_wait_dist_05_High_Uncertainty.png
-job_wait_dist_06_Tight_DR.png
-job_wait_heatmap_01_Baseline.png
-job_wait_heatmap_02_High_Load.png
-job_wait_heatmap_03_Few_Engineers.png
-job_wait_heatmap_04_Many_Engineers.png
-job_wait_heatmap_05_High_Uncertainty.png
-job_wait_heatmap_06_Tight_DR.png
-loss_breakdown.csv
-loss_cost_breakdown.png
-loss_time_breakdown.png
-proliferated_dist.png
-quality_gate_summary.csv
-rework_job_summary.csv
-rework_loss_summary.csv
-rework_weight_dist.png
-scenario_scorecard.png
-wip_time_series.png
-2026/RDIssues/Ver14/output_doe:
-2026/RDIssues/Ver14/runner:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output:
+Output-01_Baseline_v2                   dr_cost_summary.csv
+Output-02_High_Resource_Extreme         dr_gate_cycle_times.csv
+Output-03_High_Uncertainty_Extreme      final_analysis_report.json
+Output-04_Efficient_DR_Extreme          flow_time_breakdown.csv
+Output-05_Heavy_Load_Extreme            flow_time_breakdown.png
+Output-06_Throughput_Max_Attempt        gate_wait_heatmap.png
+ccdf_analysis.png                       gate_wip_heatmap.png
+compare_reworks.png                     loss_breakdown.csv
+compare_violin.png                      scenario_scorecard.png
+comparison_throughput.png               wip_time_series.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-01_Baseline_v2:
+job_details_01_Baseline_v2.csv          job_wait_dist_01_Baseline_v2.png
+job_gantt_01_Baseline_v2.png            job_wait_heatmap_01_Baseline_v2.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-02_High_Resource_Extreme:
+job_details_02_High_Resource_Extreme.csv
+job_gantt_02_High_Resource_Extreme.png
+job_wait_dist_02_High_Resource_Extreme.png
+job_wait_heatmap_02_High_Resource_Extreme.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-03_High_Uncertainty_Extreme:
+job_details_03_High_Uncertainty_Extreme.csv
+job_gantt_03_High_Uncertainty_Extreme.png
+job_wait_dist_03_High_Uncertainty_Extreme.png
+job_wait_heatmap_03_High_Uncertainty_Extreme.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-04_Efficient_DR_Extreme:
+job_details_04_Efficient_DR_Extreme.csv
+job_gantt_04_Efficient_DR_Extreme.png
+job_wait_dist_04_Efficient_DR_Extreme.png
+job_wait_heatmap_04_Efficient_DR_Extreme.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-05_Heavy_Load_Extreme:
+job_details_05_Heavy_Load_Extreme.csv
+job_gantt_05_Heavy_Load_Extreme.png
+job_wait_dist_05_Heavy_Load_Extreme.png
+job_wait_heatmap_05_Heavy_Load_Extreme.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output/Output-06_Throughput_Max_Attempt:
+job_details_06_Throughput_Max_Attempt.csv
+job_gantt_06_Throughput_Max_Attempt.png
+job_wait_dist_06_Throughput_Max_Attempt.png
+job_wait_heatmap_06_Throughput_Max_Attempt.png
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/output_doe:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/runner:
 __init__.py     __pycache__     adapters.py     experiment.py
-2026/RDIssues/Ver14/runner/__pycache__:
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/runner/__pycache__:
 __init__.cpython-311.pyc        adapters.cpython-311.pyc
 __init__.cpython-39.pyc         adapters.cpython-39.pyc
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/scenarios:
+Study1  Study2
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/scenarios/Study1:
+Design1.txt     scenarios.csv   scenarios1.csv
+/Users/koguretaichi/PycharmProjects/DX4MGR/2026/RDIssues/Ver14/scenarios/Study2:
+scenarios.csv

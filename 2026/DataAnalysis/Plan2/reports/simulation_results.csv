@@ -1,0 +1,4 @@
+total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,scenario_id
+40,12,14,5.234920378622635,0,16.666666666666668,Distributed
+33,11,13,5.141148199404631,0,11.494252873563218,Integrated
+38,8,14,5.039055977546288,4,23.333333333333336,LowQuality

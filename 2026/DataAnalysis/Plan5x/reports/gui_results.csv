@@ -1,0 +1,15 @@
+total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,scenario_id,steps,dr_threshold,strategy,use_digital_twin,delay_res_proto,loss_res_proto,dist_res_proto,delay_proto_ana,loss_proto_ana,dist_proto_ana,delay_ana_res,loss_ana_res,dist_ana_res,past_logs_file
+25,8,0,5.044837089169404,1,34.850543036101996,13,Interactive_Sim,500,5.0,strategic,True,2,0.1,0.1,1,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+33,10,0,5.0988501048176795,0,33.003832983941074,19,Interactive_Sim,500,5.0,strategic,True,2,0.2,0.1,1,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+33,13,2,5.25764221061836,2,35.8078592979388,21,Interactive_Sim,500,5.0,strategic,True,2,0.3,0.1,1,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+28,9,2,5.143390315401615,1,34.52203228199461,17,Interactive_Sim,500,5.0,strategic,True,2,0.3,0.12,1,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+31,12,2,5.054095473428246,2,36.48634842190585,17,Interactive_Sim,500,5.0,strategic,True,2,0.3,0.12,1,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+32,15,2,5.034372058576221,0,33.218759804745936,11,Interactive_Sim,500,5.0,strategic,True,2,0.3,0.12,2,0.05,0.05,2,0.1,0.2,configs/past_logs.csv
+23,10,1,5.224083011638162,1,34.2530566278728,13,Interactive_Sim,500,5.0,strategic,True,2,0.3,0.12,2,0.2,0.05,2,0.1,0.2,configs/past_logs.csv
+33,13,3,5.148355515890278,2,36.17214828036575,14,Interactive_Sim,500,5.0,random,True,2,0.3,0.12,2,0.2,0.05,2,0.1,0.2,configs/past_logs.csv
+29,10,1,5.078080990146472,0,33.07306336617843,27,Interactive_Sim,1000,5.0,random,True,2,0.3,0.12,2,0.2,0.05,2,0.1,0.2,configs/past_logs.csv
+38,19,5,5.0001029394799,1,34.99965686840034,38,Interactive_Sim,1000,5.0,random,True,2,0.3,0.12,2,0.2,0.05,4,0.1,0.2,configs/past_logs.csv
+33,13,3,5.066409295822624,1,34.778635680591265,26,Interactive_Sim,1000,5.0,random,False,2,0.3,0.12,2,0.2,0.05,4,0.1,0.2,configs/past_logs.csv
+26,12,4,5.036793686461073,1,34.8773543784631,47,Interactive_Sim,1000,5.0,random,False,2,0.3,0.12,2,0.2,0.05,4,0.1,0.2,configs/past_logs.csv
+27,10,2,5.364374288811919,0,32.118752370626936,37,Interactive_Sim,1000,5.0,random,False,2,0.3,0.12,2,0.2,0.05,4,0.13,0.2,configs/past_logs.csv
+27,9,2,5.148567696408892,2,36.171441011970366,40,Interactive_Sim,1000,5.0,strategic,True,2,0.3,0.12,2,0.2,0.05,4,0.13,0.2,configs/past_logs.csv

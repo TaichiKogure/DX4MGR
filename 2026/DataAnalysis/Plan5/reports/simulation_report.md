@@ -1,0 +1,14 @@
+# Simulation Execution Report
+
+## Scenario Comparison Summary
+
+| total_experiments | technical_failures | operational_failures | total_gain | rework_count | integration_days | scenario_id |
+| --- | --- | --- | --- | --- | --- | --- |
+| 23 | 10 | 0 | 5.0146489563967105 | 0 | 16.666666666666668 | DigitalTwin_PROJ_B |
+| 22 | 13 | 0 | 5.154343414434471 | 1 | 18.333333333333336 | Standard_Sim |
+| 23 | 16 | 0 | 5.007962866872459 | 0 | 16.666666666666668 | HighInvestment |
+
+
+## Visualization
+
+![KPI Comparison](kpi_comparison.png)

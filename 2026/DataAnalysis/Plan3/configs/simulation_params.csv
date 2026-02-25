@@ -1,0 +1,4 @@
+scenario_id,steps,dr_threshold,strategy,delay_res_proto,loss_res_proto,dist_res_proto,delay_proto_ana,loss_proto_ana,dist_proto_ana,delay_ana_res,loss_ana_res,dist_ana_res
+Strategic_LateDR,500,8.0,strategic,2,0.1,0.1,1,0.05,0.05,2,0.1,0.2
+Strategic_EarlyDR,500,3.0,strategic,2,0.1,0.1,1,0.05,0.05,2,0.1,0.2
+Random_LateDR,500,8.0,random,2,0.1,0.1,1,0.05,0.05,2,0.1,0.2

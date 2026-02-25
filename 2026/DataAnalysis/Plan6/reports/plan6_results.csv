@@ -1,0 +1,11 @@
+total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,dr_cost,completed_jobs,scenario_id,steps,strategy,use_digital_twin,dr1_period,rework_load_factor,max_rework_cycles,decay,loss_res_proto,dist_proto_ana,delay_ana_res,past_logs_file
+23,9,1,4.4356563942747975,0,0,0,0.0,14,Plan6_Integrated,500,strategic,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,16,2,5.634972706546811,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,12,2,5.696105937792035,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,10,1,6.0252325345118685,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,12,3,5.362666552571567,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,18,2,5.279668897534614,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,16,0,5.22969492680841,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,12,2,4.507790219306301,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,12,3,5.21798709279784,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
+27,10,1,7.316775530589898,0,0,0,0.0,16,Plan6_Integrated,500,random,True,30,0.5,5,0.7,0.1,0.05,2,configs/past_logs.csv
