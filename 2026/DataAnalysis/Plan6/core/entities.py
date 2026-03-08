@@ -7,6 +7,9 @@ class TaskType(Enum):
     MID_EXP = auto()
     FIN_EXP = auto()
     DR_REVIEW = auto()
+    PROTOTYPE = auto()
+    TEST = auto()
+    MASS_PROD = auto()
 
 @dataclass
 class Approver:
