@@ -1,0 +1,2 @@
+test_no,dr1_period,dr_threshold,cost_per_review,rework_load_factor,decay,uncertainty_threshold,maturity_threshold,steps,total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,dr_cost,completed_jobs
+TestNo_051,13,0.3781181970128864,152.85273294011637,0.8686396824037832,0.5568665638761523,0.4921076404550596,0.5922554560857056,1500,24,6,4,4.516951567910136,0,0,0,9018.311243466866,3
