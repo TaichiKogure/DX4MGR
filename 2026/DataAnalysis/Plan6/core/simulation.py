@@ -18,6 +18,7 @@ class Simulation:
         self.resources = {}
         self.engine = None
         self.history = []
+        self.tech_history = []  # Added for visualization
         
         self.dr_threshold = 5.0
         self.dr_passed = False
@@ -37,59 +38,91 @@ class Simulation:
         }
 
     def setup_with_params(self, params):
-        from .entities import Approver, TaskType
+        from .entities import Approver, TaskType, APPROVER_TYPES
+        from functools import partial
         self.params = params
         self.dr_threshold = params.get('dr_threshold', 5.0)
         self.strategy = params.get('strategy', 'strategic')
         seed = params.get('seed', 42)
         rng = np.random.default_rng(seed)
         
-        self.engine = SimulationEngine(rng=rng)
+        sampling_interval = params.get('sampling_interval', 1.0)
+        self.engine = SimulationEngine(rng=rng, sampling_interval=sampling_interval)
+        self.engine.sampling_callback = self._record_snapshot
         
         # 1. 技術要素の作成 (Plan5x)
-        self.tech_items = [
-            TechnologyItem("Material Mix", tacitness=0.7),
-            TechnologyItem("Process Conditions", tacitness=0.4),
-            TechnologyItem("Evaluation Criteria", tacitness=0.3)
-        ]
-        self.tech_items[0].add_trade_off("Process Conditions", intensity=0.2)
-        self.tech_items[1].add_trade_off("Evaluation Criteria", intensity=0.1)
+        # 設定ファイルから技術要素を定義可能にする
+        tech_configs = params.get('tech_items', [
+            {"name": "Material Mix", "tacitness": 0.7},
+            {"name": "Process Conditions", "tacitness": 0.4},
+            {"name": "Evaluation Criteria", "tacitness": 0.3}
+        ])
+        self.tech_items = [TechnologyItem(tc['name'], tacitness=tc['tacitness']) for tc in tech_configs]
+        
+        # トレードオフ設定 (オプション)
+        for tc in tech_configs:
+            if 'trade_offs' in tc:
+                for target_name, intensity in tc['trade_offs'].items():
+                    item = next((t for t in self.tech_items if t.name == tc['name']), None)
+                    if item:
+                        item.add_trade_off(target_name, intensity=intensity)
+        
+        if not tech_configs: # デフォルト
+            self.tech_items[0].add_trade_off("Process Conditions", intensity=0.2)
+            self.tech_items[1].add_trade_off("Evaluation Criteria", intensity=0.1)
 
         # 2. チームの作成 (Plan5x)
-        research = Team("Research", wip_limit=2)
-        prototype = Team("Prototype", wip_limit=1)
-        analysis = Team("Analysis", wip_limit=2)
-        mass_production = Team("MassProduction", wip_limit=5)
+        team_configs = params.get('teams', [
+            {"name": "Research", "wip_limit": 2},
+            {"name": "Prototype", "wip_limit": 1},
+            {"name": "Analysis", "wip_limit": 2},
+            {"name": "MassProduction", "wip_limit": 5}
+        ])
+        self.teams = {tc['name']: Team(tc['name'], wip_limit=tc['wip_limit']) for tc in team_configs}
         
         if params.get('use_digital_twin'):
-            self.calibrate_from_logs([research, prototype, analysis, mass_production], params.get('past_logs_file'))
+            self.calibrate_from_logs(list(self.teams.values()), params.get('past_logs_file'))
 
-        research.add_edge("Prototype", 
-                          delay=params.get('delay_res_proto', 2), 
-                          loss_prob=params.get('loss_res_proto', 0.1), 
-                          distortion_prob=params.get('dist_res_proto', 0.1))
-        prototype.add_edge("Analysis", 
-                           delay=params.get('delay_proto_ana', 1), 
-                           loss_prob=params.get('loss_proto_ana', 0.05), 
-                           distortion_prob=params.get('dist_proto_ana', 0.05))
-        analysis.add_edge("Research", 
-                          delay=params.get('delay_ana_res', 2), 
-                          loss_prob=params.get('loss_ana_res', 0.1), 
-                          distortion_prob=params.get('dist_ana_res', 0.2))
-        prototype.add_edge("MassProduction", delay=5, loss_prob=0.2, distortion_prob=0.2)
+        # チーム間のエッジ設定 (オプション)
+        edge_configs = params.get('team_edges', [
+            {"from": "Research", "to": "Prototype", "delay": params.get('delay_res_proto', 2), "loss": params.get('loss_res_proto', 0.1), "dist": params.get('dist_res_proto', 0.1)},
+            {"from": "Prototype", "to": "Analysis", "delay": params.get('delay_proto_ana', 1), "loss": params.get('loss_proto_ana', 0.05), "dist": params.get('dist_proto_ana', 0.05)},
+            {"from": "Analysis", "to": "Research", "delay": params.get('delay_ana_res', 2), "loss": params.get('loss_ana_res', 0.1), "dist": params.get('dist_ana_res', 0.2)},
+            {"from": "Prototype", "to": "MassProduction", "delay": 5, "loss": 0.2, "dist": 0.2}
+        ])
+        for ec in edge_configs:
+            if ec['from'] in self.teams and ec['to'] in self.teams:
+                self.teams[ec['from']].add_edge(ec['to'], delay=ec['delay'], loss_prob=ec['loss'], distortion_prob=ec['dist'])
         
-        self.teams = {t.name: t for t in [research, prototype, analysis, mass_production]}
-
         # 3. Ver14 Flowの構築 (DES)
-        # 簡易化のため、engineにノードを追加していく
-        from functools import partial
-        def _exp_dist(r, scale): return r.exponential(scale)
-        
+        def _get_dist(dist_config, r):
+            if isinstance(dist_config, (int, float)):
+                return lambda: float(dist_config)
+            
+            dist_type = dist_config.get('type', 'exponential')
+            params = dist_config.get('params', {'scale': 5})
+            
+            if dist_type == 'exponential':
+                return lambda: r.exponential(params.get('scale', 5))
+            elif dist_type == 'uniform':
+                return lambda: r.uniform(params.get('low', 0), params.get('high', 10))
+            elif dist_type == 'triangular':
+                return lambda: r.triangular(params.get('left', 0), params.get('mode', 5), params.get('right', 10))
+            elif dist_type == 'constant':
+                return lambda: float(params.get('value', 5))
+            return lambda: r.exponential(5)
+
+        rework_policy_config = params.get('rework_policy', {
+            "rework_load_factor": params.get("rework_load_factor", 0.5),
+            "max_rework_cycles": params.get("max_rework_cycles", 5),
+            "decay": params.get("decay", 0.7)
+        })
+
         rework_policy = ReworkPolicy(
-            rework_load_factor=float(params.get("rework_load_factor", 0.5)),
+            rework_load_factor=float(rework_policy_config.get("rework_load_factor", 0.5)),
             weight_dist_func=partial(lambda r: r.beta(2.0, 5.0), rng),
-            max_rework_cycles=int(params.get("max_rework_cycles", 5)),
-            decay=float(params.get("decay", 0.7))
+            max_rework_cycles=int(rework_policy_config.get("max_rework_cycles", 5)),
+            decay=float(rework_policy_config.get("decay", 0.7))
         )
 
         # 統合ポイント: WorkGateのカスタム処理
@@ -234,44 +267,102 @@ class Simulation:
                 self.engine.schedule_event(self.next_meeting_time, "MEETING_START", {"node_id": self.node_id})
 
         # ゲートのセットアップ (多段フロー)
-        dr1_period = params.get('dr1_period', 14)
-        dr_cost = params.get('cost_per_review', 100.0)
+        def _create_approvers(app_configs):
+            apps = []
+            for ac in app_configs:
+                if isinstance(ac, str) and ac in APPROVER_TYPES:
+                    at = APPROVER_TYPES[ac]
+                    apps.append(Approver(f"{ac}_{len(apps)}", ac, at['capacity'], at['quality']))
+                elif isinstance(ac, dict):
+                    # dictの場合は、typeキーがあればAPPROVER_TYPESからデフォルト値を引き、それ以外は個別指定とする
+                    at_type = ac.get('type', 'Senior')
+                    base_at = APPROVER_TYPES.get(at_type, {"capacity": 5, "quality": 0.8})
+                    
+                    apps.append(Approver(ac.get('id', f"{at_type}_{len(apps)}"), 
+                                         at_type, 
+                                         ac.get('capacity', base_at['capacity']), 
+                                         ac.get('quality', base_at['quality'])))
+            return apps
+
+        # デフォルトのフロー定義
+        default_flow = [
+            {
+                "id": "RESEARCH_EXP", "type": "work", "phase": "research", 
+                "n_servers": params.get('res_n_servers', 5),
+                "duration_dist": params.get('res_duration_dist', {"type": "exponential", "params": {"scale": 5}}),
+                "next_node_id": "DR1", "task_type": TaskType.SMALL_EXP
+            },
+            {
+                "id": "DR1", "type": "meeting", "period_days": params.get('dr1_period', 14),
+                "thresholds": {"uncertainty": 0.4},
+                "approvers": params.get('dr1_approvers', ["Senior"]),
+                "next_node_id": "PROTO_EXP", "rework_node_id": "RESEARCH_EXP",
+                "cost_per_review": params.get('cost_per_review', 100.0)
+            },
+            {
+                "id": "PROTO_EXP", "type": "work", "phase": "prototype",
+                "n_servers": params.get('proto_n_servers', 3),
+                "duration_dist": params.get('proto_duration_dist', {"type": "exponential", "params": {"scale": 10}}),
+                "next_node_id": "DR2", "task_type": TaskType.PROTOTYPE
+            },
+            {
+                "id": "DR2", "type": "meeting", "period_days": params.get('dr2_period', params.get('dr1_period', 14) * 2),
+                "thresholds": {"uncertainty": 0.2, "maturity": 0.5},
+                "approvers": params.get('dr2_approvers', [{"type": "Director", "capacity": 3, "quality": 0.9}]),
+                "next_node_id": "MASS_PROD_EXP", "rework_node_id": "PROTO_EXP",
+                "cost_per_review": params.get('cost_per_review', 100.0) * 2
+            },
+            {
+                "id": "MASS_PROD_EXP", "type": "work", "phase": "mass_production",
+                "n_servers": params.get('mass_n_servers', 2),
+                "duration_dist": params.get('mass_duration_dist', {"type": "exponential", "params": {"scale": 20}}),
+                "next_node_id": "DR3", "task_type": TaskType.MASS_PROD
+            },
+            {
+                "id": "DR3", "type": "meeting", "period_days": params.get('dr3_period', params.get('dr1_period', 14) * 4),
+                "thresholds": {"maturity": 0.8},
+                "approvers": params.get('dr3_approvers', ["Senior"]),
+                "next_node_id": None, "rework_node_id": "MASS_PROD_EXP",
+                "cost_per_review": params.get('cost_per_review', 100.0) * 5
+            }
+        ]
         
-        # 1. Research Phase
-        res_exp = Plan6WorkGate(self, "research", "RESEARCH_EXP", self.engine, n_servers=5, 
-                                duration_dist=lambda: rng.exponential(5), 
-                                next_node_id="DR1", task_type=TaskType.SMALL_EXP)
-        dr1 = Plan6MeetingGate(self, {'uncertainty': 0.4}, "DR1", self.engine, period_days=dr1_period, 
-                               approvers=[Approver("research_mgr", "Manager", 5, 0.8)],
-                               next_node_id="PROTO_EXP", rework_node_id="RESEARCH_EXP", rework_policy=rework_policy,
-                               cost_per_review=dr_cost)
+        flow_configs = params.get('flow', default_flow)
         
-        # 2. Prototype Phase
-        proto_exp = Plan6WorkGate(self, "prototype", "PROTO_EXP", self.engine, n_servers=3,
-                                  duration_dist=lambda: rng.exponential(10),
-                                  next_node_id="DR2", task_type=TaskType.PROTOTYPE)
-        dr2 = Plan6MeetingGate(self, {'uncertainty': 0.2, 'maturity': 0.5}, "DR2", self.engine, period_days=dr1_period * 2,
-                               approvers=[Approver("tech_dir", "Director", 3, 0.9)],
-                               next_node_id="MASS_PROD_EXP", rework_node_id="PROTO_EXP", rework_policy=rework_policy,
-                               cost_per_review=dr_cost * 2)
-        
-        # 3. Mass Production Phase
-        mass_exp = Plan6WorkGate(self, "mass_production", "MASS_PROD_EXP", self.engine, n_servers=2,
-                                 duration_dist=lambda: rng.exponential(20),
-                                 next_node_id="DR3", task_type=TaskType.MASS_PROD)
-        dr3 = Plan6MeetingGate(self, {'maturity': 0.8}, "DR3", self.engine, period_days=dr1_period * 4,
-                               approvers=[Approver("factory_mgr", "Manager", 2, 0.85)],
-                               next_node_id=None, rework_node_id="MASS_PROD_EXP", rework_policy=rework_policy,
-                               cost_per_review=dr_cost * 5)
-        
-        for node in [res_exp, dr1, proto_exp, dr2, mass_exp, dr3]:
+        for nc in flow_configs:
+            # task_typeの変換 (文字列からTaskType Enumへ)
+            tt = nc.get('task_type')
+            if isinstance(tt, str):
+                try:
+                    tt = TaskType[tt]
+                except KeyError:
+                    tt = None
+            
+            if nc['type'] == 'work':
+                node = Plan6WorkGate(self, nc['phase'], nc['id'], self.engine, 
+                                     n_servers=nc['n_servers'],
+                                     duration_dist=_get_dist(nc['duration_dist'], rng),
+                                     next_node_id=nc['next_node_id'],
+                                     task_type=tt)
+            elif nc['type'] == 'meeting':
+                node = Plan6MeetingGate(self, nc['thresholds'], nc['id'], self.engine,
+                                        period_days=nc['period_days'],
+                                        approvers=_create_approvers(nc['approvers']),
+                                        next_node_id=nc['next_node_id'],
+                                        rework_node_id=nc['rework_node_id'],
+                                        rework_policy=rework_policy,
+                                        cost_per_review=nc.get('cost_per_review', 0.0))
             self.engine.add_node(node)
         
         # 初回ジョブの投入
-        for i in range(3):
+        job_arrival_dist = _get_dist(params.get('job_arrival_dist', {"type": "uniform", "params": {"low": 0, "high": 5}}), rng)
+        num_initial_jobs = params.get('num_initial_jobs', 3)
+        start_node = params.get('start_node_id', flow_configs[0]['id'] if flow_configs else "RESEARCH_EXP")
+        
+        for i in range(num_initial_jobs):
             job = Job(f"project_{i}", created_at=0.0)
             job.latent = LatentRisk()
-            self.engine.schedule_event(rng.uniform(0, 5), "ARRIVAL", {"job": job, "target_node": "RESEARCH_EXP"})
+            self.engine.schedule_event(job_arrival_dist(), "ARRIVAL", {"job": job, "target_node": start_node})
 
     def calibrate_from_logs(self, teams, log_path=None):
         if not log_path or not os.path.exists(log_path):
@@ -300,3 +391,10 @@ class Simulation:
 
     def get_tech_status(self):
         return {t.name: {'evidence': t.evidence, 'uncertainty': t.uncertainty, 'maturity': t.maturity} for t in self.tech_items}
+
+    def _record_snapshot(self, at_time):
+        snapshot = {
+            "time": at_time,
+            "tech_items": {t.name: {"maturity": t.maturity, "uncertainty": t.uncertainty} for t in self.tech_items}
+        }
+        self.tech_history.append(snapshot)

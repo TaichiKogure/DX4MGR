@@ -12,6 +12,8 @@ class SimulationEngine:
         self.rng = rng if rng else None # np.random.default_rng()
         self.sampling_interval = float(sampling_interval) if sampling_interval else 0.0
         self.next_sample_time = 0.0
+        from typing import Optional
+        self.sampling_callback: Optional[Callable[[float], None]] = None
 
         self.results = {
             "completed_jobs": [],
@@ -39,6 +41,8 @@ class SimulationEngine:
             "node_wip": node_wip,
             "total_wip": int(sum(node_wip.values()))
         })
+        if self.sampling_callback:
+            self.sampling_callback(at_time)
 
     def run(self, max_days: float):
         # 最初のスナップショット

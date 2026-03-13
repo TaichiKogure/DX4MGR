@@ -22,7 +22,8 @@ class Approver:
 APPROVER_TYPES = {
     "Senior": {"capacity": 7, "quality": 0.76},
     "Coordinator": {"capacity": 3, "quality": 0.7},
-    "New": {"capacity": 1, "quality": 0.4}
+    "New": {"capacity": 1, "quality": 0.4},
+    "Director": {"capacity": 2, "quality": 0.9}
 }
 
 @dataclass
