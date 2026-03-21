@@ -1,0 +1,9 @@
+{
+    "res_n_servers": 5,
+    "proto_n_servers": 3,
+    "dr1_period": 14,
+    "dr2_period": 28,
+    "dr3_period": 42,
+    "dr_threshold": 0.4,
+    "steps": 1000
+}

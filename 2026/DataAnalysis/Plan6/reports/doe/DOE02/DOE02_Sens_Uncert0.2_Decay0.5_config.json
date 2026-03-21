@@ -1,0 +1,8 @@
+{
+    "dr_threshold": 0.2,
+    "decay": 0.5,
+    "res_n_servers": 5,
+    "proto_n_servers": 3,
+    "dr1_period": 14,
+    "steps": 1000
+}

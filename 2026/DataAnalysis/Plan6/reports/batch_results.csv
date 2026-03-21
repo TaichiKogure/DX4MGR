@@ -1,2 +1,6 @@
-total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,dr_cost,completed_jobs
-24,13,1,4.999879092359794,0,0,0,5900.0,3
+total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,dr_cost,completed_jobs,res_n_servers
+19,8,0,3.915617941785812,0,0,0,4909.756097560976,1,8
+19,9,1,4.62151633395152,0,0,0,4909.756097560976,1,9
+19,9,0,4.443193885557873,0,0,0,4909.756097560976,1,10
+17,4,1,4.341467187787765,0,0,0,4909.756097560976,2,11
+19,9,0,4.940807541633218,0,0,0,4909.756097560976,1,12
