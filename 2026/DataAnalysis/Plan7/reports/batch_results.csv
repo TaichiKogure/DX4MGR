@@ -1,0 +1,6 @@
+total_experiments,technical_failures,operational_failures,total_gain,rework_count,integration_days,market_complaints,dr_cost,completed_jobs,res_n_servers
+24,12,0,5.594599835229733,0,0,0,4900.0,1,5
+24,11,0,5.126649246013786,0,0,0,4900.0,1,6
+24,13,0,4.82914034874092,0,0,0,4900.0,1,7
+24,11,1,5.1505506551345395,0,0,0,4900.0,1,8
+24,11,3,4.987544492825926,0,0,0,4900.0,1,9

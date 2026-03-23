@@ -1,0 +1,33 @@
+{
+  "steps": 1000,
+  "flow": [
+    {
+      "id": "RESEARCH_EXP",
+      "type": "work",
+      "phase": "research",
+      "n_servers": 3,
+      "duration_dist": {"type": "exponential", "params": {"scale": 5}},
+      "next_node_id": "DR1",
+      "task_type": "SMALL_EXP"
+    },
+    {
+      "id": "DR1",
+      "type": "meeting",
+      "period_days": 14,
+      "thresholds": {"uncertainty": 0.5, "maturity": 0.3},
+      "approvers": ["Senior"],
+      "next_node_id": "PROTO_EXP",
+      "rework_node_id": "RESEARCH_EXP",
+      "cost_per_review": 100.0
+    },
+    {
+      "id": "PROTO_EXP",
+      "type": "work",
+      "phase": "prototype",
+      "n_servers": 2,
+      "duration_dist": {"type": "uniform", "params": {"low": 5, "high": 15}},
+      "next_node_id": "DR2",
+      "task_type": "PROTOTYPE"
+    }
+  ]
+}
