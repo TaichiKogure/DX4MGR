@@ -29,16 +29,19 @@ class SimulationEngine:
 
     def _snapshot_wip(self, at_time: float):
         node_wip = {}
+        node_busy = {}
         for node_id, node in self.nodes.items():
             in_queue = len(getattr(node, "queue", []))
             in_service = 0
             if hasattr(node, "busy_servers"):
                 in_service = int(getattr(node, "busy_servers", 0))
             node_wip[node_id] = in_queue + in_service
+            node_busy[node_id] = in_service
 
         self.results["wip_history"].append({
             "time": float(at_time),
             "node_wip": node_wip,
+            "node_busy": node_busy,
             "total_wip": int(sum(node_wip.values()))
         })
         if self.sampling_callback:

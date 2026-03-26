@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Callable, Tuple
 from enum import Enum, auto
 
 class TaskType(Enum):
@@ -66,3 +66,79 @@ class Job:
         }
         entry.update(kwargs)
         self.history.append(entry)
+
+
+# ===== Ver2: Cross-departmental entities (minimal implementation) =====
+
+@dataclass
+class Department:
+    dept_id: str
+    name: str
+    calendar: Optional[Any] = None  # 将来的に稼働日/時間の表現（未使用: スタブ）
+    cost_factor: float = 1.0
+    sla: Dict[str, float] = field(default_factory=lambda: {"avg_response": 0.0, "max_wait": 0.0})
+
+
+@dataclass
+class Handoff:
+    """部署間ハンドオフの最小表現。
+    - q_if: インターフェース品質（0..1, 1が最高）
+    - info_loss_lambda: 情報損失率λ（0..1の係数解釈）
+    - transfer_time_dist: 転送/待機時間分布の設定（{'type': 'exponential', 'params': {'scale': 2}} 等）
+    """
+    from_dept: str
+    to_dept: str
+    q_if: float = 1.0
+    info_loss_lambda: float = 0.0
+    transfer_time_dist: Optional[Dict[str, Any]] = None
+
+    def sampler(self, rng) -> Callable[[], float]:
+        cfg = self.transfer_time_dist or {"type": "constant", "params": {"value": 0.0}}
+        t = (cfg or {}).get("type", "constant")
+        p = (cfg or {}).get("params", {}) or {}
+        if t == "exponential":
+            scale = float(p.get("scale", 1.0))
+            return lambda: float(rng.exponential(scale))
+        if t == "uniform":
+            a = float(p.get("low", 0.0)); b = float(p.get("high", max(a, 1.0)))
+            return lambda: float(rng.uniform(a, b))
+        if t == "triangular":
+            left = float(p.get("left", 0.0)); mode = float(p.get("mode", 0.5)); right = float(p.get("right", 1.0))
+            return lambda: float(rng.triangular(left, mode, right))
+        # constant
+        val = float(p.get("value", 0.0))
+        return lambda: val
+
+
+class DecisionLogic(Enum):
+    GO = auto()
+    COND = auto()
+    NO_GO = auto()
+
+
+@dataclass
+class CrossDeptMeeting:
+    """部署横断会議の最小スタブ。
+    - departments: 参加部署IDの集合
+    - interval_days: 開催間隔（平均）
+    - threshold: 判定用のしきい値（意味付けは簡易: WIPや遅延の代理指標）
+    - logic: GO/COND/NO_GO の優先ロジック（簡易）
+    """
+    departments: List[str]
+    interval_days: float = 14.0
+    threshold: float = 0.0
+    logic: DecisionLogic = DecisionLogic.GO
+
+
+@dataclass
+class WorkItem:
+    """部門フローの宣言的仕様（最小）。
+    - steps: [dept_id or {"AND": [..]} or {"OR": [..]}] の簡易表現
+    - owners: 各工程の責任部署（任意）
+    - rework_rules: 差し戻し規則（簡易: prob, max_cycles）
+    注意: 現行のDESフローに直結はしない（Ver2最小実装: 将来の拡張用に保持）。
+    """
+    work_id: str
+    steps: List[Any]
+    owners: Optional[List[str]] = None
+    rework_rules: Optional[Dict[str, Any]] = None

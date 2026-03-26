@@ -1,0 +1,8 @@
+﻿dr1_period,throughput_mean,throughput_median,throughput_<lambda_0>,lead_time_p50_mean,lead_time_p50_median,lead_time_p50_<lambda_0>,lead_time_p90_mean,lead_time_p90_median,lead_time_p90_<lambda_0>,avg_wip_mean,avg_wip_median,avg_wip_<lambda_0>,param,proto_n_servers,res_n_servers
+7.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,dr1_period,,
+14.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,dr1_period,,
+,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,proto_n_servers,2.0,
+,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,proto_n_servers,3.0,
+,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,res_n_servers,,3.0
+,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,res_n_servers,,5.0
+,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,res_n_servers,,7.0

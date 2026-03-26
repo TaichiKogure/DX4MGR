@@ -1,0 +1,13 @@
+﻿run_id,scenario_id,completed_count,throughput,lead_time_p50,lead_time_p90,avg_wip,loss_time_per_primary,total_experiments,technical_failures,operational_failures,rework_count_total,dr_cost_total,dr1_period,dr2_period,dr3_period,res_n_servers,proto_n_servers,mass_n_servers
+"DOE[dr1_period=7,proto_n_servers=2,res_n_servers=3]_seed10000","DOE[dr1_period=7,proto_n_servers=2,res_n_servers=3]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,3,0,0,1100.0,7,28,56,3,2,2
+"DOE[dr1_period=7,proto_n_servers=2,res_n_servers=5]_seed10000","DOE[dr1_period=7,proto_n_servers=2,res_n_servers=5]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,6,1,0,1100.0,7,28,56,5,2,2
+"DOE[dr1_period=7,proto_n_servers=2,res_n_servers=7]_seed10000","DOE[dr1_period=7,proto_n_servers=2,res_n_servers=7]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,8,1,0,1100.0,7,28,56,7,2,2
+"DOE[dr1_period=7,proto_n_servers=3,res_n_servers=3]_seed10000","DOE[dr1_period=7,proto_n_servers=3,res_n_servers=3]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,6,0,0,1100.0,7,28,56,3,3,2
+"DOE[dr1_period=7,proto_n_servers=3,res_n_servers=5]_seed10000","DOE[dr1_period=7,proto_n_servers=3,res_n_servers=5]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,8,2,0,1100.0,7,28,56,5,3,2
+"DOE[dr1_period=7,proto_n_servers=3,res_n_servers=7]_seed10000","DOE[dr1_period=7,proto_n_servers=3,res_n_servers=7]_seed10000",0,0.0,0.0,0.0,0.0,0.0,12,6,2,0,1100.0,7,28,56,7,3,2
+"DOE[dr1_period=14,proto_n_servers=2,res_n_servers=3]_seed10000","DOE[dr1_period=14,proto_n_servers=2,res_n_servers=3]_seed10000",0,0.0,0.0,0.0,0.0,0.0,8,3,1,0,600.0,14,28,56,3,2,2
+"DOE[dr1_period=14,proto_n_servers=2,res_n_servers=5]_seed10000","DOE[dr1_period=14,proto_n_servers=2,res_n_servers=5]_seed10000",0,0.0,0.0,0.0,0.0,0.0,8,6,0,0,600.0,14,28,56,5,2,2
+"DOE[dr1_period=14,proto_n_servers=2,res_n_servers=7]_seed10000","DOE[dr1_period=14,proto_n_servers=2,res_n_servers=7]_seed10000",0,0.0,0.0,0.0,0.0,0.0,8,6,0,0,600.0,14,28,56,7,2,2
+"DOE[dr1_period=14,proto_n_servers=3,res_n_servers=3]_seed10000","DOE[dr1_period=14,proto_n_servers=3,res_n_servers=3]_seed10000",0,0.0,0.0,0.0,0.0,0.0,9,5,0,0,600.0,14,28,56,3,3,2
+"DOE[dr1_period=14,proto_n_servers=3,res_n_servers=5]_seed10000","DOE[dr1_period=14,proto_n_servers=3,res_n_servers=5]_seed10000",0,0.0,0.0,0.0,0.0,0.0,9,2,1,0,600.0,14,28,56,5,3,2
+"DOE[dr1_period=14,proto_n_servers=3,res_n_servers=7]_seed10000","DOE[dr1_period=14,proto_n_servers=3,res_n_servers=7]_seed10000",0,0.0,0.0,0.0,0.0,0.0,9,6,0,0,600.0,14,28,56,7,3,2

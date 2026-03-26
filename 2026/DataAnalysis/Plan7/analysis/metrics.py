@@ -295,3 +295,28 @@ def calculate_metrics(completed_jobs: List[Job], nodes_stats: List[Dict[str, Any
     }
 
     return metrics
+
+
+# --- Ver2 extension stub: Department-level metrics ---
+def calculate_metrics_by_dept(results: Dict[str, Any], team_department: Dict[str, str] | None = None) -> Dict[str, Any]:
+    """
+    部署軸のメトリクス計算（最小スタブ）。
+    現状は wip の総平均のみを返す。将来的に部署マッピング（team_department/node→dept）が提供されたら内訳を展開する。
+    Args:
+        results: `calculate_metrics`が返す辞書、もしくは同等構造（'wip': {'history': [...]}} を含む）
+        team_department: 任意。チーム名→部署IDのマップ（未使用。将来拡張）
+    Returns:
+        dict: { 'dept': { '<ALL>': { 'avg_wip': float } } }
+    """
+    try:
+        wip_hist = ((results or {}).get('wip') or {}).get('history', [])
+        avg_total = float(np.mean([row.get('total_wip', 0) for row in wip_hist])) if wip_hist else 0.0
+        return {
+            'dept': {
+                '<ALL>': {
+                    'avg_wip': avg_total
+                }
+            }
+        }
+    except Exception:
+        return {'dept': {'<ALL>': {'avg_wip': 0.0}}}

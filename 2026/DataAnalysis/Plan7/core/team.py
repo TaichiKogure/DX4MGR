@@ -14,10 +14,15 @@ class Agent:
         self.skill = min(1.0, self.skill + self.learning_rate * (1 - self.skill))
 
 class Team:
-    def __init__(self, name, wip_limit=3, skill=1.0, num_agents=3):
+    def __init__(self, name, wip_limit=3, skill=1.0, num_agents=3, department: str | None = None, utilization_cap: float | None = None):
         self.name = name
         self.wip_limit = wip_limit
         self.skill = skill # チーム全体のベーススキル (Plan 5)
+
+        # Ver2: 部署/稼働率上限（簡易）
+        self.department = department
+        # utilization_cap: 0..1 の比率。None は無制限扱い。
+        self.utilization_cap = utilization_cap
         
         # 個人エージェントのリスト (Plan 1)
         self.agents = [Agent(f"{name}_Agent_{i}", skill=np.random.uniform(0.3, 0.7)) for i in range(num_agents)]
@@ -78,4 +83,5 @@ class Team:
                 self.agents[i] = Agent(f"{self.name}_NewAgent_{np.random.randint(1000)}", skill=0.3)
 
     def __repr__(self):
-        return f"Team({self.name}, skill={self.skill:.2f}, WIP={len(self.wip)}/{self.wip_limit})"
+        dept = f", dept={self.department}" if getattr(self, 'department', None) else ""
+        return f"Team({self.name}{dept}, skill={self.skill:.2f}, WIP={len(self.wip)}/{self.wip_limit})"

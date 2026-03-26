@@ -5,7 +5,7 @@ from .technology import TechnologyItem
 from .team import Team
 from .experiment import Experiment, Resource
 from .engine import SimulationEngine
-from .entities import Job, TaskType
+from .entities import Job, TaskType, Department, Handoff, CrossDeptMeeting, WorkItem, DecisionLogic
 from .gates import WorkGate, BundleGate, MeetingGate, AdoptionGate
 from .policies import ReworkPolicy
 from .planning import Scheduler, LatentRisk
@@ -35,7 +35,11 @@ class Simulation:
             'integration_days': 0,
             'market_complaints': 0,
             'dr_cost': 0.0,
-            'completed_jobs': 0
+            'completed_jobs': 0,
+            # Ver2追加KPI
+            'sla_violations': 0,
+            'handoff_events': 0,
+            'dept_cost_time': 0.0
         }
 
     def setup_with_params(self, params):
@@ -46,6 +50,74 @@ class Simulation:
         self.strategy = params.get('strategy', 'strategic')
         seed = params.get('seed', 42)
         rng = np.random.default_rng(seed)
+        # Ver2: 複数部署関連の設定
+        self.consider_departments = bool(params.get('consider_departments', False))
+        self.consider_handoffs = bool(params.get('consider_handoffs', False))
+        self.consider_cross_meetings = bool(params.get('consider_cross_meetings', False))
+        self.consider_rework_rules = bool(params.get('consider_rework_rules', False))
+
+        # Departments
+        self.departments = []
+        self.dept_map = {}
+        for d in (params.get('departments') or []):
+            try:
+                dept = Department(
+                    dept_id=d.get('id') or d.get('dept_id') or d.get('name'),
+                    name=d.get('name') or d.get('dept_id') or d.get('id'),
+                    calendar=d.get('calendar'),
+                    cost_factor=float(d.get('cost_factor', 1.0) or 1.0),
+                    sla=d.get('sla') or {"avg_response": 0.0, "max_wait": 0.0}
+                )
+                self.departments.append(dept)
+                self.dept_map[dept.dept_id] = dept
+            except Exception:
+                continue
+
+        # Handoffs
+        self.handoffs = []
+        self.handoff_map = {}
+        for h in (params.get('handoffs') or []):
+            try:
+                ho = Handoff(
+                    from_dept=h.get('from') or h.get('from_dept'),
+                    to_dept=h.get('to') or h.get('to_dept'),
+                    q_if=float(h.get('q_if', 1.0) or 1.0),
+                    info_loss_lambda=float(h.get('lambda', h.get('info_loss_lambda', 0.0)) or 0.0),
+                    transfer_time_dist=h.get('wait_dist') or h.get('transfer_time_dist')
+                )
+                self.handoffs.append(ho)
+                self.handoff_map[(ho.from_dept, ho.to_dept)] = ho
+            except Exception:
+                continue
+
+        # Cross-dept meetings / WorkItems (保持のみ: 最小実装)
+        self.cross_meetings = []
+        for cm in (params.get('cross_meetings') or []):
+            try:
+                logic = cm.get('logic', 'GO')
+                logic_enum = DecisionLogic[logic] if isinstance(logic, str) else logic
+                self.cross_meetings.append(CrossDeptMeeting(
+                    departments=cm.get('departments') or cm.get('depts') or [],
+                    interval_days=float(cm.get('interval', cm.get('interval_days', 14.0)) or 14.0),
+                    threshold=float(cm.get('threshold', 0.0) or 0.0),
+                    logic=logic_enum
+                ))
+            except Exception:
+                continue
+        self.work_items = []
+        for wi in (params.get('work_items') or []):
+            try:
+                self.work_items.append(WorkItem(
+                    work_id=str(wi.get('id') or wi.get('work_id') or f"W{len(self.work_items)}"),
+                    steps=wi.get('steps') or [],
+                    owners=wi.get('owners'),
+                    rework_rules=wi.get('rework_rules')
+                ))
+            except Exception:
+                continue
+
+        # チームの部署マッピング
+        self.team_department = {}
         
         sampling_interval = params.get('sampling_interval', 1.0)
         self.engine = SimulationEngine(rng=rng, sampling_interval=sampling_interval)
@@ -79,7 +151,15 @@ class Simulation:
             {"name": "Analysis", "wip_limit": 2},
             {"name": "MassProduction", "wip_limit": 5}
         ])
-        self.teams = {tc['name']: Team(tc['name'], wip_limit=tc['wip_limit']) for tc in team_configs}
+        self.teams = {}
+        for tc in team_configs:
+            t = Team(tc['name'], wip_limit=tc.get('wip_limit', 3),
+                     department=tc.get('dept'), utilization_cap=tc.get('utilization_cap'),
+                     num_agents=int(tc.get('num_agents', 3) or 3))
+            self.teams[tc['name']] = t
+        for tc in team_configs:
+            if 'dept' in tc:
+                self.team_department[tc['name']] = tc['dept']
         
         if params.get('use_digital_twin'):
             self.calibrate_from_logs(list(self.teams.values()), params.get('past_logs_file'))
@@ -168,7 +248,8 @@ class Simulation:
                 # 通信劣化の模擬 (Plan 1 + Plan 5)
                 protocol_adherence = 0.8 + 0.2 * executor_team.skill
                 
-                # 前工程からの引き継ぎ劣化
+                # 前工程からの引き継ぎ劣化 + 部門ハンドオフ
+                handoff_delay = 0.0
                 if hasattr(job, 'last_team_name') and job.last_team_name != executor_team.name:
                     source_team = self.sim.teams.get(job.last_team_name)
                     if source_team:
@@ -181,6 +262,22 @@ class Simulation:
                             protocol_adherence *= (0.6 - 0.3 * tacitness)
                         elif msg.get('distorted'):
                             protocol_adherence *= (0.9 - 0.4 * tacitness)
+
+                        # 部門遷移時の追加効果（オプション）
+                        if self.sim.consider_handoffs or self.sim.consider_departments:
+                            from_dept = self.sim.team_department.get(getattr(source_team, 'name', ''), getattr(source_team, 'department', None))
+                            to_dept = self.sim.team_department.get(getattr(executor_team, 'name', ''), getattr(executor_team, 'department', None))
+                            if from_dept and to_dept and from_dept != to_dept:
+                                ho = self.sim.handoff_map.get((from_dept, to_dept))
+                                if ho:
+                                    sampler = ho.sampler(self.sim.engine.rng)
+                                    handoff_delay = float(sampler())
+                                    # 品質/情報損失の劣化
+                                    protocol_adherence *= max(0.1, float(ho.q_if or 1.0))
+                                    protocol_adherence *= max(0.5, 1.0 - float(ho.info_loss_lambda or 0.0) * 0.5)
+                                    self.sim.kpis['handoff_events'] += 1
+                                    job.add_history(self.node_id, 'HANDOFF', now, from_dept=from_dept, to_dept=to_dept, delay=handoff_delay,
+                                                    q_if=float(ho.q_if or 1.0), lambda_=float(ho.info_loss_lambda or 0.0))
                 
                 job.last_team_name = executor_team.name
                 
@@ -197,8 +294,25 @@ class Simulation:
                     if result['failure_type'] == 0: self.sim.kpis['technical_failures'] += 1
                     else: self.sim.kpis['operational_failures'] += 1
                 
-                duration = self.duration_dist()
+                # 待機時間（enqueueからの差）
+                wait_time = now - getattr(job, 'temp_enqueue_time', now)
+                # SLA違反チェック（部門SLA: max_wait）
+                if self.sim.consider_departments:
+                    dept_id = self.sim.team_department.get(executor_team.name, getattr(executor_team, 'department', None))
+                    if dept_id and dept_id in self.sim.dept_map:
+                        max_wait = float((self.sim.dept_map[dept_id].sla or {}).get('max_wait', 0.0) or 0.0)
+                        if max_wait > 0 and wait_time > max_wait:
+                            self.sim.kpis['sla_violations'] += 1
+                            job.add_history(self.node_id, 'SLA_VIOLATION', now, dept=dept_id, wait_time=wait_time, max_wait=max_wait)
+
+                duration = self.duration_dist() + float(handoff_delay or 0.0)
                 finish_time = now + duration
+                # 部門コスト（簡易）：処理時間×コスト係数
+                if self.sim.consider_departments:
+                    dept_id2 = self.sim.team_department.get(executor_team.name, getattr(executor_team, 'department', None))
+                    if dept_id2 and dept_id2 in self.sim.dept_map:
+                        cf = float(self.sim.dept_map[dept_id2].cost_factor or 1.0)
+                        self.sim.kpis['dept_cost_time'] += (duration * cf)
                 self.engine.schedule_event(finish_time, "WORK_COMPLETE", {"node_id": self.node_id, "job": job})
 
         class Plan7MeetingGate(MeetingGate):
@@ -394,9 +508,15 @@ class Simulation:
         return {t.name: {'evidence': t.evidence, 'uncertainty': t.uncertainty, 'maturity': t.maturity} for t in self.tech_items}
 
     def _record_snapshot(self, at_time):
+        current_dr_cost = 0.0
+        for node in self.engine.nodes.values():
+            if hasattr(node, "total_cost"):
+                current_dr_cost += node.total_cost
+        
         snapshot = {
             "time": at_time,
-            "tech_items": {t.name: {"maturity": t.maturity, "uncertainty": t.uncertainty} for t in self.tech_items}
+            "tech_items": {t.name: {"maturity": t.maturity, "uncertainty": t.uncertainty} for t in self.tech_items},
+            "cumulative_cost": current_dr_cost
         }
         self.tech_history.append(snapshot)
         if self.gui_callback:
