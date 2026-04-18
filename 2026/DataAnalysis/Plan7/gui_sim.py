@@ -28,6 +28,7 @@ PARAM_DEFINITIONS = [
     # 基本設定 / Basic Settings
     {"key": "scenario_id", "label": "シナリオID / Scenario ID", "default": "Scenario_A", "type": "entry", "description": "シミュレーション実行の識別名。 / Identifier for simulation execution."},
     {"key": "steps", "label": "シミュレーション日数 / Simulation Days", "default": 500, "type": "int", "range": (100, 2000), "description": "シミュレーションを実行する総期間（日単位）。 / Total duration of the simulation (days)."},
+    {"key": "sampling_interval", "label": "サンプリング間隔 / Sampling Interval", "default": 1.0, "type": "float", "range": (0.0, 30.0), "description": "WIP/技術スナップショットの間隔（日）。0で無効。 / Interval for sampling WIP/tech snapshots in days (0 = disabled)."},
     {"key": "strategy", "label": "実験戦略 / Strategy", "default": "strategic", "type": "combo", "values": ["strategic", "random"], "description": "strategic: 技術成熟度に基づく戦略的選択, random: ランダムな実験選択 / strategic: maturity-based choice, random: random choice"},
     {"key": "use_digital_twin", "label": "デジタルツイン / Digital Twin", "default": True, "type": "check", "description": "デジタルツインによるシミュレーション加速・予測機能の有効化。 / Enable digital twin simulation acceleration."},
     {"key": "seed", "label": "乱数シード / Random Seed", "default": 42, "type": "int", "range": (0, 10000), "description": "乱数生成の初期値。同じ値にすると結果の再現性が確保されます。 / Initial value for RNG. Ensures reproducibility."},
@@ -52,14 +53,22 @@ PARAM_DEFINITIONS = [
     {"key": "loss_res_proto", "label": "Res->Proto 欠落率 / Information Loss", "default": 0.1, "type": "float", "range": (0.0, 0.5), "description": "情報の欠落割合。 / Ratio of information loss during handoff."},
     {"key": "dist_proto_ana", "label": "Proto->Ana 歪み率 / Info Distortion", "default": 0.05, "type": "float", "range": (0.0, 0.5), "description": "情報のノイズ・歪み割合。 / Ratio of noise/distortion in feedback."},
     {"key": "delay_ana_res", "label": "Ana->Res 遅延 / Feedback Delay", "default": 2, "type": "int", "range": (0, 10), "description": "フィードバック遅延（日）。 / Delay in days for feedback loop."},
-    {"key": "dr1_period", "label": "DR1 会議周期 / DR1 Period", "default": 30, "type": "int", "range": (7, 90), "description": "DRを実施する周期。 / Frequency of DR meetings."},
+    {"key": "dr1_period", "label": "DR1 会議周期 / DR1 Period", "default": 30, "type": "int", "range": (7, 90), "description": "DR1を実施する周期。 / Frequency of DR1 meetings."},
+    {"key": "dr2_period", "label": "DR2 会議周期 / DR2 Period", "default": 60, "type": "int", "range": (7, 180), "description": "DR2を実施する周期。 / Frequency of DR2 meetings."},
+    {"key": "dr3_period", "label": "DR3 会議周期 / DR3 Period", "default": 120, "type": "int", "range": (14, 365), "description": "DR3を実施する周期。 / Frequency of DR3 meetings."},
     {"key": "cost_per_review", "label": "レビュー単価 / Review Cost", "default": 100, "type": "int", "range": (10, 500), "description": "1回のレビューにかかるコスト。 / Cost per single DR session."},
 
     # Ver2: 部署/会議/ハンドオフ/リワーク規則の考慮トグル（最小）
     {"key": "consider_departments", "label": "部署を考慮 / Consider Departments", "default": True, "type": "check", "description": "部署カレンダー/SLA/コスト係数を考慮（最小実装: SLA最大待機・コスト係数反映）。 / Consider dept SLA & cost (minimal)."},
     {"key": "consider_handoffs", "label": "ハンドオフを考慮 / Consider Handoffs", "default": True, "type": "check", "description": "部署間ハンドオフのインターフェース品質・情報損失・転送遅延を考慮（最小実装）。 / Apply handoff delay and quality."},
     {"key": "consider_cross_meetings", "label": "横断会議を考慮 / Cross-Dept Meetings", "default": False, "type": "check", "description": "部署横断会議の閾値ロジック（最小スタブ）を有効化。 / Enable cross-dept meeting stub (minimal)."},
-    {"key": "consider_rework_rules", "label": "リワーク規則を考慮 / Rework Rules", "default": True, "type": "check", "description": "OR/AND結合や再作業規則（将来拡張）を保持。 / Keep rework rules (future ext)."}
+    {"key": "consider_rework_rules", "label": "リワーク規則を考慮 / Rework Rules", "default": True, "type": "check", "description": "OR/AND結合や再作業規則（将来拡張）を保持。 / Keep rework rules (future ext)."},
+
+    # 入力ボリューム / Input Volume
+    {"key": "num_initial_jobs", "label": "初期投入JOB数 / Initial Jobs", "default": 3, "type": "int", "range": (0, 1000), "description": "シミュレーション開始時に投入するJOBの数。 / Number of jobs initially injected."},
+    {"key": "start_node_id", "label": "開始ノードID / Start Node", "default": "RESEARCH_EXP", "type": "entry", "description": "最初の到着先ノードID（未指定時はフロー先頭）。 / Node ID where initial jobs arrive."},
+    {"key": "job_arrival_low", "label": "初期到着Low / Arrival Low", "default": 0.0, "type": "float", "range": (0.0, 100.0), "description": "初期JOB到着の一様分布(低)（秒ではなく日）。 / Low bound for initial arrival time (uniform)."},
+    {"key": "job_arrival_high", "label": "初期到着High / Arrival High", "default": 5.0, "type": "float", "range": (0.0, 100.0), "description": "初期JOB到着の一様分布(高)。 / High bound for initial arrival time (uniform)."}
 ]
 
 GRAPH_EXPLANATIONS = {
@@ -77,19 +86,23 @@ GRAPH_EXPLANATIONS = {
 class SimulationGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Plan 7: Hybrid R&D Simulation Dashboard (v2.2)")
+        self.root.title("Plan 7: Hybrid R&D Simulation Dashboard (v2.4)")
         self.root.geometry("1400x950")
 
         self.log_queue = queue.Queue()
         self.is_running = False
         
-        # Execution time tracking
-        self.start_times = [None, None, None]
-        self.elapsed_times = [0.0, 0.0, 0.0]
-        self.progress_values = [0.0, 0.0, 0.0]
-        self.scenario_states = ["idle", "idle", "idle"]
-        self.progress_log_next = [10.0, 10.0, 10.0]
-        self.last_progress_log_at = [0.0, 0.0, 0.0]
+        # Scenario configuration (expanded to 5: A, B, C, D, F)
+        self.n_scenarios = 5
+        self.scenario_labels = ["A", "B", "C", "D", "F"]
+
+        # Execution time tracking (per scenario)
+        self.start_times = [None for _ in range(self.n_scenarios)]
+        self.elapsed_times = [0.0 for _ in range(self.n_scenarios)]
+        self.progress_values = [0.0 for _ in range(self.n_scenarios)]
+        self.scenario_states = ["idle" for _ in range(self.n_scenarios)]
+        self.progress_log_next = [10.0 for _ in range(self.n_scenarios)]
+        self.last_progress_log_at = [0.0 for _ in range(self.n_scenarios)]
         self.plot_refresh_job = None
         self.pending_single_plot = None
         self.pending_comparison_plot = None
@@ -115,11 +128,11 @@ class SimulationGUI:
         self.comparison_data = {} # To hold partial results during comparison
         self.layout_cols = tk.IntVar(value=2) # Default to 2 for better use of space
         
-        # Scenario Parameters (A, B, C)
-        self.scenario_params = [{}, {}, {}]
+        # Scenario Parameters (A, B, C, D, F)
+        self.scenario_params = [{} for _ in range(self.n_scenarios)]
         self.compare_mode = tk.BooleanVar(value=True)
-        # シナリオ有効/無効（A/B/C）
-        self.scenario_enabled = [tk.BooleanVar(value=True), tk.BooleanVar(value=True), tk.BooleanVar(value=True)]
+        # シナリオ有効/無効（A/B/C/D/F）
+        self.scenario_enabled = [tk.BooleanVar(value=True) for _ in range(self.n_scenarios)]
         # Ver2: 動画/3D出力オプション
         self.export_video_var = tk.BooleanVar(value=False)
         # Ver2+: 3D出力の種類選択とフレーム間引き
@@ -141,8 +154,15 @@ class SimulationGUI:
         self.viz3d_tech_style_var = tk.StringVar(value="Default")
         self.viz3d_net_style_var = tk.StringVar(value="Default")
         
+        # レイアウト（動画/3Dオプションの配置切替: auto/horizontal/vertical）
+        self.video_opts_orient_var = tk.StringVar(value="auto")
+        self._reflow_job = None
+        
         # Configure fonts for JP/EN rendering in Matplotlib (avoid tofu squares)
         self._configure_matplotlib_fonts()
+
+        # Advanced JSON per scenario (raw override)
+        self.advanced_json_vars = [tk.StringVar(value="") for _ in range(self.n_scenarios)]
 
         self.setup_ui()
         self.periodic_check()
@@ -154,6 +174,8 @@ class SimulationGUI:
 
         left_frame = ttk.Frame(main_paned, padding=10)
         main_paned.add(left_frame, weight=1)
+        # 参照を保持（リサイズ時の自動レイアウト切替に使用）
+        self.left_frame = left_frame
 
         right_frame = ttk.Frame(main_paned, padding=10)
         main_paned.add(right_frame, weight=2)
@@ -167,17 +189,16 @@ class SimulationGUI:
         header_row = ttk.Frame(left_frame)
         header_row.pack(fill=tk.X)
         ttk.Label(header_row, text="パラメータ名", width=20).grid(row=0, column=0, sticky=tk.W)
-        ttk.Label(header_row, text="Scenario A", width=12).grid(row=0, column=1, sticky=tk.W)
-        ttk.Label(header_row, text="Scenario B", width=12).grid(row=0, column=2, sticky=tk.W)
-        ttk.Label(header_row, text="Scenario C", width=12).grid(row=0, column=3, sticky=tk.W)
+        # 動的にシナリオヘッダを生成（A, B, C, D, F）
+        for c_idx, lab in enumerate(self.scenario_labels, start=1):
+            ttk.Label(header_row, text=f"Scenario {lab}", width=12).grid(row=0, column=c_idx, sticky=tk.W)
 
         # シナリオ有効チェックボックス（A/B/C）
         en_row = ttk.Frame(left_frame)
         en_row.pack(fill=tk.X, pady=(2, 5))
         ttk.Label(en_row, text="計算するシナリオ:").grid(row=0, column=0, sticky=tk.W)
-        ttk.Checkbutton(en_row, text="A", variable=self.scenario_enabled[0]).grid(row=0, column=1, sticky=tk.W)
-        ttk.Checkbutton(en_row, text="B", variable=self.scenario_enabled[1]).grid(row=0, column=2, sticky=tk.W)
-        ttk.Checkbutton(en_row, text="C", variable=self.scenario_enabled[2]).grid(row=0, column=3, sticky=tk.W)
+        for c_idx, lab in enumerate(self.scenario_labels, start=1):
+            ttk.Checkbutton(en_row, text=lab, variable=self.scenario_enabled[c_idx-1]).grid(row=0, column=c_idx, sticky=tk.W)
         
         # Scrollable area for parameters
         table_container = ttk.Frame(left_frame)
@@ -185,6 +206,7 @@ class SimulationGUI:
         
         canvas_params = tk.Canvas(table_container, highlightthickness=0)
         scrollbar_params = ttk.Scrollbar(table_container, orient="vertical", command=canvas_params.yview)
+        hscrollbar_params = ttk.Scrollbar(table_container, orient="horizontal", command=canvas_params.xview)
         self.params_frame = ttk.Frame(canvas_params)
         
         self.params_frame.bind(
@@ -192,10 +214,25 @@ class SimulationGUI:
             lambda e: canvas_params.configure(scrollregion=canvas_params.bbox("all"))
         )
         canvas_params.create_window((0, 0), window=self.params_frame, anchor="nw")
-        canvas_params.configure(yscrollcommand=scrollbar_params.set)
+        canvas_params.configure(yscrollcommand=scrollbar_params.set, xscrollcommand=hscrollbar_params.set)
         
         canvas_params.pack(side="left", fill="both", expand=True)
         scrollbar_params.pack(side="right", fill="y")
+        hscrollbar_params.pack(side="bottom", fill="x")
+
+        # 左テーブル用スクロール（Shift+ホイールで横）
+        def _params_on_mousewheel(event):
+            if sys.platform == 'darwin':
+                canvas_params.yview_scroll(int(-1 * (event.delta)), "units")
+            else:
+                canvas_params.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        def _params_on_hwheel(event):
+            if sys.platform == 'darwin':
+                canvas_params.xview_scroll(int(-1 * (event.delta)), "units")
+            else:
+                canvas_params.xview_scroll(int(-1 * (event.delta / 120)), "units")
+        canvas_params.bind("<MouseWheel>", _params_on_mousewheel)
+        canvas_params.bind("<Shift-MouseWheel>", _params_on_hwheel)
 
         # Create table rows based on PARAM_DEFINITIONS
         self._setup_param_table()
@@ -213,7 +250,7 @@ class SimulationGUI:
         self.viz_btn = ttk.Button(btn_frame, text="詳細レポート出力", command=self.output_viz_report)
         self.viz_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
 
-        # --- JSON Import/Export Buttons ---
+        # --- JSON Import/Export Buttons（1行目に限定） ---
         io_frame = ttk.Frame(left_frame, padding=10)
         io_frame.pack(fill=tk.X)
 
@@ -223,25 +260,69 @@ class SimulationGUI:
         self.load_btn = ttk.Button(io_frame, text="設定を読込 (JSON)", command=self.load_params_json)
         self.load_btn.pack(side=tk.LEFT, padx=5, expand=True, fill=tk.X)
 
-        # Ver2: 詳細レポート時に動画/3Dも生成
-        self.cb_export_video = ttk.Checkbutton(io_frame, text="動画も生成（3D/2D）",
+        # --- 動画/3D 出力オプション（別セクションに分離し、縦/横/自動の切替を可能に） ---
+        self.video_opts_lf = ttk.LabelFrame(left_frame, text="動画/3D 出力オプション", padding=8)
+        self.video_opts_lf.pack(fill=tk.X, pady=(0, 6))
+
+        # ヘッダー（配置切替）
+        orient_bar = ttk.Frame(self.video_opts_lf)
+        orient_bar.pack(fill=tk.X)
+        ttk.Label(orient_bar, text="配置:").pack(side=tk.RIGHT)
+        self.video_orient_cmb = ttk.Combobox(
+            orient_bar, width=10, state="readonly",
+            values=["自動", "横並び", "縦並び"]
+        )
+        # 変数→表示テキストの同期
+        def _sync_orient_ui_from_var():
+            m = self.video_opts_orient_var.get()
+            if m == "horizontal":
+                self.video_orient_cmb.set("横並び")
+            elif m == "vertical":
+                self.video_orient_cmb.set("縦並び")
+            else:
+                self.video_orient_cmb.set("自動")
+        _sync_orient_ui_from_var()
+
+        def _on_orient_change(event=None):
+            label = self.video_orient_cmb.get()
+            mode = "auto"
+            if label == "横並び":
+                mode = "horizontal"
+            elif label == "縦並び":
+                mode = "vertical"
+            self.video_opts_orient_var.set(mode)
+            self._reflow_video_options()
+        self.video_orient_cmb.bind("<<ComboboxSelected>>", _on_orient_change)
+        self.video_orient_cmb.pack(side=tk.RIGHT, padx=(0, 6))
+
+        # ボディ（実ウィジェットコンテナ）
+        self.video_opts_body = ttk.Frame(self.video_opts_lf)
+        self.video_opts_body.pack(fill=tk.X)
+
+        # 1) 動画生成チェック
+        self.export_bar = ttk.Frame(self.video_opts_body)
+        self.cb_export_video = ttk.Checkbutton(self.export_bar, text="動画も生成（3D/2D）",
                                                variable=self.export_video_var)
-        self.cb_export_video.pack(side=tk.LEFT, padx=5)
+        self.cb_export_video.pack(side=tk.LEFT)
 
-        # 3D出力の詳細オプション
-        three_d_opts = ttk.Frame(io_frame)
-        three_d_opts.pack(side=tk.LEFT, padx=10)
-        ttk.Label(three_d_opts, text="3D出力:").grid(row=0, column=0, sticky=tk.W)
-        ttk.Checkbutton(three_d_opts, text="WIPサーフェス", variable=self.viz3d_wip_var).grid(row=0, column=1, sticky=tk.W)
-        ttk.Checkbutton(three_d_opts, text="LT分解", variable=self.viz3d_lt_var).grid(row=0, column=2, sticky=tk.W)
-        ttk.Checkbutton(three_d_opts, text="技術拡散", variable=self.viz3d_tech_var).grid(row=0, column=3, sticky=tk.W)
-        ttk.Checkbutton(three_d_opts, text="ネットワーク", variable=self.viz3d_net_var).grid(row=0, column=4, sticky=tk.W)
+        # 2) 3D出力の詳細オプション
+        self.three_d_opts = ttk.Frame(self.video_opts_body)
+        self.lbl_3d_title = ttk.Label(self.three_d_opts, text="3D出力:")
+        self.lbl_3d_title.grid(row=0, column=0, sticky=tk.W)
+        self.cb3d_wip = ttk.Checkbutton(self.three_d_opts, text="WIPサーフェス", variable=self.viz3d_wip_var)
+        self.cb3d_lt = ttk.Checkbutton(self.three_d_opts, text="LT分解", variable=self.viz3d_lt_var)
+        self.cb3d_tech = ttk.Checkbutton(self.three_d_opts, text="技術拡散", variable=self.viz3d_tech_var)
+        self.cb3d_net = ttk.Checkbutton(self.three_d_opts, text="ネットワーク", variable=self.viz3d_net_var)
+        # 初期は横並びグリッド
+        self.cb3d_wip.grid(row=0, column=1, sticky=tk.W)
+        self.cb3d_lt.grid(row=0, column=2, sticky=tk.W)
+        self.cb3d_tech.grid(row=0, column=3, sticky=tk.W)
+        self.cb3d_net.grid(row=0, column=4, sticky=tk.W)
 
-        # フレーム間引き
-        frame_opt = ttk.Frame(io_frame)
-        frame_opt.pack(side=tk.LEFT, padx=10)
-        ttk.Label(frame_opt, text="フレーム間引き:").pack(side=tk.LEFT)
-        self.frame_step_cmb = ttk.Combobox(frame_opt, width=4, state="readonly",
+        # 3) フレーム間引き
+        self.frame_opt = ttk.Frame(self.video_opts_body)
+        ttk.Label(self.frame_opt, text="フレーム間引き:").pack(side=tk.LEFT)
+        self.frame_step_cmb = ttk.Combobox(self.frame_opt, width=4, state="readonly",
                                            values=["1", "2", "3", "5", "10"])
         self.frame_step_cmb.set(str(self.video_frame_step_var.get()))
         def _on_frame_step_change(event=None):
@@ -254,41 +335,44 @@ class SimulationGUI:
         self.frame_step_cmb.bind("<<ComboboxSelected>>", _on_frame_step_change)
         self.frame_step_cmb.pack(side=tk.LEFT)
 
-        # 回転と視点設定
-        view_opt = ttk.Frame(io_frame)
-        view_opt.pack(side=tk.LEFT, padx=10)
-        ttk.Checkbutton(view_opt, text="回転", variable=self.video_rotate_var).grid(row=0, column=0, sticky=tk.W)
-        ttk.Label(view_opt, text="elev:").grid(row=0, column=1, sticky=tk.E)
-        self.entry_elev = ttk.Entry(view_opt, width=4, textvariable=self.video_elev_var)
+        # 4) 回転と視点設定
+        self.view_opt = ttk.Frame(self.video_opts_body)
+        ttk.Checkbutton(self.view_opt, text="回転", variable=self.video_rotate_var).grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(self.view_opt, text="elev:").grid(row=0, column=1, sticky=tk.E)
+        self.entry_elev = ttk.Entry(self.view_opt, width=4, textvariable=self.video_elev_var)
         self.entry_elev.grid(row=0, column=2, sticky=tk.W)
-        ttk.Label(view_opt, text="azim:").grid(row=0, column=3, sticky=tk.E)
-        self.entry_azim = ttk.Entry(view_opt, width=4, textvariable=self.video_azim_var)
+        ttk.Label(self.view_opt, text="azim:").grid(row=0, column=3, sticky=tk.E)
+        self.entry_azim = ttk.Entry(self.view_opt, width=4, textvariable=self.video_azim_var)
         self.entry_azim.grid(row=0, column=4, sticky=tk.W)
 
-        # デザインプリセット選択（各3Dグラフごと）
-        design_opt = ttk.Frame(io_frame)
-        design_opt.pack(side=tk.LEFT, padx=10)
-        ttk.Label(design_opt, text="3Dデザイン:").grid(row=0, column=0, sticky=tk.W)
-        ttk.Label(design_opt, text="WIP").grid(row=0, column=1, sticky=tk.E, padx=(6, 2))
-        self.cbx_wip_style = ttk.Combobox(design_opt, width=12, state="readonly",
+        # 5) デザインプリセット選択（各3Dグラフごと）
+        self.design_opt = ttk.Frame(self.video_opts_body)
+        ttk.Label(self.design_opt, text="3Dデザイン:").grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(self.design_opt, text="WIP").grid(row=0, column=1, sticky=tk.E, padx=(6, 2))
+        self.cbx_wip_style = ttk.Combobox(self.design_opt, width=12, state="readonly",
                                           values=self.viz3d_style_options,
                                           textvariable=self.viz3d_wip_style_var)
         self.cbx_wip_style.grid(row=0, column=2, sticky=tk.W)
-        ttk.Label(design_opt, text="LT").grid(row=0, column=3, sticky=tk.E, padx=(8, 2))
-        self.cbx_lt_style = ttk.Combobox(design_opt, width=12, state="readonly",
+        ttk.Label(self.design_opt, text="LT").grid(row=0, column=3, sticky=tk.E, padx=(8, 2))
+        self.cbx_lt_style = ttk.Combobox(self.design_opt, width=12, state="readonly",
                                          values=self.viz3d_style_options,
                                          textvariable=self.viz3d_lt_style_var)
         self.cbx_lt_style.grid(row=0, column=4, sticky=tk.W)
-        ttk.Label(design_opt, text="Tech").grid(row=0, column=5, sticky=tk.E, padx=(8, 2))
-        self.cbx_tech_style = ttk.Combobox(design_opt, width=12, state="readonly",
+        ttk.Label(self.design_opt, text="Tech").grid(row=0, column=5, sticky=tk.E, padx=(8, 2))
+        self.cbx_tech_style = ttk.Combobox(self.design_opt, width=12, state="readonly",
                                            values=self.viz3d_style_options,
                                            textvariable=self.viz3d_tech_style_var)
         self.cbx_tech_style.grid(row=0, column=6, sticky=tk.W)
-        ttk.Label(design_opt, text="Net").grid(row=0, column=7, sticky=tk.E, padx=(8, 2))
-        self.cbx_net_style = ttk.Combobox(design_opt, width=12, state="readonly",
+        ttk.Label(self.design_opt, text="Net").grid(row=0, column=7, sticky=tk.E, padx=(8, 2))
+        self.cbx_net_style = ttk.Combobox(self.design_opt, width=12, state="readonly",
                                           values=self.viz3d_style_options,
                                           textvariable=self.viz3d_net_style_var)
         self.cbx_net_style.grid(row=0, column=8, sticky=tk.W)
+
+        # 初期レイアウト適用（自動）
+        self._reflow_video_options(initial=True)
+        # ウィンドウサイズ変更で自動レイアウト（自動モードのみ）
+        self.root.bind("<Configure>", self._on_root_resize)
 
         # --- Graph Visibility Controls ---
         vis_frame = ttk.LabelFrame(left_frame, text="グラフ表示設定 / Visualization Settings", padding=5)
@@ -321,6 +405,40 @@ class SimulationGUI:
         ttk.Radiobutton(layout_frame, text="1列", variable=self.layout_cols, value=1, command=self._refresh_plots).pack(side=tk.LEFT, padx=5)
         ttk.Radiobutton(layout_frame, text="2列", variable=self.layout_cols, value=2, command=self._refresh_plots).pack(side=tk.LEFT, padx=5)
 
+        # --- Chart Theme Controls ---
+        theme_frame = ttk.LabelFrame(left_frame, text="グラフデザイン / Chart Theme", padding=5)
+        theme_frame.pack(fill=tk.X, pady=5)
+
+        # Font family selection
+        ttk.Label(theme_frame, text="フォント:").grid(row=0, column=0, sticky=tk.W)
+        self.chart_font_var = tk.StringVar(value="Yu Gothic")
+        self.chart_font_cmb = ttk.Combobox(theme_frame, state="readonly", width=16,
+                                           values=["Yu Gothic", "Meiryo", "MS Gothic", "Noto Sans CJK JP", "DejaVu Sans", "Arial", "Tahoma"],
+                                           textvariable=self.chart_font_var)
+        self.chart_font_cmb.grid(row=0, column=1, sticky=tk.W, padx=(4, 8))
+
+        # Palette selection
+        ttk.Label(theme_frame, text="パレット:").grid(row=0, column=2, sticky=tk.W)
+        self.chart_palette_var = tk.StringVar(value="deep")
+        self.chart_palette_cmb = ttk.Combobox(theme_frame, state="readonly", width=14,
+                                              values=["deep", "muted", "bright", "dark", "colorblind", "pastel", "Set2", "Set3", "Paired", "husl", "cubehelix", "tab10", "tab20", "viridis", "plasma", "magma", "cividis"],
+                                              textvariable=self.chart_palette_var)
+        self.chart_palette_cmb.grid(row=0, column=3, sticky=tk.W, padx=(4, 8))
+
+        # Style selection
+        ttk.Label(theme_frame, text="スタイル:").grid(row=0, column=4, sticky=tk.W)
+        self.chart_style_var = tk.StringVar(value="default")
+        self.chart_style_cmb = ttk.Combobox(theme_frame, state="readonly", width=16,
+                                            values=["default", "seaborn-v0_8", "ggplot", "bmh", "grayscale", "fivethirtyeight", "dark_background"],
+                                            textvariable=self.chart_style_var)
+        self.chart_style_cmb.grid(row=0, column=5, sticky=tk.W)
+
+        def _on_chart_theme_change(event=None):
+            self._apply_chart_theme()
+        self.chart_font_cmb.bind("<<ComboboxSelected>>", _on_chart_theme_change)
+        self.chart_palette_cmb.bind("<<ComboboxSelected>>", _on_chart_theme_change)
+        self.chart_style_cmb.bind("<<ComboboxSelected>>", _on_chart_theme_change)
+
         # --- Status Monitoring Frame ---
         status_frame = ttk.LabelFrame(left_frame, text="ステータス / System Status", padding=5)
         status_frame.pack(fill=tk.X, pady=5)
@@ -328,15 +446,11 @@ class SimulationGUI:
         self.cpu_mem_lbl = ttk.Label(status_frame, text="CPU: -% | Mem: -%")
         self.cpu_mem_lbl.pack(fill=tk.X)
         
-        self.progress_bars = []
         self.progress_labels = []
-        for i in range(3):
-            lbl = ttk.Label(status_frame, text=f"Scenario {chr(65+i)}: 0% (0.0s)")
+        for i in range(self.n_scenarios):
+            lbl = ttk.Label(status_frame, text=f"Scenario {self._scenario_label(i)}: 0.0s")
             lbl.pack(fill=tk.X)
-            pb = ttk.Progressbar(status_frame, orient=tk.HORIZONTAL, length=100, mode='determinate')
-            pb.pack(fill=tk.X, pady=(0, 5))
             self.progress_labels.append(lbl)
-            self.progress_bars.append(pb)
 
         # --- Right Frame: Dashboard & Explanation ---
         self.right_notebook = ttk.Notebook(right_frame)
@@ -362,6 +476,7 @@ class SimulationGUI:
 
         self.canvas = tk.Canvas(plot_wrapper)
         self.scrollbar = ttk.Scrollbar(plot_wrapper, orient="vertical", command=self.canvas.yview)
+        self.hscrollbar = ttk.Scrollbar(plot_wrapper, orient="horizontal", command=self.canvas.xview)
         self.scrollable_frame = ttk.Frame(self.canvas)
 
         self.scrollable_frame.bind(
@@ -370,13 +485,15 @@ class SimulationGUI:
         )
 
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set, xscrollcommand=self.hscrollbar.set)
 
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
+        self.hscrollbar.pack(side="bottom", fill="x")
         
         # Mouse wheel support
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Shift-MouseWheel>", self._on_hmousewheel)
         self.canvas.bind_all("<Button-4>", self._on_mousewheel)
         self.canvas.bind_all("<Button-5>", self._on_mousewheel)
 
@@ -400,11 +517,11 @@ class SimulationGUI:
             help_lbl.pack(side=tk.LEFT)
             self._add_tooltip(help_lbl, description)
             
-            # For each scenario (A, B, C)
-            for s_idx in range(3):
+            # For each scenario (A, B, C, D, F)
+            for s_idx in range(self.n_scenarios):
                 default_val = param['default']
                 if key == "scenario_id":
-                    default_val = f"Scenario_{chr(65+s_idx)}"
+                    default_val = f"Scenario_{self._scenario_label(s_idx)}"
                 
                 if p_type == "entry":
                     var = tk.StringVar(value=str(default_val))
@@ -429,6 +546,22 @@ class SimulationGUI:
                 
                 # Trace changes to highlight differences
                 var.trace_add("write", lambda *args, k=key: self._on_param_change(k))
+
+        # 追加: 高度なJSON編集行
+        row_idx = len(PARAM_DEFINITIONS)
+        lbl_frame = ttk.Frame(self.params_frame)
+        lbl_frame.grid(row=row_idx, column=0, padx=5, pady=6, sticky=tk.W)
+        lbl = ttk.Label(lbl_frame, text="高度なJSON / Advanced JSON", width=22, anchor="w")
+        lbl.pack(side=tk.LEFT)
+        help_lbl = ttk.Label(lbl_frame, text=" [?]", foreground="blue", cursor="question_arrow")
+        help_lbl.pack(side=tk.LEFT)
+        self._add_tooltip(help_lbl, "JSON形式で任意のパラメータを上書きできます（例: dr*_approvers, departments, handoffs, rework_policy, flow 等）。GUI入力値より後にマージされ、同じキーはJSONが優先されます。/ You can override any params via JSON; these take precedence over GUI fields.")
+
+        for s_idx in range(self.n_scenarios):
+            def _make_handler(idx=s_idx):
+                return lambda: self._open_json_editor(idx)
+            btn = ttk.Button(self.params_frame, text=f"編集… ({self._scenario_label(s_idx)})", command=_make_handler())
+            btn.grid(row=row_idx, column=s_idx+1, padx=3, pady=4, sticky=tk.W)
 
     def _setup_explanation_tab(self):
         # Scrollable text area for explanations
@@ -464,6 +597,131 @@ class SimulationGUI:
             # Safe no-op on environments where rcParams is locked
             pass
 
+    def _apply_chart_theme(self):
+        """Apply chart theme (font, palette, style) globally and refresh plots."""
+        try:
+            style = getattr(self, 'chart_style_var', None)
+            palette = getattr(self, 'chart_palette_var', None)
+            font = getattr(self, 'chart_font_var', None)
+
+            if style is not None:
+                try:
+                    plt.style.use(style.get())
+                except Exception:
+                    pass
+
+            if font is not None:
+                try:
+                    fam = font.get()
+                    existing = list(rcParams.get('font.sans-serif', []))
+                    rcParams['font.family'] = 'sans-serif'
+                    # 選択フォントを優先に設定
+                    rcParams['font.sans-serif'] = [fam] + existing
+                    rcParams['axes.unicode_minus'] = False
+                except Exception:
+                    pass
+
+            if palette is not None:
+                try:
+                    sns.set_palette(palette.get())
+                except Exception:
+                    pass
+        finally:
+            # 反映
+            self._refresh_plots()
+
+    # --- レイアウト（動画/3Dオプション）関連ユーティリティ ---
+    def _on_root_resize(self, event=None):
+        # 自動モードのみリフローを行う（デバウンス）
+        if self.video_opts_orient_var.get() != "auto":
+            return
+        if self._reflow_job is not None:
+            try:
+                self.root.after_cancel(self._reflow_job)
+            except Exception:
+                pass
+            self._reflow_job = None
+        # 150ms後に一度だけ反映
+        self._reflow_job = self.root.after(150, self._reflow_video_options)
+
+    def _layout_three_d_opts(self, orientation: str):
+        # three_d_opts 内のグリッドを組み直す
+        try:
+            # 既存配置を忘れる
+            for w in (self.lbl_3d_title, self.cb3d_wip, self.cb3d_lt, self.cb3d_tech, self.cb3d_net):
+                w.grid_forget()
+        except Exception:
+            pass
+        if orientation == "vertical":
+            # タイトル行 + 各チェックボックスを縦に
+            self.lbl_3d_title.grid(row=0, column=0, sticky=tk.W)
+            self.cb3d_wip.grid(row=1, column=0, sticky=tk.W, pady=(0, 0))
+            self.cb3d_lt.grid(row=2, column=0, sticky=tk.W, pady=(0, 0))
+            self.cb3d_tech.grid(row=3, column=0, sticky=tk.W, pady=(0, 0))
+            self.cb3d_net.grid(row=4, column=0, sticky=tk.W, pady=(0, 0))
+        else:
+            # 1行に横並び
+            self.lbl_3d_title.grid(row=0, column=0, sticky=tk.W)
+            self.cb3d_wip.grid(row=0, column=1, sticky=tk.W)
+            self.cb3d_lt.grid(row=0, column=2, sticky=tk.W)
+            self.cb3d_tech.grid(row=0, column=3, sticky=tk.W)
+            self.cb3d_net.grid(row=0, column=4, sticky=tk.W)
+
+    def _reflow_video_options(self, initial: bool = False):
+        # 目標モード判定
+        mode = self.video_opts_orient_var.get()
+        if mode == "auto":
+            try:
+                w = max(0, int(self.left_frame.winfo_width()))
+            except Exception:
+                w = 0
+            # 閾値: 左ペインが狭い場合は縦配置
+            orientation = "horizontal" if w >= 980 else "vertical"
+        else:
+            orientation = "horizontal" if mode == "horizontal" else "vertical"
+
+        # まず、すべてのサブフレームのpackを解除
+        for f in (self.export_bar, self.three_d_opts, self.frame_opt, self.view_opt, self.design_opt):
+            try:
+                f.pack_forget()
+            except Exception:
+                pass
+
+        # 3Dチェックボックスの内部レイアウトを合わせる
+        self._layout_three_d_opts(orientation)
+
+        if orientation == "horizontal":
+            # 横並び（1行）
+            self.export_bar.pack(side=tk.LEFT, padx=(0, 8), pady=2)
+            self.three_d_opts.pack(side=tk.LEFT, padx=(0, 12), pady=2)
+            self.frame_opt.pack(side=tk.LEFT, padx=(0, 12), pady=2)
+            self.view_opt.pack(side=tk.LEFT, padx=(0, 12), pady=2)
+            self.design_opt.pack(side=tk.LEFT, padx=(0, 0), pady=2)
+        else:
+            # 縦並び（各ブロックを上から順に）
+            self.export_bar.pack(side=tk.TOP, anchor=tk.W, pady=(0, 2))
+            self.three_d_opts.pack(side=tk.TOP, anchor=tk.W, pady=(0, 2))
+            self.frame_opt.pack(side=tk.TOP, anchor=tk.W, pady=(0, 2))
+            self.view_opt.pack(side=tk.TOP, anchor=tk.W, pady=(0, 2))
+            self.design_opt.pack(side=tk.TOP, anchor=tk.W, pady=(0, 2))
+
+        # 初期呼び出し時に親のスクロール領域更新が遅延するケースへの軽い対策
+        if initial:
+            try:
+                self.root.update_idletasks()
+            except Exception:
+                pass
+
+    # --- シナリオラベル/タイトルのヘルパ ---
+    def _scenario_label(self, idx: int) -> str:
+        try:
+            return self.scenario_labels[idx]
+        except Exception:
+            return str(idx)
+
+    def _scenario_title(self, idx: int) -> str:
+        return f"Scenario {self._scenario_label(idx)}"
+
     def _on_param_change(self, key):
         # Optional: highlight cells that differ between scenarios
         pass
@@ -473,6 +731,13 @@ class SimulationGUI:
             self.canvas.yview_scroll(int(-1 * (event.delta)), "units")
         else:
             self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def _on_hmousewheel(self, event):
+        # Shift + wheel for horizontal scroll
+        if sys.platform == 'darwin':
+            self.canvas.xview_scroll(int(-1 * (event.delta)), "units")
+        else:
+            self.canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")
 
 
     def _add_tooltip(self, widget, text):
@@ -494,7 +759,7 @@ class SimulationGUI:
         for k, v in params_dict.items():
             val = v.get()
             # 型変換
-            if k in ['steps', 'seed', 'dr1_period']:
+            if k in ['steps', 'seed', 'dr1_period', 'dr2_period', 'dr3_period', 'num_initial_jobs']:
                 p[k] = int(float(val))
             elif k in ['res_n_servers', 'proto_n_servers', 'mass_n_servers', 'wip_limit_res', 'wip_limit_proto', 'max_rework_cycles']:
                 p[k] = int(float(val))
@@ -553,31 +818,105 @@ class SimulationGUI:
             ]
         p['dr_threshold'] = 5.0 # Fixed for now
         p['past_logs_file'] = 'configs/past_logs.csv'
+
+        # 初期投入Arrival分布（GUIのlow/highがあれば一様分布にマップ）
+        if 'job_arrival_low' in p or 'job_arrival_high' in p:
+            low = float(p.get('job_arrival_low', 0.0) or 0.0)
+            high = float(p.get('job_arrival_high', max(low, 5.0)) or 5.0)
+            if high < low:
+                high = low
+            p['job_arrival_dist'] = {"type": "uniform", "params": {"low": low, "high": high}}
+            # UI補助キーは下流に渡さない
+            p.pop('job_arrival_low', None)
+            p.pop('job_arrival_high', None)
+
+        # Advanced JSON のマージ（同一キーはJSONが最終優先）
+        if hasattr(self, 'advanced_json_vars'):
+            # 検出: どのシナリオ配列から呼ばれたかを推定するのは困難なので、
+            # 引数 params_dict が self.scenario_params[i] のどれかと一致した場合のみ適用
+            try:
+                scenario_index = self.scenario_params.index(params_dict)  # type: ignore[arg-type]
+            except ValueError:
+                scenario_index = None
+            if scenario_index is not None:
+                raw = self.advanced_json_vars[scenario_index].get().strip()
+                if raw:
+                    try:
+                        over = json.loads(raw)
+                        if isinstance(over, dict):
+                            p = {**p, **over}
+                    except Exception:
+                        # 不正JSONは無視（GUI側でエラーダイアログ）
+                        pass
         return p
+
+    def _open_json_editor(self, scenario_idx: int):
+        top = tk.Toplevel(self.root)
+        top.title(f"Advanced JSON Editor - {self._scenario_title(scenario_idx)}")
+        top.geometry("700x500")
+
+        txt = tk.Text(top, wrap=tk.NONE, font=("Consolas", 10))
+        txt.pack(fill=tk.BOTH, expand=True)
+        # 初期値
+        curr = self.advanced_json_vars[scenario_idx].get()
+        if not curr:
+            curr = "{\n  \"example\": \"override here\"\n}"
+        txt.insert("1.0", curr)
+
+        btn_frame = ttk.Frame(top)
+        btn_frame.pack(fill=tk.X)
+
+        def on_validate():
+            raw = txt.get("1.0", tk.END).strip()
+            try:
+                obj = json.loads(raw) if raw else {}
+                if not isinstance(obj, dict):
+                    raise ValueError("JSONの最上位はオブジェクト（{...}）である必要があります。")
+                messagebox.showinfo("OK", "JSONの構文は有効です。")
+            except Exception as e:
+                messagebox.showerror("JSONエラー", str(e))
+
+        def on_ok():
+            raw = txt.get("1.0", tk.END).strip()
+            # 一度バリデーション
+            if raw:
+                try:
+                    obj = json.loads(raw)
+                    if not isinstance(obj, dict):
+                        raise ValueError("JSONの最上位はオブジェクト（{...}）である必要があります。")
+                except Exception as e:
+                    messagebox.showerror("JSONエラー", str(e))
+                    return
+            self.advanced_json_vars[scenario_idx].set(raw)
+            top.destroy()
+
+        ttk.Button(btn_frame, text="構文チェック", command=on_validate).pack(side=tk.LEFT, padx=4, pady=4)
+        ttk.Button(btn_frame, text="OK", command=on_ok).pack(side=tk.RIGHT, padx=4, pady=4)
+        ttk.Button(btn_frame, text="キャンセル", command=top.destroy).pack(side=tk.RIGHT, padx=4, pady=4)
 
     def start_simulation(self):
         if self.is_running: return
         
-        scenarios = []  # 長さ3、無効はNone
-        for i in range(3):
+        scenarios = []  # 長さn、無効はNone
+        for i in range(self.n_scenarios):
             if self.scenario_enabled[i].get():
                 scenarios.append(self.get_parsed_params(self.scenario_params[i]))
             else:
                 scenarios.append(None)
         if all(p is None for p in scenarios):
-            messagebox.showwarning("Warning", "少なくとも1つのシナリオを選択してください（A/B/C）。")
+            messagebox.showwarning("Warning", "少なくとも1つのシナリオを選択してください（A/B/C/D/F）。")
             return
         
-        # Initialize progress bars and labels
-        for i in range(3):
+        # Initialize status labels
+        for i in range(self.n_scenarios):
             if scenarios[i] is None:
                 # スキップ
                 self.start_times[i] = None
                 self.elapsed_times[i] = 0.0
                 self.progress_values[i] = 0.0
                 self.scenario_states[i] = "skipped"
-                self.progress_bars[i]['value'] = 0
-                self.progress_labels[i].config(text=f"Scenario {chr(65+i)}: Skipped")
+                if i < len(self.progress_labels):
+                    self.progress_labels[i].config(text=f"Scenario {self._scenario_label(i)}: Skipped")
             else:
                 self.start_times[i] = time.perf_counter()
                 self.elapsed_times[i] = 0.0
@@ -585,8 +924,8 @@ class SimulationGUI:
                 self.scenario_states[i] = "running"
                 self.progress_log_next[i] = 10.0
                 self.last_progress_log_at[i] = 0.0
-                self.progress_bars[i]['value'] = 0
-                self.progress_labels[i].config(text=self._format_progress_label(i))
+                if i < len(self.progress_labels):
+                    self.progress_labels[i].config(text=self._format_progress_label(i))
         self.cpu_mem_lbl.config(text="CPU: -% | Mem: -%")
         self.comparison_data = {}
         self.pending_comparison_plot = None
@@ -668,11 +1007,11 @@ class SimulationGUI:
                 self.log_queue.put(("comp_partial_result", (label, kpis, p, tech_status, metrics)))
 
             threads = []
-            labels = ["Scenario A", "Scenario B", "Scenario C"]
             for i, p in enumerate(scenarios):
                 if p is None:
                     continue  # スキップ
-                t = threading.Thread(target=run_single_sim, args=(p, labels[i], i))
+                label_txt = p.get('scenario_id') or f"Scenario {self._scenario_label(i)}"
+                t = threading.Thread(target=run_single_sim, args=(p, label_txt, i))
                 threads.append(t)
                 t.start()
             
@@ -829,7 +1168,7 @@ class SimulationGUI:
                 self.results_text.see(tk.END)
             elif msg_type == "progress":
                 idx, progress, elapsed, cpu, mem = data
-                if idx < len(self.progress_bars):
+                if 0 <= idx < self.n_scenarios:
                     self.progress_values[idx] = max(self.progress_values[idx], progress)
                     self.elapsed_times[idx] = max(self.elapsed_times[idx], elapsed)
                     if progress >= 100.0:
@@ -840,7 +1179,7 @@ class SimulationGUI:
                     self.cpu_mem_lbl.config(text=f"CPU: {cpu:.1f}% | Mem: {mem:.1f}%")
             elif msg_type == "scenario_done":
                 idx, elapsed = data
-                if idx < len(self.progress_bars):
+                if 0 <= idx < self.n_scenarios:
                     self.elapsed_times[idx] = max(self.elapsed_times[idx], elapsed)
                     self.progress_values[idx] = 100.0
                     self.scenario_states[idx] = "done"
@@ -878,11 +1217,12 @@ class SimulationGUI:
             suffix = " ✓"
         elif state == "running":
             suffix = " ..."
-        return f"Scenario {chr(65+idx)}: {self.progress_values[idx]:.1f}% ({self.elapsed_times[idx]:.1f}s){suffix}"
+        # 進捗パーセンテージは表示せず、経過時間のみ
+        return f"Scenario {self._scenario_label(idx)}: {self.elapsed_times[idx]:.1f}s{suffix}"
 
     def _update_progress_widgets(self, idx):
-        self.progress_bars[idx]['value'] = self.progress_values[idx]
-        self.progress_labels[idx].config(text=self._format_progress_label(idx))
+        if 0 <= idx < len(self.progress_labels):
+            self.progress_labels[idx].config(text=self._format_progress_label(idx))
 
     def _refresh_running_elapsed_labels(self):
         now_perf = time.perf_counter()
@@ -909,7 +1249,7 @@ class SimulationGUI:
             self.last_progress_log_at[idx] = now_perf
             self.results_text.insert(
                 tk.END,
-                f"Scenario {chr(65+idx)} progress: {progress:.1f}% / elapsed {elapsed:.1f}s\n"
+                f"Scenario {self._scenario_label(idx)} progress: {progress:.1f}% / elapsed {elapsed:.1f}s\n"
             )
             self.results_text.see(tk.END)
 
@@ -1655,8 +1995,15 @@ class SimulationGUI:
 
     def save_params_json(self):
         all_scenarios = []
-        for i in range(3):
-            all_scenarios.append(self.get_parsed_params(self.scenario_params[i]))
+        for i in range(self.n_scenarios):
+            merged = self.get_parsed_params(self.scenario_params[i])
+            # 保存時はAdvanced JSONの生文字列も含める
+            adv_raw = self.advanced_json_vars[i].get() if hasattr(self, 'advanced_json_vars') else ""
+            if adv_raw:
+                merged_with_hint = {**merged, "advanced_json": adv_raw}
+            else:
+                merged_with_hint = merged
+            all_scenarios.append(merged_with_hint)
             
         filename = filedialog.asksaveasfilename(
             initialdir="configs",
@@ -1682,13 +2029,32 @@ class SimulationGUI:
             try:
                 with open(filename, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                
+            
                 scenarios = data.get("scenarios", [])
                 for i, p in enumerate(scenarios):
-                    if i >= 3: break
+                    if i >= self.n_scenarios: break
+                    # まずAdvanced JSON（保存に含まれていれば）
+                    adv = p.get("advanced_json")
+                    if adv is not None and hasattr(self, 'advanced_json_vars'):
+                        try:
+                            # 軽くバリデーション
+                            if adv.strip():
+                                obj = json.loads(adv)
+                                if not isinstance(obj, dict):
+                                    raise ValueError
+                        except Exception:
+                            # 破損していても致命ではないので捨てる
+                            adv = ""
+                        self.advanced_json_vars[i].set(adv or "")
+
+                    # 次に既知キーをUIへ反映
                     for key, val in p.items():
                         if key in self.scenario_params[i]:
-                            self.scenario_params[i][key].set(val)
+                            try:
+                                self.scenario_params[i][key].set(val)
+                            except Exception:
+                                # 型不一致等はスキップ
+                                pass
                 
                 messagebox.showinfo("Success", f"Settings loaded from {filename}")
             except Exception as e:
