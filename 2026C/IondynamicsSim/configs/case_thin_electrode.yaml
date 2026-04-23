@@ -1,0 +1,30 @@
+meta:
+  case_name: "thin_electrode"
+  description: "電極厚みを半分にしたケース"
+
+electrode:
+  thickness_um: 40            # 80 -> 40 um
+  porosity: 0.35
+  particle_radius_um: 5.0
+
+resistances:
+  electronic_conductivity_S_m: 100.0
+  ionic_conductivity_S_m: 1.0
+  solid_diffusivity_m2_s: 1.0e-14
+
+operation:
+  mode: "discharge"
+  c_rate: 1.0
+  cutoff_voltage_V: 2.5
+  initial_soc: 1.0
+
+particles:
+  mode: "random"
+  count: 150
+  bbox_um: [200.0, 40.0, 0.0]
+  seed: 42
+
+output:
+  animation_format: "mp4"
+  fps: 20
+  save_csv: true

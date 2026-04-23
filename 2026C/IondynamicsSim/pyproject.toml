@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iondynamics"
+version = "0.1.0"
+description = "Lithium-ion battery simulation tool"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "pybamm",
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "pandas",
+    "imageio-ffmpeg",
+]
+
+[project.scripts]
+iondynamics = "iondynamics.cli:main"
+iondynamics-gui = "iondynamics.gui:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -12,8 +12,9 @@
       <sourceFolder url="file://$MODULE_DIR$/2026/DataAnalysis/Plan7" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/2026/DataAnalysis/Ver1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/archive/Ver6" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/2026C/IondynamicsSim/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 (PyCharmMiscProject)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

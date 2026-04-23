@@ -1,0 +1,34 @@
+meta:
+  case_name: "default"
+  description: "MVP動作確認用デフォルト設定"
+
+electrode:
+  thickness_um: 80            # 電極厚み [um]
+  porosity: 0.35              # 空孔率 [-]
+  particle_radius_um: 5.0     # 代表粒子半径 [um]
+
+resistances:
+  electronic_conductivity_S_m: 100.0   # 電子導電率 σ_s [S/m]
+  ionic_conductivity_S_m: 1.0          # イオン伝導度 κ [S/m](電解液)
+  solid_diffusivity_m2_s: 1.0e-14      # 固体内拡散係数 D_s [m^2/s]
+
+operation:
+  mode: "discharge"           # charge / discharge
+  c_rate: 1.0                 # Cレート
+  cutoff_voltage_V: 2.5       # 放電終止電圧
+  initial_soc: 1.0
+
+particles:
+  mode: "random"              # random / regular / bimodal
+  count: 300
+  bbox_um: [200.0, 80.0, 0.0] # 幅, 厚み, 奥行き(0なら2D)
+  bimodal:
+    ratio_large: 0.3
+    radius_small_um: 3.0
+    radius_large_um: 8.0
+  seed: 42
+
+output:
+  animation_format: "mp4"     # mp4 / gif
+  fps: 20
+  save_csv: true
