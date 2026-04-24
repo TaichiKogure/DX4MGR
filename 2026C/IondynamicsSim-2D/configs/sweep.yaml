@@ -1,0 +1,2 @@
+electrode.thickness_um: [40, 80]
+resistances.ionic_conductivity_S_m: [0.5, 1.0, 2.0]

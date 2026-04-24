@@ -1,0 +1,8 @@
+pybamm
+numpy
+scipy
+matplotlib
+pyyaml
+pytest
+imageio-ffmpeg
+pandas

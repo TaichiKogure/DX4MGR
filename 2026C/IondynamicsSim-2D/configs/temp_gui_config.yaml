@@ -1,0 +1,33 @@
+electrode:
+  particle_radius_um: 5.0
+  porosity: 0.35
+  thickness_um: 80.0
+meta:
+  case_name: default
+  description: MVP動作確認用デフォルト設定
+operation:
+  c_rate: 1.0
+  cutoff_voltage_V: 2.5
+  initial_soc: 1.0
+  mode: discharge
+output:
+  animation_format: mp4
+  fps: 20
+  save_csv: true
+particles:
+  bbox_um:
+  - 200.0
+  - 80.0
+  - 0.0
+  bimodal:
+    radius_large_um: 8.0
+    radius_small_um: 3.0
+    ratio_large: 0.3
+  count: 300
+  mode: random
+  seed: 42
+pybamm: null
+resistances:
+  electronic_conductivity_S_m: 100.0
+  ionic_conductivity_S_m: 1.0
+  solid_diffusivity_m2_s: 1.0e-14
