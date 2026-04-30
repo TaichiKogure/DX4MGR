@@ -5,6 +5,7 @@ electrode:
 meta:
   case_name: default
   description: MVP動作確認用デフォルト設定
+microstructure: null
 operation:
   c_rate: 1.0
   cutoff_voltage_V: 2.5

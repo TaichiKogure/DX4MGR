@@ -52,6 +52,10 @@ class PyBaMMConfig:
     parameter_set: str
     custom_parameters: Optional[Dict[str, float]] = None
 
+# MicrostructureConfig is imported from microstructure to avoid circular dependency
+# But since SimConfig needs it, maybe define a placeholder or import it inside SimConfig
+# Or move it to a common place. For now, let's use a Dict for simplicity or import at runtime.
+
 @dataclass
 class SimConfig:
     meta: MetaConfig
@@ -61,6 +65,7 @@ class SimConfig:
     particles: ParticleConfig
     output: OutputConfig
     pybamm: Optional[PyBaMMConfig] = None
+    microstructure: Optional[Dict] = None # MicrostructureConfig will be stored as dict here
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -86,7 +91,8 @@ class SimConfig:
                 bimodal=BimodalConfig(**data['particles']['bimodal']) if 'bimodal' in data['particles'] and data['particles']['bimodal'] else None
             ),
             output=OutputConfig(**data['output']),
-            pybamm=pybamm_cfg
+            pybamm=pybamm_cfg,
+            microstructure=data.get('microstructure')
         )
 
 def load_config(path: str) -> SimConfig:

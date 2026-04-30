@@ -42,6 +42,11 @@ class IondynamicsGUI:
         self._load_config_file(self.config_path)
 
         self.last_run_dir = None
+        self.last_phase_map = None
+        self.last_micro_config = None
+        self.last_transport_map = None
+        self.last_micro_stats = None
+
         self.entries = {}
         self._create_widgets()
         self._setup_logging()
@@ -88,6 +93,16 @@ class IondynamicsGUI:
         self.tab_history = ttk.Frame(self.notebook)
         self.notebook.add(self.tab_history, text="Analysis")
         self._build_history_tab()
+
+        # Tab 4: Microstructure
+        self.tab_micro = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab_micro, text="Microstructure")
+        self._build_micro_tab()
+
+        # Tab 5: Transport 2D
+        self.tab_trans2d = ttk.Frame(self.notebook)
+        self.notebook.add(self.tab_trans2d, text="Transport 2D")
+        self._build_transport2d_tab()
 
         # 下部: ログエリア
         log_frame = ttk.LabelFrame(main_frame, text="System Log", padding="5")
@@ -386,6 +401,360 @@ class IondynamicsGUI:
                 os.startfile(os.path.abspath(path))
             else:
                 messagebox.showwarning("File not found", f"File {filename} not found.")
+
+    def _open_trans_out_dir(self):
+        out_dir = getattr(self, 'trans_out_dir', "outputs/gui_trans2d")
+        if os.path.exists(out_dir):
+            os.startfile(os.path.abspath(out_dir))
+        else:
+            messagebox.showinfo("Info", "Output directory does not exist yet.")
+
+    def _build_micro_tab(self):
+        main_f = ttk.Frame(self.tab_micro, padding="10")
+        main_f.pack(fill=tk.BOTH, expand=True)
+
+        left_f = ttk.Frame(main_f, width=300)
+        left_f.pack(side=tk.LEFT, fill=tk.Y)
+
+        ttk.Label(left_f, text="Microstructure Generator", font=("", 12, "bold")).pack(pady=10)
+        
+        # パラメータ入力 (簡易版)
+        self.micro_vars = {}
+        fields = [
+            ("Width (um)", "width_um", 100.0),
+            ("Resolution (um/px)", "resolution_um_per_px", 0.5),
+            ("Target Porosity", "target_porosity", 0.3),
+            ("Active Material Fraction", "target_active_fraction", 0.6),
+            ("CBD Fraction", "target_cbd_fraction", 0.1),
+            ("Calendaring Ratio", "calendaring_ratio", 1.0),
+            ("Random Seed", "random_seed", 42)
+        ]
+        
+        for label, key, default in fields:
+            f = ttk.Frame(left_f)
+            f.pack(fill=tk.X, pady=2)
+            ttk.Label(f, text=label, width=20).pack(side=tk.LEFT)
+            var = tk.StringVar(value=str(default))
+            ttk.Entry(f, textvariable=var, width=10).pack(side=tk.LEFT)
+            self.micro_vars[key] = var
+
+        ttk.Button(left_f, text="🚀 Generate structure", command=self.run_micro_gen_thread).pack(fill=tk.X, pady=20)
+        
+        # 進捗表示エリア
+        micro_progress_f = ttk.LabelFrame(left_f, text="Generation Status", padding="5")
+        micro_progress_f.pack(fill=tk.X, pady=5)
+        
+        self.micro_status_var = tk.StringVar(value="Ready")
+        ttk.Label(micro_progress_f, textvariable=self.micro_status_var).pack(fill=tk.X)
+        
+        self.micro_progress = ttk.Progressbar(micro_progress_f, orient=tk.HORIZONTAL, length=200, mode='determinate')
+        self.micro_progress.pack(fill=tk.X, pady=5)
+
+        self.micro_info_text = tk.Text(left_f, height=10, width=40, state='disabled')
+        self.micro_info_text.pack(fill=tk.X, pady=10)
+
+        # 右側: プレビュー表示
+        right_f = ttk.LabelFrame(main_f, text="Preview")
+        right_f.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
+        
+        self.micro_img_label = ttk.Label(right_f, text="Generated image will appear here")
+        self.micro_img_label.pack(fill=tk.BOTH, expand=True)
+
+    def run_micro_gen_thread(self):
+        threading.Thread(target=self._run_micro_gen, daemon=True).start()
+
+    def _run_micro_gen(self):
+        from iondynamics.microstructure import MicrostructureConfig, MicrostructureGenerator, MicrostructureAnalyzer, visualize_microstructure
+        
+        logging.info("Generating microstructure...")
+        self.root.after(0, lambda: self.micro_status_var.set("Initializing..."))
+        self.root.after(0, lambda: self.micro_progress.config(value=0))
+        
+        def micro_progress_cb(data):
+            msg = data.get("message", "")
+            step = data.get("step")
+            n_steps = data.get("n_steps")
+            
+            def update():
+                if msg:
+                    self.micro_status_var.set(msg)
+                if step is not None and n_steps is not None:
+                    prog = (step / n_steps) * 100
+                    self.micro_progress.config(value=prog)
+            self.root.after(0, update)
+            if msg:
+                logging.info(f"[Microstructure] {msg}")
+
+        try:
+            m_cfg = MicrostructureConfig(
+                target_porosity=float(self.micro_vars["target_porosity"].get()),
+                target_active_fraction=float(self.micro_vars["target_active_fraction"].get()),
+                target_cbd_fraction=float(self.micro_vars["target_cbd_fraction"].get()),
+                calendaring_ratio=float(self.micro_vars["calendaring_ratio"].get()),
+                random_seed=int(self.micro_vars["random_seed"].get()),
+                width_um=float(self.micro_vars["width_um"].get()),
+                thickness_um=float(self.entries["electrode.thickness_um"].get()),
+                resolution_um_per_px=float(self.micro_vars["resolution_um_per_px"].get())
+            )
+            
+            generator = MicrostructureGenerator(m_cfg)
+            phase_map = generator.generate(progress_callback=micro_progress_cb)
+            
+            micro_progress_cb({"message": "Analyzing structure..."})
+            analyzer = MicrostructureAnalyzer(phase_map)
+            transport_map = analyzer.analyze()
+            stats = analyzer.get_summary_statistics(transport_map, m_cfg)
+            
+            # Store results in GUI instance
+            self.last_phase_map = phase_map
+            self.last_micro_config = m_cfg
+            self.last_transport_map = transport_map
+            self.last_micro_stats = stats
+
+            micro_progress_cb({"message": "Rendering visualization..."})
+            temp_img = "outputs/gui_micro_preview.png"
+            os.makedirs("outputs", exist_ok=True)
+            visualize_microstructure(phase_map, transport_map, save_path=temp_img)
+            
+            self.root.after(0, lambda: self._update_micro_ui(temp_img, stats))
+            self.root.after(0, lambda: self.micro_status_var.set("Generation Completed"))
+            logging.info("Microstructure generation successful.")
+        except Exception as e:
+            error_msg = f"Microstructure generation failed: {e}"
+            logging.error(error_msg)
+            self.root.after(0, lambda: self.micro_status_var.set("Error occurred"))
+            self.root.after(0, lambda: messagebox.showerror("Generation Error", error_msg))
+
+    def _update_micro_ui(self, img_path, stats):
+        self.micro_info_text.config(state='normal')
+        self.micro_info_text.delete('1.0', tk.END)
+        for k, v in stats.items():
+            self.micro_info_text.insert(tk.END, f"{k}: {v}\n")
+        self.micro_info_text.config(state='disabled')
+        
+        from PIL import Image, ImageTk
+        if os.path.exists(img_path):
+            img = Image.open(img_path)
+            img.thumbnail((600, 600))
+            self.micro_photo = ImageTk.PhotoImage(img)
+            self.micro_img_label.config(image=self.micro_photo, text="")
+
+    def _build_transport2d_tab(self):
+        main_f = ttk.Frame(self.tab_trans2d, padding="10")
+        main_f.pack(fill=tk.BOTH, expand=True)
+
+        left_f = ttk.Frame(main_f, width=300)
+        left_f.pack(side=tk.LEFT, fill=tk.Y)
+
+        ttk.Label(left_f, text="2D Ion Transport Solver", font=("", 12, "bold")).pack(pady=10)
+        
+        # パラメータ入力
+        self.trans_vars = {}
+        
+        # 構造の再利用設定
+        micro_reuse_f = ttk.LabelFrame(left_f, text="Microstructure Source", padding="5")
+        micro_reuse_f.pack(fill=tk.X, pady=5)
+        
+        self.trans_micro_source = tk.StringVar(value="reuse")
+        ttk.Radiobutton(micro_reuse_f, text="Use generated Microstructure", 
+                        variable=self.trans_micro_source, value="reuse").pack(anchor=tk.W)
+        ttk.Radiobutton(micro_reuse_f, text="Regenerate before run", 
+                        variable=self.trans_micro_source, value="regenerate").pack(anchor=tk.W)
+
+        fields = [
+            ("Time Step (s)", "dt", 1.0),
+            ("Final Time (s)", "t_final", 600.0),
+            ("Initial Conc. (mol/m3)", "c_initial", 1000.0),
+            ("C-rate (for flux)", "c_rate", 1.0),
+            ("BC Separator", "bc_sep", "constant_concentration"),
+        ]
+        
+        for label, key, default in fields:
+            f = ttk.Frame(left_f)
+            f.pack(fill=tk.X, pady=2)
+            ttk.Label(f, text=label, width=20).pack(side=tk.LEFT)
+            if key == "bc_sep":
+                var = tk.StringVar(value=default)
+                combo = ttk.Combobox(f, textvariable=var, values=["constant_concentration", "constant_flux"], width=15)
+                combo.pack(side=tk.LEFT)
+            else:
+                var = tk.StringVar(value=str(default))
+                ttk.Entry(f, textvariable=var, width=10).pack(side=tk.LEFT)
+            self.trans_vars[key] = var
+
+        ttk.Button(left_f, text="⚡ Run 2D Transport", command=self.run_trans2d_thread).pack(fill=tk.X, pady=20)
+        
+        # 出力ディレクトリ情報
+        self.trans_out_label = ttk.Label(left_f, text="Output: outputs/gui_trans2d", foreground="blue", wraplength=250)
+        self.trans_out_label.pack(fill=tk.X, pady=2)
+        ttk.Button(left_f, text="📂 Open Output Folder", command=self._open_trans_out_dir).pack(fill=tk.X, pady=2)
+
+        # 進捗表示エリア
+        progress_f = ttk.LabelFrame(left_f, text="Execution Status", padding="5")
+        progress_f.pack(fill=tk.X, pady=5)
+        
+        self.trans_status_var = tk.StringVar(value="Ready")
+        ttk.Label(progress_f, textvariable=self.trans_status_var, wraplength=250).pack(fill=tk.X)
+        
+        self.trans_progress = ttk.Progressbar(progress_f, orient=tk.HORIZONTAL, length=200, mode='determinate')
+        self.trans_progress.pack(fill=tk.X, pady=5)
+        
+        self.trans_stats_var = tk.StringVar(value="")
+        ttk.Label(progress_f, textvariable=self.trans_stats_var).pack(fill=tk.X)
+
+        self.trans_info_text = tk.Text(left_f, height=10, width=40, state='disabled')
+        self.trans_info_text.pack(fill=tk.X, pady=10)
+
+        # 右側: プレビュー表示
+        right_f = ttk.LabelFrame(main_f, text="Results Preview")
+        right_f.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10)
+        
+        # プレビュー切り替えボタン
+        btn_f = ttk.Frame(right_f)
+        btn_f.pack(fill=tk.X)
+        self.preview_mode = tk.StringVar(value="ce_final")
+        ttk.Radiobutton(btn_f, text="Concentration (2D)", variable=self.preview_mode, value="ce_final", command=self._refresh_trans_preview).pack(side=tk.LEFT, padx=5)
+        ttk.Radiobutton(btn_f, text="Potential (2D)", variable=self.preview_mode, value="phi_e", command=self._refresh_trans_preview).pack(side=tk.LEFT, padx=5)
+        ttk.Radiobutton(btn_f, text="Profiles (1D)", variable=self.preview_mode, value="profiles", command=self._refresh_trans_preview).pack(side=tk.LEFT, padx=5)
+
+        self.trans_img_label = ttk.Label(right_f, text="Results will appear here")
+        self.trans_img_label.pack(fill=tk.BOTH, expand=True)
+
+    def run_trans2d_thread(self):
+        threading.Thread(target=self._run_trans2d, daemon=True).start()
+
+    def _run_trans2d(self):
+        from iondynamics.solver2d import TransportSolverConfig, TransportSolver2D, save_transport_results
+        from iondynamics.microstructure import MicrostructureConfig, MicrostructureGenerator
+        
+        logging.info("Starting 2D Transport Simulation...")
+        self.root.after(0, lambda: self.trans_status_var.set("Initializing..."))
+        self.root.after(0, lambda: self.trans_progress.config(value=0))
+        
+        def progress_cb(data):
+            msg = data.get("message", "")
+            step = data.get("step")
+            n_steps = data.get("n_steps")
+            eta = data.get("eta")
+            
+            def update():
+                if msg:
+                    self.trans_status_var.set(msg)
+                if step is not None and n_steps is not None:
+                    prog = (step / n_steps) * 100
+                    self.trans_progress.config(value=prog)
+                    stats_text = f"Step {step}/{n_steps}"
+                    if eta is not None:
+                        stats_text += f" | ETA: {eta:.1f}s"
+                    self.trans_stats_var.set(stats_text)
+                
+            self.root.after(0, update)
+            if msg:
+                logging.info(f"[Transport2D] {msg}")
+
+        try:
+            # 1. 構造の決定 (再利用 or 新規生成)
+            reuse = (self.trans_micro_source.get() == "reuse")
+            if reuse and self.last_phase_map is not None:
+                logging.info("Reusing previously generated microstructure.")
+                phase_map = self.last_phase_map
+                m_cfg = self.last_micro_config
+                micro_log = "Reused existing structure"
+            else:
+                if reuse:
+                    logging.info("No generated microstructure found. Generating new one...")
+                
+                m_cfg = MicrostructureConfig(
+                    target_porosity=float(self.micro_vars["target_porosity"].get()),
+                    target_active_fraction=float(self.micro_vars["target_active_fraction"].get()),
+                    target_cbd_fraction=float(self.micro_vars["target_cbd_fraction"].get()),
+                    calendaring_ratio=float(self.micro_vars["calendaring_ratio"].get()),
+                    random_seed=int(self.micro_vars["random_seed"].get()),
+                    width_um=float(self.micro_vars["width_um"].get()),
+                    thickness_um=float(self.entries["electrode.thickness_um"].get()),
+                    resolution_um_per_px=float(self.micro_vars["resolution_um_per_px"].get())
+                )
+                progress_cb({"message": "Generating microstructure..."})
+                gen = MicrostructureGenerator(m_cfg)
+                phase_map = gen.generate(progress_callback=progress_cb)
+                micro_log = "Newly generated structure"
+            
+            # 2. 輸送設定
+            t_cfg = TransportSolverConfig(
+                case_name="gui_trans2d",
+                dt=float(self.trans_vars["dt"].get()),
+                t_final=float(self.trans_vars["t_final"].get()),
+                c_initial=float(self.trans_vars["c_initial"].get()),
+                applied_current_density=float(self.trans_vars["c_rate"].get()) * 20.0,
+                bc_separator=self.trans_vars["bc_sep"].get()
+            )
+            
+            solver = TransportSolver2D(t_cfg, phase_map.grid)
+            solver.prepare_property_map(phase_map)
+            
+            res_steady = solver.solve_steady_potential(progress_callback=progress_cb)
+            res_transient = solver.solve_transient_concentration(progress_callback=progress_cb)
+            
+            # 3. 保存と可視化
+            progress_cb({"message": "Saving results and generating plots..."})
+            self.trans_out_dir = "outputs/gui_trans2d"
+            os.makedirs(self.trans_out_dir, exist_ok=True)
+            
+            # 保存
+            save_transport_results(self.trans_out_dir, t_cfg, res_steady, res_transient, solver.prop_map)
+            
+            # 可視化
+            from iondynamics.visualize2d import visualize_transport_results
+            visualize_transport_results(res_steady, res_transient, solver.prop_map, 
+                                        {"width_um": m_cfg.width_um, "thickness_um": m_cfg.thickness_um},
+                                        self.trans_out_dir,
+                                        phase_map=phase_map)
+            
+            stats = {**res_steady.kpis, **res_transient.kpis}
+            self.root.after(0, lambda: self._update_trans_ui(stats))
+            self.root.after(0, lambda: self.trans_status_var.set("Simulation Completed"))
+            
+            # 詳細ログ
+            logging.info(f"2D Transport Simulation successful.")
+            logging.info(f" - Microstructure: {micro_log}")
+            logging.info(f" - Grid: {phase_map.grid.nx} x {phase_map.grid.nz}")
+            logging.info(f" - Physical: {m_cfg.width_um} x {m_cfg.thickness_um} um (res: {m_cfg.resolution_um_per_px})")
+            logging.info(f" - Output: {os.path.abspath(self.trans_out_dir)}")
+            
+            self.root.after(0, lambda: self.trans_out_label.config(text=f"Output: {self.trans_out_dir}"))
+
+        except Exception as e:
+            import traceback
+            error_msg = f"2D Transport Simulation failed: {e}"
+            logging.error(f"{error_msg}\n{traceback.format_exc()}")
+            self.root.after(0, lambda: self.trans_status_var.set("Error occurred"))
+            self.root.after(0, lambda: messagebox.showerror("Simulation Error", error_msg))
+
+    def _update_trans_ui(self, stats):
+        self.trans_info_text.config(state='normal')
+        self.trans_info_text.delete('1.0', tk.END)
+        for k, v in stats.items():
+            self.trans_info_text.insert(tk.END, f"{k}: {v}\n")
+        self.trans_info_text.config(state='disabled')
+        self._refresh_trans_preview()
+
+    def _refresh_trans_preview(self):
+        if not hasattr(self, 'trans_out_dir'): return
+        
+        mode = self.preview_mode.get()
+        mapping = {
+            "ce_final": "ce_final_2d.png",
+            "phi_e": "phi_e_steady.png",
+            "profiles": "ce_profiles_1d.png"
+        }
+        img_path = os.path.join(self.trans_out_dir, mapping.get(mode, "ce_final_2d.png"))
+        
+        from PIL import Image, ImageTk
+        if os.path.exists(img_path):
+            img = Image.open(img_path)
+            img.thumbnail((600, 600))
+            self.trans_photo = ImageTk.PhotoImage(img)
+            self.trans_img_label.config(image=self.trans_photo, text="")
 
 def main():
     root = tk.Tk()
