@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>試作設備DXダッシュボード</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<style>
+  body { font-family: -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif;
+         margin: 0; background: #f4f6f8; color: #222; }
+  header { background: #0b3d61; color: #fff; padding: 18px 28px; }
+  header h1 { margin: 0; font-size: 20px; }
+  header .sub { font-size: 12px; opacity: .8; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .card { flex: 1 1 180px; background: #fff; border-radius: 10px; padding: 16px;
+          box-shadow: 0 1px 3px rgba(0,0,0,.1); border-left: 5px solid #0b3d61; }
+  .card .num { font-size: 30px; font-weight: bold; }
+  .card .lbl { font-size: 13px; color: #666; }
+  .card.red { border-color: #d62728; }
+  .card.orange { border-color: #ff7f0e; }
+  section { background: #fff; border-radius: 10px; padding: 18px; margin-bottom: 18px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  section h2 { font-size: 16px; border-bottom: 2px solid #0b3d61;
+               padding-bottom: 6px; margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: center; }
+  th { background: #0b3d61; color: #fff; }
+  tbody tr:nth-child(even) { background: #f7f9fb; }
+  ul { line-height: 1.8; }
+</style>
+</head>
+<body>
+<header>
+  <h1>試作設備DXダッシュボード</h1>
+  <div class="sub">Prototyping Section Manager / 生成日時: 2026-06-20 09:13</div>
+</header>
+<div class="wrap">
+
+  <div class="cards">
+    <div class="card red"><div class="num">3</div><div class="lbl">更新推奨 (優先度:高)</div></div>
+    <div class="card orange"><div class="num">3</div><div class="lbl">故障リスク高</div></div>
+    <div class="card orange"><div class="num">1</div><div class="lbl">安全対応要</div></div>
+    <div class="card red"><div class="num">1</div><div class="lbl">ボトルネック工程</div></div>
+  </div>
+
+  <section>
+    <h2>1. 設備投資優先順位 (MVP3)</h2>
+    <div id="priority"></div>
+  </section>
+
+  <section>
+    <h2>2. 工程別ボトルネック (MVP2)</h2>
+    <div id="load"></div>
+    <div id="wait"></div>
+  </section>
+
+  <section>
+    <h2>3. 試作設備台帳 (MVP1)</h2>
+    <table><thead><tr><th>設備名</th><th>工程</th><th>老朽化度</th><th>稼働率</th><th>故障頻度</th><th>研究テーマ貢献度</th><th>ボトルネック度</th><th>安全リスク</th><th>更新優先度スコア</th><th>更新優先度</th></tr></thead><tbody><tr><td>グローブボックスD</td><td>組立</td><td>5</td><td>85</td><td>4</td><td>5</td><td>4</td><td>4</td><td>4.45</td><td>高</td></tr><tr><td>小型塗工機A</td><td>塗工</td><td>4</td><td>90</td><td>3</td><td>5</td><td>5</td><td>2</td><td>4.05</td><td>高</td></tr><tr><td>化成装置G</td><td>化成</td><td>4</td><td>98</td><td>3</td><td>5</td><td>5</td><td>2</td><td>4.05</td><td>高</td></tr><tr><td>充放電評価装置C</td><td>評価</td><td>2</td><td>95</td><td>1</td><td>5</td><td>5</td><td>1</td><td>3.2</td><td>中</td></tr><tr><td>乾燥炉B</td><td>乾燥</td><td>3</td><td>70</td><td>2</td><td>4</td><td>3</td><td>3</td><td>3.1</td><td>中</td></tr><tr><td>プレス機F</td><td>プレス</td><td>3</td><td>80</td><td>2</td><td>4</td><td>3</td><td>3</td><td>3.1</td><td>中</td></tr><tr><td>混練機E</td><td>混練</td><td>2</td><td>60</td><td>1</td><td>3</td><td>2</td><td>2</td><td>2.1</td><td>低</td></tr><tr><td>スリッターH</td><td>スリット</td><td>2</td><td>55</td><td>1</td><td>2</td><td>2</td><td>2</td><td>1.85</td><td>低</td></tr></tbody></table>
+  </section>
+
+  <section>
+    <h2>4. 研究テーマ × 設備マップ</h2>
+    <table><thead><tr><th>研究テーマ</th><th>必要工程</th><th>使用設備</th><th>不足設備</th><th>設備制約度</th></tr></thead><tbody><tr><td>高Ni正極</td><td>混練・塗工・評価</td><td>A;B;C</td><td>高温評価装置</td><td>中</td></tr><tr><td>Si負極</td><td>混練・塗工・膨張評価</td><td>A;D</td><td>膨張測定装置</td><td>大</td></tr><tr><td>全固体電池</td><td>粉体混合・加圧成形</td><td>E;F</td><td>ドライ環境設備</td><td>大</td></tr><tr><td>急速充電</td><td>セル作製・充放電評価</td><td>B;C;F</td><td>高出力評価設備</td><td>中</td></tr></tbody></table>
+  </section>
+
+  <section>
+    <h2>5. 投資候補ランキング (不足設備)</h2>
+    <ol><li><b>膨張測定装置</b> — テーマ: Si負極 / 制約度: 大</li><li><b>ドライ環境設備</b> — テーマ: 全固体電池 / 制約度: 大</li><li><b>高温評価装置</b> — テーマ: 高Ni正極 / 制約度: 中</li><li><b>高出力評価設備</b> — テーマ: 急速充電 / 制約度: 中</li></ol>
+  </section>
+
+</div>
+<script>
+  var FIGS = {"priority": {"data": [{"type": "bar", "orientation": "h", "x": [1.85, 2.1, 3.1, 3.1, 3.2, 4.05, 4.05, 4.45], "y": ["スリッターH", "混練機E", "プレス機F", "乾燥炉B", "充放電評価装置C", "化成装置G", "小型塗工機A", "グローブボックスD"], "marker": {"color": ["#2ca02c", "#2ca02c", "#ff7f0e", "#ff7f0e", "#ff7f0e", "#d62728", "#d62728", "#d62728"]}, "text": [1.85, 2.1, 3.1, 3.1, 3.2, 4.05, 4.05, 4.45], "textposition": "auto"}], "layout": {"title": "設備 更新優先度スコア (5点満点)", "xaxis": {"range": [0, 5]}, "margin": {"l": 140}, "height": 360}}, "load": {"data": [{"type": "bar", "x": ["化成", "塗工", "評価", "組立", "乾燥", "プレス", "混練", "スリット"], "y": [120.0, 96.0, 90.0, 85.7, 80.0, 62.5, 60.0, 45.0], "marker": {"color": ["#d62728", "#ff7f0e", "#ff7f0e", "#ff7f0e", "#2ca02c", "#2ca02c", "#2ca02c", "#2ca02c"]}, "text": ["120.0%", "96.0%", "90.0%", "85.7%", "80.0%", "62.5%", "60.0%", "45.0%"], "textposition": "auto"}], "layout": {"title": "工程別 負荷率 (100%超=ボトルネック)", "yaxis": {"title": "負荷率 (%)"}, "shapes": [{"type": "line", "x0": -0.5, "x1": 7.5, "y0": 100, "y1": 100, "line": {"color": "#d62728", "dash": "dash"}}], "height": 360}}, "wait": {"data": [{"type": "bar", "x": ["化成", "塗工", "評価", "組立", "乾燥", "プレス", "混練", "スリット"], "y": [20.0, 12.0, 10.0, 8.0, 5.0, 3.0, 2.0, 1.0], "marker": {"color": "#1f77b4"}}], "layout": {"title": "工程別 平均待ち日数", "yaxis": {"title": "日数"}, "height": 320}}};
+  var cfg = {responsive: true};
+  Plotly.newPlot('priority', FIGS.priority.data, FIGS.priority.layout, cfg);
+  Plotly.newPlot('load', FIGS.load.data, FIGS.load.layout, cfg);
+  Plotly.newPlot('wait', FIGS.wait.data, FIGS.wait.layout, cfg);
+</script>
+</body>
+</html>

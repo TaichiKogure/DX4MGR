@@ -59,6 +59,27 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/2026/Prototyping Section Mgr/psm_dashboard/data/equipment.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/Prototyping Section Mgr/psm_dashboard/data/process_load.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/2026/Prototyping Section Mgr/psm_dashboard/data/theme_map.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
